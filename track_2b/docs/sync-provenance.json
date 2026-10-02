@@ -1,0 +1,85 @@
+{
+  "source_repository": "Hack-Apertus",
+  "source_commit": "ab5d2060fce5dce550d2c2997132319beb722a0d",
+  "imported_files": [
+    {
+      "path": "track_2b/src/pipeline.py",
+      "imported_sha256": "33c61bcef501eef932ddbb85e03a9e323b50c69068cf964d61c3865c998d5ef3"
+    },
+    {
+      "path": "track_2b/src/pipeline_v3.py",
+      "imported_sha256": "73d9ea26e45898a62eb8bed88628f8801a172e56c09dad5b0dd27386a45ecb02"
+    },
+    {
+      "path": "track_2b/src/fact_parsers.py",
+      "imported_sha256": "cbe1b9c2ed1700d0b2a05e6d8e71be844f28d0d1a0a833ab0695de76b4d0a542"
+    },
+    {
+      "path": "track_2b/src/fact_store.py",
+      "imported_sha256": "bbe675a525648560dbb96d2b32350da5a895499d52fa5ea2ab5d382265d0f7bc"
+    },
+    {
+      "path": "track_2b/src/validators.py",
+      "imported_sha256": "a36935cdc372f7dca5534256710a9ca22380727b718b5b0a19f0d3ae058eb6d9"
+    },
+    {
+      "path": "track_2b/src/llm_client.py",
+      "imported_sha256": "b92dcb827ad770e2480a83d9667fc26984a85cc5895c3ab6cdc505a26f84a35b"
+    },
+    {
+      "path": "track_2b/src/server.py",
+      "imported_sha256": "d4b3cda84b043617504fe96d50aafda4b3c09e080521da868bbc89427abd29a0"
+    },
+    {
+      "path": "track_2b/src/selftest.py",
+      "imported_sha256": "4247f209ea4089a7c286e619b619e73403667de3202d23cd6985fe984e055c18"
+    },
+    {
+      "path": "track_2b/src/selftest_v3.py",
+      "imported_sha256": "7d29b520acad5f2d17377a0a01b30fce2e2e3901f30f027a1d85bfed27c6798c"
+    },
+    {
+      "path": "track_2b/src/audit_parser_ceiling.py",
+      "imported_sha256": "d0a8c2c704722adbbacf45cbafcf765d95fa929810a4204aaae5e0d67b9a2a0b"
+    },
+    {
+      "path": "track_2b/src/bench.py",
+      "imported_sha256": "03ae39efa86c191a4db8b67aa9a3cabd8f0b602edada88dc0ca65194dacaf251"
+    },
+    {
+      "path": "track_2b/src/bench_v3.py",
+      "imported_sha256": "4f2a8371363097d26139694cbb88ae20539fd147698fc5c9ceffd5fd20a81700"
+    },
+    {
+      "path": "track_2b/src/prompts/v1.json",
+      "imported_sha256": "e07770c54da0de59394ecad40ced476462cde85fd8f04afd64eee8b6f7c3e31d"
+    },
+    {
+      "path": "track_2b/src/prompts/v2.json",
+      "imported_sha256": "5a7e707709257686cc381532a7bdfe0feb9a0cd4fea3ce74056d6beafe9f9307"
+    },
+    {
+      "path": "track_2b/src/prompts/v3.json",
+      "imported_sha256": "ff7eaf7a3fbc013a0b90009741f0e08160e0b207e783cddf83a49e0b2c509b02"
+    },
+    {
+      "path": "track_2b/data/bench/cases.json",
+      "imported_sha256": "881de018c4863e5e3b807afffe46424f8c0cf79e003bba78d3e2950dd3e0a33b"
+    },
+    {
+      "path": "track_2b/data/samples.json",
+      "imported_sha256": "ae07b1f98e917fe1da3c2004c9c8c4a58cde5cfcd4eb3ef6ad451af8038bcfa4"
+    },
+    {
+      "path": "track_2b/Dockerfile",
+      "imported_sha256": "15f318af87a8181815b56b34ed3c993e61bf9e3de7080f29ceb15e33bcec65c9"
+    },
+    {
+      "path": "track_2b/Makefile",
+      "imported_sha256": "9b78e944a93f083a59d6e6f02a491574e8629efbd0b2684a81708168664aab30"
+    }
+  ],
+  "note": "Only committed runtime, benchmark and synthetic fixtures; packaging edits reviewed separately. No raw research records or private configuration.",
+  "agent": "Codex",
+  "session": "01a0fc9c-8f11-77a2-9e98-3b756563e431"
+}

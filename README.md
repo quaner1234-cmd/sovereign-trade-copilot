@@ -1,4 +1,29 @@
-# Hack Apertus — project template
+# Sovereign Trade Copilot
+
+An evidence-first garment trade email prototype for Hack Apertus Track 2B.
+The default v3 pipeline selects exact parser candidate IDs, keeps per-fact
+source spans, and checks reply drafts before presenting them for human review.
+It does not send customer emails or make commercial commitments automatically.
+
+The project root is `track_2b/`. It uses Python's standard library and the
+Apertus model family through a configurable OpenAI-compatible endpoint.
+
+```sh
+cd track_2b
+make run
+```
+
+The service listens on port 8000: `GET /health`, `POST /process` with an `email`
+string. Set `LLM_NAME`, `LLM_BASE_URL`, and `LLM_API_KEY` in the runtime
+environment for real inference. With no endpoint it runs a deterministic
+offline demonstration, which does not use Apertus or measure its quality.
+Never place an actual API key in a tracked file.
+
+See [current status and limitations](track_2b/docs/STATUS.md) for tests,
+benchmark commands, synthetic data scope and remaining submission deliverables.
+The Docker command is supplied; container execution remains to be verified.
+
+## Official template contract
 
 Template repository for [Hack Apertus](https://hackapertus.ch/) submissions.
 Every project keeps almost the same layout, so organizers and judges find the

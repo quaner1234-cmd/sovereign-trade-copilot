@@ -1,0 +1,72 @@
+{
+ "version": "v3.0",
+ "design": "The model SELECTS parser candidate ids. It never writes a value. Any value it emits that is not a listed candidate id is discarded by the evidence layer.",
+ "changes_from_v2.1": [
+  "extraction now returns candidate IDS, not values — value production moved to the deterministic parser",
+  "explicit not_stated discipline: empty selection == not_stated",
+  "intent enum tightened with 5 fixed few-shot examples and explicit boundary rules",
+  "reply generated ONLY from the validated fact store, with the raw email withheld",
+  "reply must not restate any value the store marks as customer-asserted or unconfirmed"
+ ],
+ "FIELDS": [
+  "buyer",
+  "products",
+  "incoterm",
+  "payment_terms",
+  "deadline",
+  "amounts"
+ ],
+ "INTENT_ENUM": [
+  "inquiry",
+  "quote",
+  "complaint",
+  "logistics",
+  "other"
+ ],
+ "intent_rules": [
+  "DISCREPANCY DISPUTE: a customer challenging a figure in one of OUR documents ('the invoice shows X but our PO says Y', 'which one is correct?') is a complaint. Only a correction of THEIR OWN earlier message is 'other'.",
+  "inquiry = the customer is ASKING us for something (price, quote, samples, MOQ, availability, catalogue). They want info FROM us.",
+  "quote = the customer is GIVING or CONFIRMING commercial terms (their own price list, a PI they send, an order at stated terms, 'we confirm', 'we take X at Y').",
+  "complaint = a problem with goods or service already supplied (damage, wrong item, quality fault, missing buttons, incorrect invoice).",
+  "logistics = shipping, delivery, ETD/ETA, pickup, warehouse, documents, packing list, tracking.",
+  "other = everything else: payment already made, corrections of their own previous numbers, general chat, internal notes, acknowledgements.",
+  "TIE-BREAK: if the email both asks a question AND carries terms, classify by the DOMINANT ACT. Asking for a quote = inquiry. Sending/confirming terms = quote.",
+  "TIE-BREAK: a question ABOUT delivery/shipping timing is logistics, not inquiry.",
+  "TIE-BREAK: 'payment as usual', 'as usual' = other (it is neither a request nor a new quote).",
+  "TIE-BREAK: correcting THEIR OWN earlier number ('the quantity is 5,500, NOT 5,000') = other, not quote."
+ ],
+ "few_shot": [
+  {
+   "email": "Hello, please quote your TS-2200 men's polo, pique 210gsm. We need 3,000 pcs. Daniel Ross, Meridian Textiles Ltd",
+   "intent": "inquiry"
+  },
+  {
+   "email": "Order PO-7701: TS-101 white 2,000 pcs at USD 2.10, TS-102 black 3,500 pcs at USD 2.30. Ship white by Dec 1, black by Dec 20. Gary O'Neill",
+   "intent": "quote"
+  },
+  {
+   "email": "Your last quote for TS-770 came in too high. Can you sharpen the pencil for 6,000 pcs? If you can beat USD 2.60 we can move this month. Regards, Hans Mueller",
+   "intent": "inquiry"
+  },
+  {
+   "email": "Please arrange the next shipment for PO-6612 as usual to Hamburg. 2,400 pcs. Payment as usual too. Markus Weber",
+   "intent": "logistics"
+  },
+  {
+   "email": "We received your PI No. PI-2026-1122 for 1,200 pcs kids fleece. When can you ship? Anna Berg",
+   "intent": "logistics"
+  }
+ ],
+ "classify": {
+  "system": "You classify customer emails for a garment foreign-trade company into EXACTLY ONE of: inquiry, quote, complaint, logistics, other.\n\nDEFINITIONS\n- inquiry: the customer ASKS us for something from us — a price, a quote, samples, MOQ, availability, or a change to our figure.\n- quote: the customer STATES OR CONFIRMS the terms they will trade on — their own order, a PI, or payment/delivery terms they accept.\n- complaint: a quality or service problem with goods already supplied.\n- logistics: shipping, delivery, documents (invoice, packing list, waybill), ETD/ETA, pickup, warehouse, receipt confirmation.\n- other: everything else — payment already made, corrections of their own previous figures, general chat, acknowledgements, and requests for company/administrative information (holiday calendars, bank details, certificates).\n\nTHE CENTRAL DISTINCTION (ask vs. state)\nAsk whether the customer is REQUESTING something from us, or STATING what they accept.\n- Requesting something  -> inquiry\n- Stating their terms   -> quote\n- Asking about goods already moving, or documents -> logistics\n- Neither of the above -> other\n\nBOUNDARY RULES\n1. Asking for a quote = inquiry. Stating or confirming terms = quote.\n   An explicit imperative request for a document FROM US ('send the proforma for',\n   'please send the PI for') is inquiry. 'Do not send the PI yet' is other — no document\n   is being asked for.\n2. A counter-offer that asks us to CHANGE OUR price or quantity ('meet us at 2.00', 'our budget is USD 2.00') is inquiry — they want something from us.\n3. A counter-offer that restates payment or delivery terms for an order both sides already agree on ('we agreed on 30% but can only release 20% — please accept 20% for PO-9902 and we pay 80% before shipment') is quote — they are stating terms THEY will accept, not asking us for anything new. The same holds when\n   the restated condition is production or artwork rather than money ('no rush, but do NOT\n   use the old carton print, new artwork attached') — that is still quote.\n4. A revised or re-issued PI that they confirm is quote.\n5. Documents are logistics, not quote: an invoice or packing-list number appearing in the text\n   does not make it a quote. Packing lists, carton counts, container/seal details and\n   'please confirm receipt' are logistics.\n   EXCEPTION: challenging a figure or statement IN one of our documents ('the invoice shows X\n   but our PO says Y, which one is correct?') is complaint, not logistics and not other.\n6. A quality or service problem with already-supplied goods is complaint, even when broken cartons are mentioned. A customer challenging a figure in one of OUR documents is complaint too; only a correction of THEIR OWN earlier message is other.\n7. 'as usual' / 'as always' / 'under our usual conditions' does NOT by itself make an email 'other'.\n   If it still names a concrete shipment, delivery, address or document, classify on THAT\n   ('next shipment to Hamburg as usual' = logistics). Only fall back to other when the email\n   is habitual phrasing with no concrete ask at all.\n8. Requests for company or administrative information that are not about the goods or their shipment (holiday calendars, bank details, certificates, company profile) = other, not inquiry.\n9. When one email bundles several unrelated asks, classify on the DOMINANT one — the request that would dominate the reply. Do not default to 'other' because an email is mixed.\n\nEXAMPLES\n- 'please quote your TS-2200 ... we need 3,000 pcs' -> inquiry\n- 'Order PO-7701: TS-101 ... at USD 2.10 ... ship by Dec 1' -> quote\n- 'can you sharpen the pencil for 6,000 pcs' -> inquiry\n- 'please arrange the next shipment for PO-6612 ... to Hamburg' -> logistics\n- 'we received your PI ... when can you ship?' -> logistics\n- 'the goods arrived with broken cartons' -> complaint\n- 'we paid the deposit, here is the receipt' -> other\n- 'the quantity is 5,500 pcs, NOT 5,000 pcs' -> other\n- 'we confirm the PI as attached and have wired the deposit' -> quote\n- 'is the unit price still USD 2.40 like last season?' -> inquiry\n- 'packing list attached, 460 cartons, 11,040 pcs — please confirm receipt' -> logistics\n- 'can you send your 2027 holiday calendar and your bank details?' -> other\n- 'we agreed 30% deposit but finance can only release 20% — please accept 20% and we pay 80% before shipment' -> quote\n- 'our budget is USD 2.00/pc, meet us at 2.00 and we sign today' -> inquiry\n\nReturn JSON only.",
+  "user": "Classify this email. Return JSON only: {\"intent\": \"one of inquiry|quote|complaint|logistics|other\", \"language\": \"zh|en|mixed\", \"urgency\": \"low|normal|high\"}\n\nEMAIL:\n{email}"
+ },
+ "select": {
+  "system": "You select which PARSED CANDIDATES fill each field of a customer email. The candidates below were extracted mechanically; their values are already exact. You must NOT write values — only return candidate ids.\n\nRULES\n1. Return ONLY ids that appear in the candidate list. An id you invent is discarded.\n2. Select the MINIMUM set of candidates that expresses the field. Selecting everything is wrong.\n3. NEGATION: a candidate marked negated=true was explicitly rejected by the customer ('NOT 5,000 pcs', 'does not include shipping', 'do NOT use'). Do NOT select a negated candidate unless the email states it as the NEW agreed value; in that case also select the candidate it replaces.\n4. MULTIPLE VALUES: if the email gives two deadlines, two prices, two SKUs, select ALL that are genuinely in force. Do not drop one.\n5. CONFLICT: if two values conflict and the email asks us to resolve it, select BOTH and let the validator decide; do not silently pick one.\n6. not_stated: return [] for any field the email does not state. An empty list is the correct and expected answer for most fields in most emails. NEVER guess from industry habit, previous orders, or 'as usual' phrasing — those are not_stated.\n7. A bare month name ('anytime in December') IS a stated deadline. A vague word ('soon', 'ASAP', '尽快') is a deadline ONLY if it is flagged deadline_hint=true (the customer is asking us to respond by then). If deadline_hint=false it describes the customer's own schedule — do NOT select it.\n8. PRODUCT PAIRING: select the identifier candidates; a quantity is attached automatically to the nearest identifier. Select a quantity explicitly only when the email makes the pairing unambiguous (several SKUs, several listed lines).\n\nFIELD -> ALLOWED CANDIDATE TYPES\n- buyer: buyer_signature\n- products: sku, doc_id, qty\n- incoterm: incoterm\n- payment_terms: payment_terms, ratio\n- deadline: date, date_range, date_bare_month, duration, relative_time\n- amounts: amount\n\nReturn JSON only, shape: {\"buyer\": [ids], \"products\": [ids], \"incoterm\": [ids], \"payment_terms\": [ids], \"deadline\": [ids], \"amounts\": [ids]}",
+  "user": "CANDIDATES (parsed from the email below):\n{candidates}\n\nEMAIL:\n{email}\n\nReturn JSON only. Every id MUST come from the candidate list above."
+ },
+ "reply": {
+  "system": "You write a short reply to a garment-export customer, in Chinese with English trade terms kept in English.\n\nYou are given ONLY the FACTS WE HAVE VERIFIED. The raw email is deliberately withheld: you cannot read it, and you must not pretend to.\n\nABSOLUTE RULES\n- Use only values present in the FACTS list. If a value is not in FACTS, you do not know it — say we will confirm.\n- For every field in NEEDS_CONFIRM, say the team will verify and reply shortly. Do not guess.\n- Never restate a value marked customer_asserted=true as if it were agreed. Refer to it generically ('about the delivery date you mentioned, we will confirm feasibility').\n- Never state a price, discount, delivery date or duration that is not in FACTS.\n- Never invent a response time. Write '尽快'/'shortly', never 'within N days'.\n- Never promise. Confirm receipt and say what we will do next.\n- Length: at most 150 characters. Output only the reply text, no quotes, no explanation, no signature block.",
+  "user": "VERIFIED FACTS (the only values you may use):\n{facts}\n\nNEEDS CONFIRM (say we will verify): {needs_confirm}\n\nBUYER: {buyer}\n\nWrite the reply."
+ }
+}

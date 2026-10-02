@@ -2,15 +2,13 @@
 """Adversarial benchmark runner (v1 dataset, 48 cases).
 Channel selection via env (same LLM_* vars as the pipeline):
   LLM_BASE_URL + LLM_NAME (+ LLM_API_KEY)  -> any OpenAI-compatible endpoint
-  BENCH_CHANNEL=space70b                   -> akhaliq 70B HF Space (gradio, system+message params)
 Usage:
   python src/bench.py --runs 3 --tag local-8b-q4
-  BENCH_CHANNEL=space70b python src/bench.py --runs 1 --tag space-70b
-Raw records -> experiments/records/bench-slice/<tag>/  (repo-root relative; falls back to ../../..)
+Raw records -> experiments/records/bench-slice/<tag>/ (track_2b relative, gitignored).
 """
 import os, sys, json, time, argparse
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+ROOT = os.path.abspath(os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 import pipeline, llm_client
 
@@ -131,57 +129,8 @@ def score_case(case, result, email):
 def run_channel(case, promptset):
     """One pipeline execution on the configured channel (env-driven)."""
     if os.environ.get("BENCH_CHANNEL") == "space70b":
-        return run_space70b(case)
+        raise ValueError("Legacy HF Space channel is research-only; configure LLM_* instead")
     return pipeline.process(case["email"])
-
-
-def run_space70b(case):
-    """Same v2 prompts through the akhaliq 70B gradio Space (system_prompt + message).
-    apertus_client lives in the research repo's harness; bootstrap it if present."""
-    import sys as _sys
-    _harness = os.path.join(ROOT, "experiments", "harness")
-    if _harness not in _sys.path:
-        _sys.path.insert(0, _harness)
-    import apertus_client as AC
-    P = pipeline.PROMPTS
-    email = case["email"]
-
-    def call(system, user, max_tokens, temperature):
-        info = AC.space_info("akhaliq-70b")
-        names, params = AC.build_params_akhaliq(info, user, system_prompt=system,
-                                                max_tokens=max_tokens, temperature=temperature)
-        last = None
-        for attempt in range(4):
-            try:
-                r = AC.space_call("akhaliq-70b", params, max_total_s=180)
-                if r.get("ok"):
-                    return r.get("text"), r
-                last = r
-            except Exception as e:
-                last = {"ok": False, "error": f"{type(e).__name__}: {e}", "text": None, "timing_ms": {}}
-            time.sleep(8 * (attempt + 1))
-        return None, last
-
-    def parse(text):
-        from validators import load_json_strict
-        return load_json_strict(text)
-
-    cls = parse(call(P["classify"]["system"], P["classify"]["user"].replace("{email}", email), 120, 0.0)[0])
-    ext_raw, r2 = call(P["extract"]["system"], P["extract"]["user"].replace("{email}", email), 700, 0.0)
-    extraction = parse(ext_raw)
-    if extraction is not None:
-        extraction, _ = pipeline.normalize_extraction(extraction)
-    draft, r3 = call(P["draft"]["system"],
-                     P["draft"]["user"].replace("{email}", email)
-                     .replace("{extraction}", json.dumps(extraction or {}, ensure_ascii=False)), 300, 0.2)
-    draft = (draft or "").strip()
-    validation = {"extraction": pipeline.check_extraction(extraction, email) if extraction else {"ok": False, "issues": ["no_json"]},
-                  "draft": pipeline.check_draft(draft, email),
-                  "claims": pipeline.check_claims(draft, email)}
-    return {"classification": cls, "extraction": extraction, "draft": draft,
-            "validation": validation, "meta": {"mode": "space70b",
-                                               "steps": {"extract": {"latency_ms": (r2.get("timing_ms") or {}).get("total")},
-                                                          "draft": {"latency_ms": (r3.get("timing_ms") or {}).get("total")}}}}
 
 
 def main():

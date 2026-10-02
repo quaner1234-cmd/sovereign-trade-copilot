@@ -25,3 +25,9 @@ build/
 .DS_Store
 .idea/
 .vscode/
+
+# Generated benchmark output and temporary diagnostics
+/track_2b/experiments/records/
+*.log
+*.err
+*.tmp

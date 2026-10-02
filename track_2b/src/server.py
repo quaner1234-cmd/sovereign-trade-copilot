@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
-"""Track 2B mini-prototype HTTP server (stdlib only).
-GET  /health  -> {"status":"ok","mode":"llm"|"demo"}
+"""Track 2B HTTP server (stdlib only).
+GET  /health  -> {"status":"ok","mode":"llm"|"demo","pipeline":"v3"|"v2","model":...}
 POST /process {"email": "..."} -> classification + extraction + draft + validation
+                 plus, on v3, the validated fact store with per-fact provenance.
+PIPELINE_VERSION selects the pipeline; default is v3 (evidence-gated).
 """
 import json, os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import llm_client
-import pipeline
+
+PIPELINE_VERSION = os.environ.get("PIPELINE_VERSION", "v3").lower()
+if PIPELINE_VERSION == "v3":
+    import pipeline_v3 as pipeline
+else:
+    import pipeline
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -19,7 +26,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/health":
-            self._send(200, {"status": "ok", "mode": "demo" if llm_client.demo_mode() else "llm",
+            self._send(200, {"status": "ok",
+                             "mode": "demo" if llm_client.demo_mode() else "llm",
+                             "pipeline": PIPELINE_VERSION,
                              "model": llm_client.CONFIG["model"] or "(demo)"})
         else:
             self._send(404, {"error": "not found", "hint": "GET /health or POST /process"})
@@ -35,7 +44,10 @@ class Handler(BaseHTTPRequestHandler):
         email = (body.get("email") or "").strip()
         if not email:
             return self._send(400, {"error": "field 'email' is required"})
-        result = pipeline.process(email)
+        try:
+            result = pipeline.process(email)
+        except Exception as e:
+            return self._send(500, {"error": f"{type(e).__name__}: {e}"})
         self._send(200, result)
 
     def log_message(self, *a):
@@ -44,6 +56,7 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8000"))
-    print(f"track2b mini-prototype listening on 0.0.0.0:{port} "
-          f"(mode={'demo' if llm_client.demo_mode() else 'llm'})", flush=True)
+    print(f"track2b listening on 0.0.0.0:{port} "
+          f"(mode={'demo' if llm_client.demo_mode() else 'llm'}, pipeline={PIPELINE_VERSION})",
+          flush=True)
     HTTPServer(("0.0.0.0", port), Handler).serve_forever()
