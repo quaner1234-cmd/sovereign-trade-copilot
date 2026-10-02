@@ -35,9 +35,28 @@ def _fill(tpl, **kw):
     return out
 
 
+ABSENT_VALUE = {"not_stated", "n/a", "na", "none", "null", "-", "未提及", "未知", "not mentioned", "not specified"}
+USUAL_VALUE = ("as usual", "as always", "usual", "same as last", "same as before", "as before",
+               "as per our standing agreement", "照旧", "按惯例", "惯例", "跟以前一样", "和以前一样", "老规矩")
+
+
+def _value_is_absent(v):
+    """Mechanical: these 'values' carry no concrete fact -> treat the field as absent."""
+    if v is None or v == "" or v == [] or v == {}:
+        return True
+    if isinstance(v, str):
+        s = v.strip().lower().rstrip(".")
+        if s in ABSENT_VALUE or s in USUAL_VALUE:
+            return True
+        if len(s) <= 40 and any(u in s for u in USUAL_VALUE):
+            return True
+    return False
+
+
 def normalize_extraction(extraction):
     """Mechanical normalization, no ground-truth knowledge:
-    - null / missing / empty-string canonical field -> moved into not_stated
+    - absent-ish values (null/empty/'not_stated'/'as usual'/...) -> moved into not_stated
+    - fields WITH a concrete value are removed from not_stated (double-reporting fix)
     - unknown not_stated entries -> unmapped (flagged, not silently fixed)
     Returns (clean_extraction, normalizations:list)."""
     if not isinstance(extraction, dict):
@@ -47,17 +66,22 @@ def normalize_extraction(extraction):
     ns = list(extraction.get("not_stated") or [])
     for f in FIELDS:
         v = ext.get(f)
-        if v is None or v == "" or v == [] or v == {}:
+        if _value_is_absent(v):
+            if v is not None and v != "" and v != [] and v != {}:
+                norm.append(f"absent_value_normalized:{f}")
             ext.pop(f, None)
             if f not in ns:
                 ns.append(f)
                 norm.append(f"moved_to_not_stated:{f}")
+        elif f in ns:
+            ns.remove(f)
+            norm.append(f"removed_from_not_stated:{f}")
     unknown = [x for x in ns if x not in FIELDS]
     known = [x for x in ns if x in FIELDS]
     if unknown:
         norm.append("unmapped_not_stated:" + "|".join(unknown))
     ext["not_stated"] = known
-    if norm:
+    if unknown:
         ext["unmapped_notes"] = unknown
     return ext, norm
 
@@ -89,7 +113,7 @@ def process(email, debug=False):
 
     extraction, _, m2 = _chat_json([{"role": "system", "content": PROMPTS["extract"]["system"]},
                                     {"role": "user", "content": _fill(PROMPTS["extract"]["user"], email=email)}],
-                                   max_tokens=600, temperature=0.0)
+                                   max_tokens=900, temperature=0.0)
     normalizations = []
     if extraction is not None:
         extraction, normalizations = normalize_extraction(extraction)

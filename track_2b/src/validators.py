@@ -47,7 +47,7 @@ def check_extraction(extraction, email):
     issues = []
     if not isinstance(extraction, dict):
         return {"ok": False, "issues": ["extraction_not_json_object"]}
-    email_digits = _digits_of(email)
+    email_digits = _digits_of(_month_normalized(email))
 
     def verbatim(v):
         d = _digits_of(v)
@@ -70,12 +70,14 @@ def check_extraction(extraction, email):
 
 
 def check_draft(draft, email):
-    """Numbers in the draft must exist in the email (digit-wise); catches invented figures."""
+    """Numbers in the draft must exist in the email (digit-wise, month-name aware);
+    catches invented figures."""
     issues = []
     if not draft:
         return {"ok": False, "issues": ["empty_draft"]}
-    model_numbers = set(re.findall(r"\d[\d,.，]*\d|\d", draft))
-    email_digits = _digits_of(email)
+    draft_m, email_m = _month_normalized(draft), _month_normalized(email)
+    email_digits = _digits_of(email_m)
+    model_numbers = set(re.findall(r"\d[\d,.]*\d|\d", draft_m))
     for n in model_numbers:
         d = _digits_of(n)
         if d and d not in email_digits:
@@ -85,18 +87,32 @@ def check_draft(draft, email):
 
 DATE_TOKEN = re.compile(r"\d{1,2}\s*月\s*\d{1,2}[日号]?|\d{4}-\d{1,2}-\d{1,2}|\d{1,2}/\d{1,2}(?:/\d{2,4})?|week\s*\d+|\d+\s*(?:个?工作日|天|日|weeks?|days?)", re.I)
 PROMISE_VERB = re.compile(r"将于|会在?|预计| guarantee|will (?:deliver|ship|send|provide|arrive)|delivery (?:by|on)|ETA|ETD", re.I)
+MONTHS = {"jan": "1", "feb": "2", "mar": "3", "apr": "4", "may": "5", "jun": "6",
+          "jul": "7", "aug": "8", "sep": "9", "sept": "9", "oct": "10", "nov": "11", "dec": "12"}
+
+
+def _month_normalized(text):
+    """Map English month names to their numbers so 'Dec 1' and '12月1日' digit-compare equal."""
+    t = str(text or "").lower()
+    for name, num in MONTHS.items():
+        t = re.sub(rf"\b{name}\.?\s*", f"{num}月", t)
+    return t
+
+
+def _num_tokens(text):
+    return set(t for t in re.split(r"\D+", _month_normalized(text)) if t)
 
 
 def check_claims(draft, email):
     """Unsupported factual claims (mechanical proxy):
-    a date/duration token appearing in the draft but NOT in the email, especially near
-    a promise verb, is flagged. Numbers are covered by check_draft."""
+    a date/duration token appearing in the draft whose component numbers are NOT all present
+    in the email (month-name aware) is flagged. Numbers are covered by check_draft."""
     issues = []
     if not draft:
         return {"ok": False, "issues": ["empty_draft"]}
-    for m in DATE_TOKEN.finditer(draft):
-        tok = m.group(0)
-        digits = _digits_of(tok)
-        if digits and digits not in _digits_of(email):
-            issues.append(f"unsupported_date_or_duration:{tok}")
+    email_tokens = _num_tokens(email)
+    for m in DATE_TOKEN.finditer(_month_normalized(draft)):
+        comps = [t for t in re.split(r"\D+", m.group(0)) if t]
+        if comps and not all(c in email_tokens for c in comps):
+            issues.append(f"unsupported_date_or_duration:{m.group(0)}")
     return {"ok": not issues, "issues": issues}

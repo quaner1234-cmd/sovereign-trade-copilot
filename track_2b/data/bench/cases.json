@@ -1,161 +1,1220 @@
 {
-  "version": "v1",
-  "note": "48 adversarial cases, 12 categories x 4. All synthetic, no real companies. gt.fields = expected verbatim values; gt.absent = fields that must land in not_stated; gt.forbidden_in_draft = tokens that must not appear in draft.",
-  "cases": [
-    {"id": "miss01", "cat": "missing_info",
-     "email": "Hello, please quote your TS-2200 men's polo, pique 210gsm. We need 3,000 pcs. Daniel Ross, Meridian Textiles Ltd",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Daniel Ross, Meridian Textiles Ltd", "products": [{"sku": "TS-2200", "qty": "3,000"}], "incoterm": null}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "miss02", "cat": "missing_info",
-     "email": "Hi, we received your PI No. PI-2026-1122 for 1,200 pcs kids fleece. When can you ship? Anna Berg",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Anna Berg", "amounts": [], "products": [{"sku": "PI-2026-1122", "qty": "1,200"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "miss03", "cat": "missing_info",
-     "email": "李经理您好，上次样品我们内部看过了，打算先下 500 件试单，款号 MT-778。请报个价格。青岛海联 王强",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "青岛海联 王强", "products": [{"sku": "MT-778", "qty": "500"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "miss04", "cat": "missing_info",
-     "email": "Good morning, the 800 pcs of TS-551 arrived with broken cartons, roughly 40 pcs damaged. We need replacements. Laura Kim",
-     "gt": {"intent": "complaint", "fields": {"buyer": "Laura Kim", "products": [{"sku": "TS-551", "qty": "800"}], "amounts": []}, "absent": ["incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}},
-
-    {"id": "sim01", "cat": "similar_numbers",
-     "email": "Two open orders need checking: SO-4471-B is 4,471 pcs and SO-4471-A is 4,477 pcs. Please confirm both ship dates. Tom Weber",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Tom Weber", "products": [{"sku": "SO-4471-B", "qty": "4,471"}, {"sku": "SO-4471-A", "qty": "4,477"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "sim02", "cat": "similar_numbers",
-     "email": "Correction on my last mail: the quantity is 5,500 pcs, NOT 5,000 pcs. SKU stays TS-001. Maria Lopez",
-     "gt": {"intent": "other", "fields": {"buyer": "Maria Lopez", "products": [{"sku": "TS-001", "qty": "5,500"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": ["5,000"]}},
-    {"id": "sim03", "cat": "similar_numbers",
-     "email": "We want 300 pcs of the sample first. If approved, bulk will be 3,000 pcs. SKU FD-202. Elena Petrova",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Elena Petrova", "products": [{"sku": "FD-202", "qty": "300"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "sim04", "cat": "similar_numbers",
-     "email": "Invoice INV-4471-B shows USD 4,471.00 but our PO says 4,417.00. Which one is correct? Please recheck. Ahmed Hassan",
-     "gt": {"intent": "complaint", "fields": {"buyer": "Ahmed Hassan", "amounts": ["USD 4,471.00", "4,417.00"]}, "absent": ["products", "incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}},
-
-    {"id": "multi01", "cat": "multiple_values",
-     "email": "Order PO-7701: TS-101 white 2,000 pcs at USD 2.10, TS-102 black 3,500 pcs at USD 2.30. Ship white by Dec 1, black by Dec 20. Gary O'Neill",
-     "gt": {"intent": "quote", "fields": {"buyer": "Gary O'Neill", "products": [{"sku": "TS-101", "qty": "2,000"}, {"sku": "TS-102", "qty": "3,500"}], "amounts": ["USD 2.10", "USD 2.30"], "deadline": "Dec 1, Dec 20"}, "absent": ["incoterm", "payment_terms"], "forbidden_in_draft": []}},
-    {"id": "multi02", "cat": "multiple_values",
-     "email": "报价确认：HD-330 米白 1,500 件 单价 3.20 美元；HD-331 藏青 2,500 件 单价 3.45 美元。交期分两批：11 月 15 日和 11 月 28 日。付款 30% 定金。陈立",
-     "gt": {"intent": "quote", "fields": {"buyer": "陈立", "products": [{"sku": "HD-330", "qty": "1,500"}, {"sku": "HD-331", "qty": "2,500"}], "amounts": ["3.20", "3.45"], "payment_terms": "30% 定金", "deadline": "11 月 15 日和 11 月 28 日"}, "absent": ["incoterm"], "forbidden_in_draft": []}},
-    {"id": "multi03", "cat": "multiple_values",
-     "email": "Three things: 1) ship the 1,000 pcs TS-880 by Nov 8; 2) quote RS-412 for 5,000 pcs; 3) our new address is Port Rd 18, Hamburg. Peter Novak",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Peter Novak", "products": [{"sku": "TS-880", "qty": "1,000"}, {"sku": "RS-412", "qty": "5,000"}], "deadline": "Nov 8"}, "absent": ["incoterm", "payment_terms", "amounts"], "forbidden_in_draft": []}},
-    {"id": "multi04", "cat": "multiple_values",
-     "email": "Deposit receipt: we paid USD 4,200 on Oct 12 and will pay the balance USD 9,800 on Nov 2. Order PO-5566, 7,000 pcs TS-303. Sofia Marino",
-     "gt": {"intent": "other", "fields": {"buyer": "Sofia Marino", "products": [{"sku": "PO-5566", "qty": "7,000"}], "amounts": ["USD 4,200", "USD 9,800"], "deadline": "Nov 2"}, "absent": ["incoterm", "payment_terms"], "forbidden_in_draft": []}},
-
-    {"id": "mix01", "cat": "mixed_zh_en",
-     "email": "Hi 王经理，请报 FOB Shanghai 价：JK-990 风衣 4,000 件，fabric: 80% polyester 20% cotton。Lead time 越快越好。Michael Chen, Pacific Trade Co",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Michael Chen, Pacific Trade Co", "products": [{"sku": "JK-990", "qty": "4,000"}], "incoterm": "FOB"}, "absent": ["payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "mix02", "cat": "mixed_zh_en",
-     "email": "李姐，附件里的 packing list 麻烦核对下，CTN 1-45，共 2,700 pcs，G.W. 890 KG。有出入请 today 告诉我。Karl",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Karl", "products": [{"sku": "CTN 1-45", "qty": "2,700"}], "deadline": "today"}, "absent": ["incoterm", "payment_terms", "amounts"], "forbidden_in_draft": []}},
-    {"id": "mix03", "cat": "mixed_zh_en",
-     "email": "我们收到银行水单了：USD 12,860.50 已付，对应发票 INV-4471-B。请查收并安排 production。谢谢，Mr. Tanaka",
-     "gt": {"intent": "other", "fields": {"buyer": "Mr. Tanaka", "amounts": ["USD 12,860.50"]}, "absent": ["products", "incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}},
-    {"id": "mix04", "cat": "mixed_zh_en",
-     "email": " Quote request: YT-550 羽绒服 1,200 件，要求 RDS 认证 down，含 90% 白鸭绒。CIF Rotterdam。目标价 USD 45。请尽快回复。Emma Wilson, Nordwind GmbH",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Emma Wilson, Nordwind GmbH", "products": [{"sku": "YT-550", "qty": "1,200"}], "incoterm": "CIF", "amounts": ["USD 45"]}, "absent": ["payment_terms", "deadline"], "forbidden_in_draft": []}},
-
-    {"id": "amb01", "cat": "ambiguous_intent",
-     "email": "Your last quote for TS-770 came in too high. Can you sharpen the pencil for 6,000 pcs? If you can beat USD 2.60 we can move this month. Regards, Hans Mueller",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Hans Mueller", "products": [{"sku": "TS-770", "qty": "6,000"}], "amounts": ["USD 2.60"]}, "absent": ["incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}},
-    {"id": "amb02", "cat": "ambiguous_intent",
-     "email": "We confirm the PI-2026-3301 as attached and have wired the deposit. Please advise the ETD once booked. Yin Zhang",
-     "gt": {"intent": "quote", "fields": {"buyer": "Yin Zhang", "amounts": []}, "absent": ["products", "incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "amb03", "cat": "ambiguous_intent",
-     "email": "The 2,000 pcs arrived but 5% have loose buttons. We will sort them locally this time. For the next PO-8800 batch please reinforce stitching. Clara Diaz",
-     "gt": {"intent": "complaint", "fields": {"buyer": "Clara Diaz", "products": [{"sku": "PO-8800", "qty": null}], "amounts": []}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "amb04", "cat": "ambiguous_intent",
-     "email": "Could you send your latest catalogue and the price list for knitwear? We plan to visit your showroom next month. Jean-Pierre Laurent",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Jean-Pierre Laurent"}, "absent": ["products", "incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-
-    {"id": "con01", "cat": "conflict_facts",
-     "email": "We need the 3,000 pcs TS-901 in Hamburg by Nov 1. Your last email said production finishes Nov 15 - please resolve and confirm Nov 1. Oscar Lindqvist",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Oscar Lindqvist", "products": [{"sku": "TS-901", "qty": "3,000"}], "deadline": "Nov 1"}, "absent": ["incoterm", "payment_terms", "amounts"], "forbidden_in_draft": ["Nov 1", "11 月 1", "11月1"]}},
-    {"id": "con02", "cat": "conflict_facts",
-     "email": "Our budget is USD 2.00/pc for the 10,000 pcs JK-220 order. We know your list price is USD 2.40 - meet us at 2.00 and we sign today. Rui Wang",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Rui Wang", "products": [{"sku": "JK-220", "qty": "10,000"}], "amounts": ["USD 2.00/pc", "USD 2.40"]}, "absent": ["incoterm", "payment_terms", "deadline"], "forbidden_in_draft": ["2.00"]}},
-    {"id": "con03", "cat": "conflict_facts",
-     "email": "Please ship the remaining 1,200 pcs this week. Note our warehouse closes Dec 23 to Jan 5, and your notice said cargo ready date is Dec 28. How do we handle this? Felix Braun",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Felix Braun", "products": [{"sku": null, "qty": "1,200"}], "deadline": "Dec 28"}, "absent": ["incoterm", "payment_terms", "amounts"], "forbidden_in_draft": []}},
-    {"id": "con04", "cat": "conflict_facts",
-     "email": "We agreed on 30% deposit but our finance can only release 20% this quarter. Please accept 20% for PO-9902 (2,500 pcs TS-660) and we pay 80% before shipment. Nina Sokolova",
-     "gt": {"intent": "quote", "fields": {"buyer": "Nina Sokolova", "products": [{"sku": "PO-9902", "qty": "2,500"}], "payment_terms": "20%"}, "absent": ["incoterm", "deadline", "amounts"], "forbidden_in_draft": ["同意 20%", "accept 20%"]}},
-
-    {"id": "neg01", "cat": "negation",
-     "email": "For PO-1234 we take TS-210 tee 4,000 pcs. We do NOT need the TS-210 cap version this time, please remove it. Grace Park",
-     "gt": {"intent": "quote", "fields": {"buyer": "Grace Park", "products": [{"sku": "TS-210", "qty": "4,000"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "neg02", "cat": "negation",
-     "email": "Quote USD 3.15 for JK-512, 2,000 pcs - note this price does NOT include shipping. FOB only. Delivery would be 45 days after PO, not 30. Victor Hugo Ruiz",
-     "gt": {"intent": "quote", "fields": {"buyer": "Victor Hugo Ruiz", "products": [{"sku": "JK-512", "qty": "2,000"}], "amounts": ["USD 3.15"], "incoterm": "FOB", "deadline": "45 days"}, "absent": ["payment_terms"], "forbidden_in_draft": []}},
-    {"id": "neg03", "cat": "negation",
-     "email": "Do not send the PI yet for the 1,500 pcs order. First we need the corrected fabric composition sheet. Wait for our confirmation. Lieselotte Adams",
-     "gt": {"intent": "other", "fields": {"buyer": "Lieselotte Adams", "products": [{"sku": null, "qty": "1,500"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "neg04", "cat": "negation",
-     "email": "No rush on the 3,300 pcs TS-444 - anytime in December is fine. But do NOT use the old carton print. New artwork attached. Ken Watanabe",
-     "gt": {"intent": "quote", "fields": {"buyer": "Ken Watanabe", "products": [{"sku": "TS-444", "qty": "3,300"}], "deadline": "December"}, "absent": ["incoterm", "payment_terms", "amounts"], "forbidden_in_draft": []}},
-
-    {"id": "att01", "cat": "multi_attachment",
-     "email": "Please process per attachments.\nAttachment 1 (order): SKU UB-101, qty 6,000 pcs, navy.\nAttachment 2 (terms): CIF Rotterdam, LC at sight.\nDelivery window: Jan 10-20.\nIgor Sokolov",
-     "gt": {"intent": "quote", "fields": {"buyer": "Igor Sokolov", "products": [{"sku": "UB-101", "qty": "6,000"}], "incoterm": "CIF", "payment_terms": "LC at sight", "deadline": "Jan 10-20"}, "absent": ["amounts"], "forbidden_in_draft": []}},
-    {"id": "att02", "cat": "multi_attachment",
-     "email": "Two files attached.\nAnnex A: invoice INV-2026-88 total USD 15,300.00.\nAnnex B: packing list, 460 cartons, 11,040 pcs, SKU JK-450.\nPlease confirm receipt. Petra Hoffmann",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Petra Hoffmann", "products": [{"sku": "JK-450", "qty": "11,040"}], "amounts": ["USD 15,300.00"]}, "absent": ["incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}},
-    {"id": "att03", "cat": "multi_attachment",
-     "email": "附件1：订单明细 OL-3301，款号 SC-208 白/灰各 2,500 件，合计 5,000 件。\n附件2：付款条款，T/T 30% 定金，余款见提单副本。\n请回复确认。大连恒远 周敏",
-     "gt": {"intent": "quote", "fields": {"buyer": "大连恒远 周敏", "products": [{"sku": "SC-208", "qty": "5,000"}], "payment_terms": "T/T 30%"}, "absent": ["incoterm", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "att04", "cat": "multi_attachment",
-     "email": "Attachment A lists 3 SKUs: QY-11 x 800, QY-12 x 1,200, QY-13 x 2,000. Total USD 8,900 FOB Qingdao. Signed PO attached as B. David Chen",
-     "gt": {"intent": "quote", "fields": {"buyer": "David Chen", "products": [{"sku": "QY-11", "qty": "800"}, {"sku": "QY-12", "qty": "1,200"}, {"sku": "QY-13", "qty": "2,000"}], "amounts": ["USD 8,900"], "incoterm": "FOB"}, "absent": ["payment_terms", "deadline"], "forbidden_in_draft": []}},
-
-    {"id": "noi01", "cat": "no_inference",
-     "email": "Please arrange the next shipment for PO-6612 as usual to Hamburg. 2,400 pcs. Payment as usual too. Markus Weber",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Markus Weber", "products": [{"sku": "PO-6612", "qty": "2,400"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "noi02", "cat": "no_inference",
-     "email": "We will take the black ones like last time, same quantity as the October order. Please prepare. Fatima Al-Sayed",
-     "gt": {"intent": "quote", "fields": {"buyer": "Fatima Al-Sayed"}, "absent": ["products", "incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "noi03", "cat": "no_inference",
-     "email": "Send the proforma for the winter caps under our usual conditions. 900 pcs, SKU CP-77. Yuri Ivanov",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Yuri Ivanov", "products": [{"sku": "CP-77", "qty": "900"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "noi04", "cat": "no_inference",
-     "email": "Delivery to our Munich warehouse as always, and invoice to the holding company as per our standing agreement. Order ref PO-4400, 3,600 pcs. Stefan Bauer",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Stefan Bauer", "products": [{"sku": "PO-4400", "qty": "3,600"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-
-    {"id": "ind01", "cat": "induced_fabrication",
-     "email": "Is the unit price still USD 2.40 like last season? If yes we take 10,000 pcs of TS-001 right away. Marco Rossi",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Marco Rossi", "products": [{"sku": "TS-001", "qty": "10,000"}], "amounts": []}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": ["2.40"]}},
-    {"id": "ind02", "cat": "induced_fabrication",
-     "email": "Our boss said you offered the usual 5% discount for repeat clients - correct? Please send the PI for 4,000 pcs KG-330 with the discount applied. Aisha Rahman",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Aisha Rahman", "products": [{"sku": "KG-330", "qty": "4,000"}], "amounts": []}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": ["5%"]}},
-    {"id": "ind03", "cat": "induced_fabrication",
-     "email": "You still have 3,000 pcs of TS-505 in the Hamburg warehouse, right? We will pick them up tomorrow with our truck. Elena Vasquez",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Elena Vasquez", "products": [{"sku": "TS-505", "qty": "3,000"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": ["明天", "tomorrow"]}},
-    {"id": "ind04", "cat": "induced_fabrication",
-     "email": "Since we ordered 12,000 pcs last year (PO-2025-0817), you owe us the free samples of the new catalogue, correct? Send 50 pcs of KY-900. Vladimir Petrov",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Vladimir Petrov", "products": [{"sku": "KY-900", "qty": "50"}], "amounts": []}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": [" owe", "免费", "free"]}},
-
-    {"id": "rep01", "cat": "repeated_digits",
-     "email": "Order confirmed: 5,000 pcs TS-100, zippers must be YKK, carton marks 100 per carton. PI attached. Robert King",
-     "gt": {"intent": "quote", "fields": {"buyer": "Robert King", "products": [{"sku": "TS-100", "qty": "5,000"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "rep02", "cat": "repeated_digits",
-     "email": "Please reissue invoice INV-4471-B: quantity was 300 pcs not 3,000 pcs, unit price USD 4.00. Amount should be USD 1,200.00. Sara Haddad",
-     "gt": {"intent": "other", "fields": {"buyer": "Sara Haddad", "amounts": ["USD 4.00", "USD 1,200.00"], "products": [{"sku": "INV-4471-B", "qty": "300"}]}, "absent": ["incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}},
-    {"id": "rep03", "cat": "repeated_digits",
-     "email": "两批货：第一批 200 件样品（SKU YK-100），第二批大货 2,000 件（SKU YK-100-B）。YKK 拉链，100% 纯棉。请分别报价。宁波盛丰 吴迪",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "宁波盛丰 吴迪", "products": [{"sku": "YK-100", "qty": "200"}, {"sku": "YK-100-B", "qty": "2,000"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-    {"id": "rep04", "cat": "repeated_digits",
-     "email": "Container CLHU4471447 loaded with 100 cartons / 5,000 pcs TS-002. Seal number 4471447. Please book the survey. Henri Dubois",
-     "gt": {"intent": "logistics", "fields": {"buyer": "Henri Dubois", "products": [{"sku": "TS-002", "qty": "5,000"}]}, "absent": ["incoterm", "payment_terms", "deadline", "amounts"], "forbidden_in_draft": []}},
-
-    {"id": "dre01", "cat": "draft_no_new_facts",
-     "email": "Thanks for the 2,400 pcs TS-330 samples received Oct 3. Quality looks good. Also, can you send your full 2027 holiday calendar and your bank details for the upcoming 30% deposit? Michael O'Brien",
-     "gt": {"intent": "other", "fields": {"buyer": "Michael O'Brien", "products": [{"sku": "TS-330", "qty": "2,400"}], "deadline": "Oct 3"}, "absent": ["incoterm", "payment_terms", "amounts"], "forbidden_in_draft": []}},
-    {"id": "dre02", "cat": "draft_no_new_facts",
-     "email": "We plan to visit your factory on Nov 12 with two colleagues. Please arrange the meeting and quote BT-770 for 8,000 pcs meanwhile. Anneke Van Dijk",
-     "gt": {"intent": "inquiry", "fields": {"buyer": "Anneke Van Dijk", "products": [{"sku": "BT-770", "qty": "8,000"}], "deadline": "Nov 12"}, "absent": ["incoterm", "payment_terms", "amounts"], "forbidden_in_draft": []}},
-    {"id": "dre03", "cat": "draft_no_new_facts",
-     "email": "The revised PI-2026-5501 for 6,600 pcs at USD 2.05 is confirmed. Please also include a quality handbook in the shipment docs. Andrei Popescu",
-     "gt": {"intent": "quote", "fields": {"buyer": "Andrei Popescu", "products": [{"sku": "PI-2026-5501", "qty": "6,600"}], "amounts": ["USD 2.05"]}, "absent": ["incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}},
-    {"id": "dre04", "cat": "draft_no_new_facts",
-     "email": "Our quality team rejected the last 1,100 pcs batch (PO-3312). We will send 200 pcs back for analysis. Please acknowledge and hold the next shipment. Veronique Martin",
-     "gt": {"intent": "complaint", "fields": {"buyer": "Veronique Martin", "products": [{"sku": "PO-3312", "qty": "1,100"}], "amounts": []}, "absent": ["incoterm", "payment_terms", "deadline"], "forbidden_in_draft": []}}
-  ]
+ "version": "v1.2",
+ "note": "48 adversarial cases, 12 categories x 4. All synthetic, no real companies. gt.fields = expected verbatim values; gt.absent = fields that must land in not_stated; gt.forbidden_in_draft = tokens that must not appear in draft. v1.1: fixed GT spec bug - fields listed with null AND in absent (miss01 incoterm, miss02 amounts); absent list is authoritative. v1.2: multi02 deadline separator fixed to comma (matches documented \"multiple dates separated by commas\" semantics).",
+ "cases": [
+  {
+   "id": "miss01",
+   "cat": "missing_info",
+   "email": "Hello, please quote your TS-2200 men's polo, pique 210gsm. We need 3,000 pcs. Daniel Ross, Meridian Textiles Ltd",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Daniel Ross, Meridian Textiles Ltd",
+     "products": [
+      {
+       "sku": "TS-2200",
+       "qty": "3,000"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "miss02",
+   "cat": "missing_info",
+   "email": "Hi, we received your PI No. PI-2026-1122 for 1,200 pcs kids fleece. When can you ship? Anna Berg",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Anna Berg",
+     "products": [
+      {
+       "sku": "PI-2026-1122",
+       "qty": "1,200"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "miss03",
+   "cat": "missing_info",
+   "email": "李经理您好，上次样品我们内部看过了，打算先下 500 件试单，款号 MT-778。请报个价格。青岛海联 王强",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "青岛海联 王强",
+     "products": [
+      {
+       "sku": "MT-778",
+       "qty": "500"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "miss04",
+   "cat": "missing_info",
+   "email": "Good morning, the 800 pcs of TS-551 arrived with broken cartons, roughly 40 pcs damaged. We need replacements. Laura Kim",
+   "gt": {
+    "intent": "complaint",
+    "fields": {
+     "buyer": "Laura Kim",
+     "products": [
+      {
+       "sku": "TS-551",
+       "qty": "800"
+      }
+     ],
+     "amounts": []
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "sim01",
+   "cat": "similar_numbers",
+   "email": "Two open orders need checking: SO-4471-B is 4,471 pcs and SO-4471-A is 4,477 pcs. Please confirm both ship dates. Tom Weber",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Tom Weber",
+     "products": [
+      {
+       "sku": "SO-4471-B",
+       "qty": "4,471"
+      },
+      {
+       "sku": "SO-4471-A",
+       "qty": "4,477"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "sim02",
+   "cat": "similar_numbers",
+   "email": "Correction on my last mail: the quantity is 5,500 pcs, NOT 5,000 pcs. SKU stays TS-001. Maria Lopez",
+   "gt": {
+    "intent": "other",
+    "fields": {
+     "buyer": "Maria Lopez",
+     "products": [
+      {
+       "sku": "TS-001",
+       "qty": "5,500"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": [
+     "5,000"
+    ]
+   }
+  },
+  {
+   "id": "sim03",
+   "cat": "similar_numbers",
+   "email": "We want 300 pcs of the sample first. If approved, bulk will be 3,000 pcs. SKU FD-202. Elena Petrova",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Elena Petrova",
+     "products": [
+      {
+       "sku": "FD-202",
+       "qty": "300"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "sim04",
+   "cat": "similar_numbers",
+   "email": "Invoice INV-4471-B shows USD 4,471.00 but our PO says 4,417.00. Which one is correct? Please recheck. Ahmed Hassan",
+   "gt": {
+    "intent": "complaint",
+    "fields": {
+     "buyer": "Ahmed Hassan",
+     "amounts": [
+      "USD 4,471.00",
+      "4,417.00"
+     ]
+    },
+    "absent": [
+     "products",
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "multi01",
+   "cat": "multiple_values",
+   "email": "Order PO-7701: TS-101 white 2,000 pcs at USD 2.10, TS-102 black 3,500 pcs at USD 2.30. Ship white by Dec 1, black by Dec 20. Gary O'Neill",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Gary O'Neill",
+     "products": [
+      {
+       "sku": "TS-101",
+       "qty": "2,000"
+      },
+      {
+       "sku": "TS-102",
+       "qty": "3,500"
+      }
+     ],
+     "amounts": [
+      "USD 2.10",
+      "USD 2.30"
+     ],
+     "deadline": "Dec 1, Dec 20"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "multi02",
+   "cat": "multiple_values",
+   "email": "报价确认：HD-330 米白 1,500 件 单价 3.20 美元；HD-331 藏青 2,500 件 单价 3.45 美元。交期分两批：11 月 15 日和 11 月 28 日。付款 30% 定金。陈立",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "陈立",
+     "products": [
+      {
+       "sku": "HD-330",
+       "qty": "1,500"
+      },
+      {
+       "sku": "HD-331",
+       "qty": "2,500"
+      }
+     ],
+     "amounts": [
+      "3.20",
+      "3.45"
+     ],
+     "payment_terms": "30% 定金",
+     "deadline": "11 月 15 日, 11 月 28 日"
+    },
+    "absent": [
+     "incoterm"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "multi03",
+   "cat": "multiple_values",
+   "email": "Three things: 1) ship the 1,000 pcs TS-880 by Nov 8; 2) quote RS-412 for 5,000 pcs; 3) our new address is Port Rd 18, Hamburg. Peter Novak",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Peter Novak",
+     "products": [
+      {
+       "sku": "TS-880",
+       "qty": "1,000"
+      },
+      {
+       "sku": "RS-412",
+       "qty": "5,000"
+      }
+     ],
+     "deadline": "Nov 8"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "multi04",
+   "cat": "multiple_values",
+   "email": "Deposit receipt: we paid USD 4,200 on Oct 12 and will pay the balance USD 9,800 on Nov 2. Order PO-5566, 7,000 pcs TS-303. Sofia Marino",
+   "gt": {
+    "intent": "other",
+    "fields": {
+     "buyer": "Sofia Marino",
+     "products": [
+      {
+       "sku": "PO-5566",
+       "qty": "7,000"
+      }
+     ],
+     "amounts": [
+      "USD 4,200",
+      "USD 9,800"
+     ],
+     "deadline": "Nov 2"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "mix01",
+   "cat": "mixed_zh_en",
+   "email": "Hi 王经理，请报 FOB Shanghai 价：JK-990 风衣 4,000 件，fabric: 80% polyester 20% cotton。Lead time 越快越好。Michael Chen, Pacific Trade Co",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Michael Chen, Pacific Trade Co",
+     "products": [
+      {
+       "sku": "JK-990",
+       "qty": "4,000"
+      }
+     ],
+     "incoterm": "FOB"
+    },
+    "absent": [
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "mix02",
+   "cat": "mixed_zh_en",
+   "email": "李姐，附件里的 packing list 麻烦核对下，CTN 1-45，共 2,700 pcs，G.W. 890 KG。有出入请 today 告诉我。Karl",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Karl",
+     "products": [
+      {
+       "sku": "CTN 1-45",
+       "qty": "2,700"
+      }
+     ],
+     "deadline": "today"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "mix03",
+   "cat": "mixed_zh_en",
+   "email": "我们收到银行水单了：USD 12,860.50 已付，对应发票 INV-4471-B。请查收并安排 production。谢谢，Mr. Tanaka",
+   "gt": {
+    "intent": "other",
+    "fields": {
+     "buyer": "Mr. Tanaka",
+     "amounts": [
+      "USD 12,860.50"
+     ]
+    },
+    "absent": [
+     "products",
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "mix04",
+   "cat": "mixed_zh_en",
+   "email": " Quote request: YT-550 羽绒服 1,200 件，要求 RDS 认证 down，含 90% 白鸭绒。CIF Rotterdam。目标价 USD 45。请尽快回复。Emma Wilson, Nordwind GmbH",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Emma Wilson, Nordwind GmbH",
+     "products": [
+      {
+       "sku": "YT-550",
+       "qty": "1,200"
+      }
+     ],
+     "incoterm": "CIF",
+     "amounts": [
+      "USD 45"
+     ]
+    },
+    "absent": [
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "amb01",
+   "cat": "ambiguous_intent",
+   "email": "Your last quote for TS-770 came in too high. Can you sharpen the pencil for 6,000 pcs? If you can beat USD 2.60 we can move this month. Regards, Hans Mueller",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Hans Mueller",
+     "products": [
+      {
+       "sku": "TS-770",
+       "qty": "6,000"
+      }
+     ],
+     "amounts": [
+      "USD 2.60"
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "amb02",
+   "cat": "ambiguous_intent",
+   "email": "We confirm the PI-2026-3301 as attached and have wired the deposit. Please advise the ETD once booked. Yin Zhang",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Yin Zhang",
+     "amounts": []
+    },
+    "absent": [
+     "products",
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "amb03",
+   "cat": "ambiguous_intent",
+   "email": "The 2,000 pcs arrived but 5% have loose buttons. We will sort them locally this time. For the next PO-8800 batch please reinforce stitching. Clara Diaz",
+   "gt": {
+    "intent": "complaint",
+    "fields": {
+     "buyer": "Clara Diaz",
+     "products": [
+      {
+       "sku": "PO-8800",
+       "qty": null
+      }
+     ],
+     "amounts": []
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "amb04",
+   "cat": "ambiguous_intent",
+   "email": "Could you send your latest catalogue and the price list for knitwear? We plan to visit your showroom next month. Jean-Pierre Laurent",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Jean-Pierre Laurent"
+    },
+    "absent": [
+     "products",
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "con01",
+   "cat": "conflict_facts",
+   "email": "We need the 3,000 pcs TS-901 in Hamburg by Nov 1. Your last email said production finishes Nov 15 - please resolve and confirm Nov 1. Oscar Lindqvist",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Oscar Lindqvist",
+     "products": [
+      {
+       "sku": "TS-901",
+       "qty": "3,000"
+      }
+     ],
+     "deadline": "Nov 1"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "amounts"
+    ],
+    "forbidden_in_draft": [
+     "Nov 1",
+     "11 月 1",
+     "11月1"
+    ]
+   }
+  },
+  {
+   "id": "con02",
+   "cat": "conflict_facts",
+   "email": "Our budget is USD 2.00/pc for the 10,000 pcs JK-220 order. We know your list price is USD 2.40 - meet us at 2.00 and we sign today. Rui Wang",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Rui Wang",
+     "products": [
+      {
+       "sku": "JK-220",
+       "qty": "10,000"
+      }
+     ],
+     "amounts": [
+      "USD 2.00/pc",
+      "USD 2.40"
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": [
+     "2.00"
+    ]
+   }
+  },
+  {
+   "id": "con03",
+   "cat": "conflict_facts",
+   "email": "Please ship the remaining 1,200 pcs this week. Note our warehouse closes Dec 23 to Jan 5, and your notice said cargo ready date is Dec 28. How do we handle this? Felix Braun",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Felix Braun",
+     "products": [
+      {
+       "sku": null,
+       "qty": "1,200"
+      }
+     ],
+     "deadline": "Dec 28"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "con04",
+   "cat": "conflict_facts",
+   "email": "We agreed on 30% deposit but our finance can only release 20% this quarter. Please accept 20% for PO-9902 (2,500 pcs TS-660) and we pay 80% before shipment. Nina Sokolova",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Nina Sokolova",
+     "products": [
+      {
+       "sku": "PO-9902",
+       "qty": "2,500"
+      }
+     ],
+     "payment_terms": "20%"
+    },
+    "absent": [
+     "incoterm",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": [
+     "同意 20%",
+     "accept 20%"
+    ]
+   }
+  },
+  {
+   "id": "neg01",
+   "cat": "negation",
+   "email": "For PO-1234 we take TS-210 tee 4,000 pcs. We do NOT need the TS-210 cap version this time, please remove it. Grace Park",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Grace Park",
+     "products": [
+      {
+       "sku": "TS-210",
+       "qty": "4,000"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "neg02",
+   "cat": "negation",
+   "email": "Quote USD 3.15 for JK-512, 2,000 pcs - note this price does NOT include shipping. FOB only. Delivery would be 45 days after PO, not 30. Victor Hugo Ruiz",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Victor Hugo Ruiz",
+     "products": [
+      {
+       "sku": "JK-512",
+       "qty": "2,000"
+      }
+     ],
+     "amounts": [
+      "USD 3.15"
+     ],
+     "incoterm": "FOB",
+     "deadline": "45 days"
+    },
+    "absent": [
+     "payment_terms"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "neg03",
+   "cat": "negation",
+   "email": "Do not send the PI yet for the 1,500 pcs order. First we need the corrected fabric composition sheet. Wait for our confirmation. Lieselotte Adams",
+   "gt": {
+    "intent": "other",
+    "fields": {
+     "buyer": "Lieselotte Adams",
+     "products": [
+      {
+       "sku": null,
+       "qty": "1,500"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "neg04",
+   "cat": "negation",
+   "email": "No rush on the 3,300 pcs TS-444 - anytime in December is fine. But do NOT use the old carton print. New artwork attached. Ken Watanabe",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Ken Watanabe",
+     "products": [
+      {
+       "sku": "TS-444",
+       "qty": "3,300"
+      }
+     ],
+     "deadline": "December"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "att01",
+   "cat": "multi_attachment",
+   "email": "Please process per attachments.\nAttachment 1 (order): SKU UB-101, qty 6,000 pcs, navy.\nAttachment 2 (terms): CIF Rotterdam, LC at sight.\nDelivery window: Jan 10-20.\nIgor Sokolov",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Igor Sokolov",
+     "products": [
+      {
+       "sku": "UB-101",
+       "qty": "6,000"
+      }
+     ],
+     "incoterm": "CIF",
+     "payment_terms": "LC at sight",
+     "deadline": "Jan 10-20"
+    },
+    "absent": [
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "att02",
+   "cat": "multi_attachment",
+   "email": "Two files attached.\nAnnex A: invoice INV-2026-88 total USD 15,300.00.\nAnnex B: packing list, 460 cartons, 11,040 pcs, SKU JK-450.\nPlease confirm receipt. Petra Hoffmann",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Petra Hoffmann",
+     "products": [
+      {
+       "sku": "JK-450",
+       "qty": "11,040"
+      }
+     ],
+     "amounts": [
+      "USD 15,300.00"
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "att03",
+   "cat": "multi_attachment",
+   "email": "附件1：订单明细 OL-3301，款号 SC-208 白/灰各 2,500 件，合计 5,000 件。\n附件2：付款条款，T/T 30% 定金，余款见提单副本。\n请回复确认。大连恒远 周敏",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "大连恒远 周敏",
+     "products": [
+      {
+       "sku": "SC-208",
+       "qty": "5,000"
+      }
+     ],
+     "payment_terms": "T/T 30%"
+    },
+    "absent": [
+     "incoterm",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "att04",
+   "cat": "multi_attachment",
+   "email": "Attachment A lists 3 SKUs: QY-11 x 800, QY-12 x 1,200, QY-13 x 2,000. Total USD 8,900 FOB Qingdao. Signed PO attached as B. David Chen",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "David Chen",
+     "products": [
+      {
+       "sku": "QY-11",
+       "qty": "800"
+      },
+      {
+       "sku": "QY-12",
+       "qty": "1,200"
+      },
+      {
+       "sku": "QY-13",
+       "qty": "2,000"
+      }
+     ],
+     "amounts": [
+      "USD 8,900"
+     ],
+     "incoterm": "FOB"
+    },
+    "absent": [
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "noi01",
+   "cat": "no_inference",
+   "email": "Please arrange the next shipment for PO-6612 as usual to Hamburg. 2,400 pcs. Payment as usual too. Markus Weber",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Markus Weber",
+     "products": [
+      {
+       "sku": "PO-6612",
+       "qty": "2,400"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "noi02",
+   "cat": "no_inference",
+   "email": "We will take the black ones like last time, same quantity as the October order. Please prepare. Fatima Al-Sayed",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Fatima Al-Sayed"
+    },
+    "absent": [
+     "products",
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "noi03",
+   "cat": "no_inference",
+   "email": "Send the proforma for the winter caps under our usual conditions. 900 pcs, SKU CP-77. Yuri Ivanov",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Yuri Ivanov",
+     "products": [
+      {
+       "sku": "CP-77",
+       "qty": "900"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "noi04",
+   "cat": "no_inference",
+   "email": "Delivery to our Munich warehouse as always, and invoice to the holding company as per our standing agreement. Order ref PO-4400, 3,600 pcs. Stefan Bauer",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Stefan Bauer",
+     "products": [
+      {
+       "sku": "PO-4400",
+       "qty": "3,600"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "ind01",
+   "cat": "induced_fabrication",
+   "email": "Is the unit price still USD 2.40 like last season? If yes we take 10,000 pcs of TS-001 right away. Marco Rossi",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Marco Rossi",
+     "products": [
+      {
+       "sku": "TS-001",
+       "qty": "10,000"
+      }
+     ],
+     "amounts": []
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": [
+     "2.40"
+    ]
+   }
+  },
+  {
+   "id": "ind02",
+   "cat": "induced_fabrication",
+   "email": "Our boss said you offered the usual 5% discount for repeat clients - correct? Please send the PI for 4,000 pcs KG-330 with the discount applied. Aisha Rahman",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Aisha Rahman",
+     "products": [
+      {
+       "sku": "KG-330",
+       "qty": "4,000"
+      }
+     ],
+     "amounts": []
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": [
+     "5%"
+    ]
+   }
+  },
+  {
+   "id": "ind03",
+   "cat": "induced_fabrication",
+   "email": "You still have 3,000 pcs of TS-505 in the Hamburg warehouse, right? We will pick them up tomorrow with our truck. Elena Vasquez",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Elena Vasquez",
+     "products": [
+      {
+       "sku": "TS-505",
+       "qty": "3,000"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": [
+     "明天",
+     "tomorrow"
+    ]
+   }
+  },
+  {
+   "id": "ind04",
+   "cat": "induced_fabrication",
+   "email": "Since we ordered 12,000 pcs last year (PO-2025-0817), you owe us the free samples of the new catalogue, correct? Send 50 pcs of KY-900. Vladimir Petrov",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Vladimir Petrov",
+     "products": [
+      {
+       "sku": "KY-900",
+       "qty": "50"
+      }
+     ],
+     "amounts": []
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": [
+     " owe",
+     "免费",
+     "free"
+    ]
+   }
+  },
+  {
+   "id": "rep01",
+   "cat": "repeated_digits",
+   "email": "Order confirmed: 5,000 pcs TS-100, zippers must be YKK, carton marks 100 per carton. PI attached. Robert King",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Robert King",
+     "products": [
+      {
+       "sku": "TS-100",
+       "qty": "5,000"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "rep02",
+   "cat": "repeated_digits",
+   "email": "Please reissue invoice INV-4471-B: quantity was 300 pcs not 3,000 pcs, unit price USD 4.00. Amount should be USD 1,200.00. Sara Haddad",
+   "gt": {
+    "intent": "other",
+    "fields": {
+     "buyer": "Sara Haddad",
+     "amounts": [
+      "USD 4.00",
+      "USD 1,200.00"
+     ],
+     "products": [
+      {
+       "sku": "INV-4471-B",
+       "qty": "300"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "rep03",
+   "cat": "repeated_digits",
+   "email": "两批货：第一批 200 件样品（SKU YK-100），第二批大货 2,000 件（SKU YK-100-B）。YKK 拉链，100% 纯棉。请分别报价。宁波盛丰 吴迪",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "宁波盛丰 吴迪",
+     "products": [
+      {
+       "sku": "YK-100",
+       "qty": "200"
+      },
+      {
+       "sku": "YK-100-B",
+       "qty": "2,000"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "rep04",
+   "cat": "repeated_digits",
+   "email": "Container CLHU4471447 loaded with 100 cartons / 5,000 pcs TS-002. Seal number 4471447. Please book the survey. Henri Dubois",
+   "gt": {
+    "intent": "logistics",
+    "fields": {
+     "buyer": "Henri Dubois",
+     "products": [
+      {
+       "sku": "TS-002",
+       "qty": "5,000"
+      }
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "dre01",
+   "cat": "draft_no_new_facts",
+   "email": "Thanks for the 2,400 pcs TS-330 samples received Oct 3. Quality looks good. Also, can you send your full 2027 holiday calendar and your bank details for the upcoming 30% deposit? Michael O'Brien",
+   "gt": {
+    "intent": "other",
+    "fields": {
+     "buyer": "Michael O'Brien",
+     "products": [
+      {
+       "sku": "TS-330",
+       "qty": "2,400"
+      }
+     ],
+     "deadline": "Oct 3"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "dre02",
+   "cat": "draft_no_new_facts",
+   "email": "We plan to visit your factory on Nov 12 with two colleagues. Please arrange the meeting and quote BT-770 for 8,000 pcs meanwhile. Anneke Van Dijk",
+   "gt": {
+    "intent": "inquiry",
+    "fields": {
+     "buyer": "Anneke Van Dijk",
+     "products": [
+      {
+       "sku": "BT-770",
+       "qty": "8,000"
+      }
+     ],
+     "deadline": "Nov 12"
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "amounts"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "dre03",
+   "cat": "draft_no_new_facts",
+   "email": "The revised PI-2026-5501 for 6,600 pcs at USD 2.05 is confirmed. Please also include a quality handbook in the shipment docs. Andrei Popescu",
+   "gt": {
+    "intent": "quote",
+    "fields": {
+     "buyer": "Andrei Popescu",
+     "products": [
+      {
+       "sku": "PI-2026-5501",
+       "qty": "6,600"
+      }
+     ],
+     "amounts": [
+      "USD 2.05"
+     ]
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  },
+  {
+   "id": "dre04",
+   "cat": "draft_no_new_facts",
+   "email": "Our quality team rejected the last 1,100 pcs batch (PO-3312). We will send 200 pcs back for analysis. Please acknowledge and hold the next shipment. Veronique Martin",
+   "gt": {
+    "intent": "complaint",
+    "fields": {
+     "buyer": "Veronique Martin",
+     "products": [
+      {
+       "sku": "PO-3312",
+       "qty": "1,100"
+      }
+     ],
+     "amounts": []
+    },
+    "absent": [
+     "incoterm",
+     "payment_terms",
+     "deadline"
+    ],
+    "forbidden_in_draft": []
+   }
+  }
+ ]
 }

@@ -136,7 +136,12 @@ def run_channel(case, promptset):
 
 
 def run_space70b(case):
-    """Same v2 prompts through the akhaliq 70B gradio Space (system_prompt + message)."""
+    """Same v2 prompts through the akhaliq 70B gradio Space (system_prompt + message).
+    apertus_client lives in the research repo's harness; bootstrap it if present."""
+    import sys as _sys
+    _harness = os.path.join(ROOT, "experiments", "harness")
+    if _harness not in _sys.path:
+        _sys.path.insert(0, _harness)
     import apertus_client as AC
     P = pipeline.PROMPTS
     email = case["email"]
@@ -145,8 +150,17 @@ def run_space70b(case):
         info = AC.space_info("akhaliq-70b")
         names, params = AC.build_params_akhaliq(info, user, system_prompt=system,
                                                 max_tokens=max_tokens, temperature=temperature)
-        r = AC.space_call("akhaliq-70b", params, max_total_s=180)
-        return r.get("text"), r
+        last = None
+        for attempt in range(4):
+            try:
+                r = AC.space_call("akhaliq-70b", params, max_total_s=180)
+                if r.get("ok"):
+                    return r.get("text"), r
+                last = r
+            except Exception as e:
+                last = {"ok": False, "error": f"{type(e).__name__}: {e}", "text": None, "timing_ms": {}}
+            time.sleep(8 * (attempt + 1))
+        return None, last
 
     def parse(text):
         from validators import load_json_strict
