@@ -1,0 +1,9 @@
+{
+  "samples": [
+    {"id": "inquiry_en", "email": "Hi, we saw your catalogue at the Canton Fair follow-up. We need 5,000 pcs of TS-001 cotton tee, ribbed collar, 180gsm. Please quote CIF Hamburg and delivery time. Payment 30% T/T deposit is fine. Sarah Lau, Nordic Apparel AB"},
+    {"id": "inquiry_zh_mixed", "email": "王经理您好，上次广交会之后我们对贵司的 TS-881 女款卫衣很感兴趣。请报 FOB 宁波价格，MOQ 和 lead time 也请告知。我们年采购量约 12,000 件。Best regards, Karl Schmidt, Kiel Trading GmbH"},
+    {"id": "complaint_zh", "email": "李经理：上批 PO-2026-0881 的 3,000 件童装到仓后质检发现约 8% 存在拉链头脱落，不符合我们 AQL 2.5 标准。请贵司 10 月 20 日前给出返工方案或赔偿报价。Marta Nowak"},
+    {"id": "logistics_en", "email": "Could you confirm the ETD for order SO-77123 (2,000 caps, TS-009)? Our forwarder needs the shipping documents by Nov 5. Also please send the updated packing list with carton numbers. Regards, Henrik"},
+    {"id": "quote_zh", "email": "报价单确认：TS-660 针织开衫，单价 4.85 美元 FOB 上海，数量 8,000 件，含税另计。请盖章回传 PI，定金 30%，余款见提单副本。青岛锦程 王芳"}
+  ]
+}

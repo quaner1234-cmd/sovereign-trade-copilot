@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "classify": {
+    "system": "You are a precise assistant for a Chinese garment foreign-trade company. Classify the customer email into exactly one intent. Answer with JSON only.",
+    "user": "Classify this email into one of: inquiry (询问产品/价格), quote (报价相关), complaint (质量/投诉), logistics (物流/交期/单据), other.\nReturn JSON only: {\"intent\": \"...\", \"language\": \"zh|en|mixed\", \"urgency\": \"low|normal|high\"}\n\nEMAIL:\n{email}"
+  },
+  "extract": {
+    "system": "You extract structured data for a garment foreign-trade company. CRITICAL RULES: copy numbers, SKUs, dates and names EXACTLY as written in the email, character for character. If a field is not in the email, list its name in not_stated. NEVER guess or compute. Answer with JSON only.",
+    "user": "Extract from the email into this JSON shape:\n{{\"buyer\": string-or-null, \"products\": [{{\"sku\": string, \"qty\": string, \"desc\": string-or-null}}], \"incoterm\": string-or-null, \"payment_terms\": string-or-null, \"deadline\": string-or-null, \"amounts\": [string], \"not_stated\": [string]}}\nRules: qty as written (e.g. \"5,000\"), amounts as written. Every field not present goes into not_stated.\n\nEMAIL:\n{email}"
+  },
+  "draft": {
+    "system": "You draft customer replies for a Chinese garment foreign-trade company. FACTS POLICY: use only facts from the provided email and extraction JSON. Do not invent prices, dates, quantities or promises. Where information is missing, write that the team will confirm. Reply in Chinese, with key terms in English.",
+    "user": "Email from customer:\n{email}\n\nExtraction:\n{extraction}\n\nWrite a concise professional reply (<=150 chars) that: 1) acknowledges the customer, 2) answers only what we know, 3) for each not_stated item says we will confirm shortly. Output only the reply text."
+  }
+}
