@@ -161,6 +161,14 @@ VERB_NEGATION_RE = re.compile(
 CONDITIONAL_QTY_RE = re.compile(
     r"(if\s+(?:approved|ok|okay|accepted|confirmed)|should\s+(?:be\s+)?work"
     r"|bulk\s+will\s+be|will\s+be|would\s+be|next\s+time|future|后续|如果(?:批准|可以))", re.I)
+# CONDITIONAL requires a real CONDITION, not merely the verb "would/will be".
+# "Initial order would be around 300 pcs" is the customer's stated opening
+# quantity — the order size is the SUBJECT of "would be". "If approved, bulk
+# will be 3,000 pcs" is contingent on something else happening. Collapsing the
+# two lost the only quantity in the email.
+CONDITIONAL_CONJ_RE = re.compile(
+    r"\b(?:if|when|once|should|upon|assuming|provided|pending)\b"
+    r"|如果|一旦|等(?:批准|确认)后", re.I)
 
 # A summary figure beats a per-item figure: "SC-208 白/灰各 2,500 件，合计 5,000 件"
 TOTAL_QTY_RE = re.compile(r"(合计|总共|共计|总额|总量|\btotal\b|\bcombined\b|\bin\s+total\b|\bsum\b)", re.I)
@@ -191,6 +199,73 @@ OWN_COMMITMENT_RE = re.compile(
     r"|\bour (?:price|list price|terms|policy|standard terms|offer)\b"
     r"|\bis confirmed\b|\bare confirmed\b|\bplease process\b|\bper attachments?\b"
     r"|已确认|我方确认|我司确认|我们确认|我方报价|请回复确认)", re.I)
+# NOTE: in an INBOUND customer email the first person is the CUSTOMER. This regex
+# therefore marks the CUSTOMER's own stance, not ours. It is kept only so the
+# existing v3 selector contract stays byte-identical; the semantic layer
+# (semantics.py) re-derives party from pronouns and never promotes these to a
+# company commitment.
+
+# ------------------------------------------------------------ qualifiers (added v4)
+
+# Hedges and bounds attached to a value. "around 300 pcs" is not the same claim
+# as "300 pcs": echoing one as the other fabricates precision the customer never
+# offered. The hedge is part of the value, so it is parsed alongside it.
+APPROX_RE = re.compile(
+    r"\b(about|around|approx\.?|approximately|roughly|circa|close\s+to|in\s+the\s+region\s+of)\b"
+    r"|大约|大概|约|左右|上下|差不多|将近|接近", re.I)
+# postposed hedge: "300 pcs or so"
+APPROX_POST_RE = re.compile(r"^\s*(?:or\s+so|or\s+thereabouts)|^[，,]\s*左右|左右", re.I)
+MIN_RE = re.compile(r"\b(at\s+least|minimum|min\.?|no\s+less\s+than|not\s+less\s+than)\b|至少|最少|不低于", re.I)
+MAX_RE = re.compile(r"\b(at\s+most|maximum|max\.?|no\s+more\s+than|up\s+to)\b|最多|不超过|以内|以下", re.I)
+EXACT_RE = re.compile(r"\b(exactly|precisely)\b|正好|刚好|整", re.I)
+
+# Delivery relations. "before Dec 20" and "Dec 20" are different promises; the
+# relation is part of the claim.
+RELATION_RE = re.compile(r"\b(before|not\s+later\s+than|no\s+later\s+than|on\s+or\s+before)\b"
+                         r"|\b(by|until|till)\b"
+                         r"|\b(after)\b"
+                         r"|之前|以前|以前交货|前交货|截止|之后", re.I)
+RELATION_MAP = {"not later than": "before", "no later than": "before", "on or before": "before",
+                "before": "before", "by": "by", "until": "by", "till": "by", "after": "after",
+                "之前": "before", "以前": "before", "前交货": "before", "截止": "by", "之后": "after"}
+
+# ------------------------------------------------------- product common nouns (added v4)
+
+# The v3 candidate set can only see IDENTIFIER SHAPES (SKU, PO/PI numbers). A
+# merchandise line named with a common noun ("ski jackets") has no shape, so the
+# product vanished from the store entirely. These are domain lexicons, not a list
+# of phrases from any single email, and the acceptance suite exercises product
+# names that never appear in the case that prompted them.
+_GOODS_MOD = (r"ski|down|puffer|softshell|hard\s?shell|rain|winter|summer|baby|kids?|children'?s?|"
+              r"men'?s?|women'?s?|ladies'?|unisex|yoga|running|hiking|outdoor|thermal|fleece|"
+              r"padded|quilted|insulated|waterproof|windproof|camping|hiking|beach|kitchen|"
+              r"cotton|canvas|leather|denim|polyester|nylon|knit|woven|plush|hooded|packable|"
+              r"lightweight|heavy|cargo|fashion|casual|printed|solid|striped|plain|long\s?sleeve|"
+              r"short\s?sleeve|sleeveless|zip|crew\s?neck|fleece-lined")
+# longest-first within each cluster so "sleeping bag" wins over "bag"
+_GOODS = (r"sleep\s?sacks?|sleeping\s?bags?|down\s?jackets?|puffer\s?jackets?|track\s?suits?|"
+          r"t-?shirts?|polo\s?shirts?|sweat\s?shirts?|sleep\s?suits?|baby\s?sleep\s?sacks?|"
+          r"jackets?|parkas?|anoraks?|coats?|fleeces?|hoodies?|sweaters?|jumpers?|cardigans?|"
+          r"polos?|shirts?|tees?|blouses?|tops?|vests?|dresses?|skirts?|pants?|trousers?|shorts?|"
+          r"joggers?|leggings?|jeans?|overalls?|rompers?|onesies?|bibs?|pyjamas?|pajamas?|"
+          r"uniforms?|robes?|aprons?|coveralls?|socks?|gloves?|mittens?|beanies?|caps?|hats?|"
+          r"scarves?|scarfs?|towels?|blankets?|quilts?|duvets?|pillows?|cushions?|mattresses?|"
+          r"curtains?|rugs?|mats?|coasters?|bags?|totes?|backpacks?|pouches?|wallets?|belts?|"
+          r"keychains?|lanyards?|straps?|cords?|ropes?|webbing|umbrellas?|toys?|tents?|tarps?")
+PRODUCT_NAME_RE = re.compile(
+    r"(?<![A-Za-z0-9])(?P<p>(?:(?:" + _GOODS_MOD + r")\s+){0,3}(?:" + _GOODS + r"))(?![A-Za-z0-9])",
+    re.I)
+_CJK_GOODS_MOD = r"婴儿|儿童|成人|男式|女式|加厚|防风|防水|抓绒|纯棉|加绒|夏季|冬季|长袖|短袖|连帽"
+_CJK_GOODS = (r"婴儿睡袋|睡袋|冲锋衣|羽绒服|棉服|外套|夹克|卫衣|毛衫|连衣裙|瑜伽裤|工装裤|睡衣|围兜|哈衣|"
+              r"裤子|裙子|袜子|手套|帽子|围巾|背包|手提袋|购物袋|束口袋|钥匙扣|挂绳|织带|窗帘|地毯|地垫|杯垫|"
+              r"毛巾|毛毯|被子|枕头|靠垫|床垫|毛绒玩具|雨伞|制服|围裙|冲锋裤|T恤|Polo衫")
+CJK_PRODUCT_NAME_RE = re.compile(
+    r"(?P<p>(?:(?:" + _CJK_GOODS_MOD + r"){0,2})(?:" + _CJK_GOODS + r"))")
+# A merchandise noun that is really described as packing/transport context is not
+# a product line ("packed the cartons", "seal number", "container").
+PRODUCT_NAME_BLOCK_RE = re.compile(
+    r"(?:\b(?:container|carton|box|pallet|seal|shipping\s+mark|hs\s+code|fabric|lining|shell)\b"
+    r"|箱子|纸箱|集装箱|封条|铅封|面料|里布)\s*$", re.I)
 
 
 # ------------------------------------------------------------------- helpers
@@ -257,6 +332,53 @@ def _asserted(email, start):
     return bool(CUSTOMER_ASSERTION_RE.search(email[max(0, start - 60):start]))
 
 
+def _clause_before(email, start, width=32):
+    """Text immediately before `start`, cut at the nearest clause boundary.
+
+    A qualifier only binds the value it actually modifies. Scoping the window
+    keeps "Initial order would be around 300 pcs" intact while stopping a hedge
+    attached to an EARLIER number from leaking onto a later one.
+    """
+    win = email[max(0, start - width):start]
+    cut = max(win.rfind(x) for x in (";", ":", "。", "！", "？", "!", "?", "\n", ",", "，"))
+    if cut != -1:
+        win = win[cut + 1:]
+    return win
+
+
+def _qualifier(email, start, end):
+    """Capture how firmly the value is stated: around / at least / at most / exact.
+
+    Returns {"kind": ...|None, "raw": literal hedge text, "approx": bool}.
+    The hedge keeps the NUMBER from being quoted with precision the customer
+    never claimed: "around 300 pcs" is (300, approx), never a flat 300.
+    """
+    win = _clause_before(email, start)
+    for kind, rx in (("max", MAX_RE), ("min", MIN_RE), ("approx", APPROX_RE), ("exact", EXACT_RE)):
+        m = rx.search(win)
+        if m:
+            return {"kind": kind, "raw": (m.group(0) or "").strip(), "approx": kind == "approx"}
+    # postposed hedge: "300 pcs or so"
+    tail = email[end:end + 16]
+    if APPROX_POST_RE.match(tail):
+        return {"kind": "approx", "raw": "or so", "approx": True}
+    return {"kind": None, "raw": None, "approx": False}
+
+
+def _relation(email, start):
+    """Delivery relation attached to a date: before | by | after | on | None.
+
+    "before Dec 20" and "Dec 20" are different promises. Dropping the relation
+    turns the customer's requirement into a flat — and false — date claim.
+    """
+    win = _clause_before(email, start, 34)
+    m = RELATION_RE.search(win)
+    if not m:
+        return None
+    raw = (m.group(1) or m.group(2) or m.group(0) or "").strip().lower()
+    return RELATION_MAP.get(raw, "on")
+
+
 def _own_commitment(email, start):
     """Cue words immediately before this span -> the sender asserts it as OUR term."""
     return bool(OWN_COMMITMENT_RE.search(email[max(0, start - 60):start]))
@@ -313,6 +435,7 @@ def _amounts(email):
             continue
         out.append(_mk(email, m.start(), m.end(), "amount", currency=cur, number=num,
                        weak=bare,
+                       qualifier=_qualifier(email, m.start(), m.end()),
                        negated=_negated(email, m.start())))
     return out
 
@@ -340,7 +463,7 @@ def _qty_role(email, start, end):
         return "defect"
     if HISTORICAL_QTY_RE.search(after[:40]):
         return "historical"
-    if CONDITIONAL_QTY_RE.search(before[-40:]):
+    if CONDITIONAL_QTY_RE.search(before[-40:]) and CONDITIONAL_CONJ_RE.search(before):
         return "conditional"
     return "primary"
 
@@ -351,6 +474,7 @@ def _quantities(email):
         for m in rx.finditer(email):
             out.append(_mk(email, m.start(), m.end(), "qty", number=m.group("num"),
                            unit=m.group("unit"), role=_qty_role(email, m.start(), m.end()),
+                           qualifier=_qualifier(email, m.start(), m.end()),
                            negated=_negated(email, m.start())))
     # multiplication listing: capture the number and, when present, the SKU to its left
     for m in QTY_MUL_RE.finditer(email):
@@ -359,6 +483,7 @@ def _quantities(email):
         sid = re.search(r"([A-Z]{1,4}-?\d[\w\-]*)\s*[x×@*]\s*$", head)
         out.append(_mk(email, m.start(), m.end(), "qty", number=num, unit=None,
                        listing_sku=sid.group(1) if sid else None,
+                       qualifier=_qualifier(email, m.start(), m.end()),
                        negated=_negated(email, m.start())))
     return out
 
@@ -445,14 +570,55 @@ def _incoterms(email):
         pm = re.match(r"\s+([A-Z][A-Za-z]*(?:\s+[A-Z][A-Za-z]*)*)", tail)
         out.append(_mk(email, m.start(), m.end(), "incoterm", normalized=norm,
                        place=pm.group(1) if pm else None,
+                       named_place=pm.group(1) if pm else None,
                        negated=_negated(email, m.start())))
     return out
+
+
+def _product_names(email):
+    """Merchandise named with a COMMON NOUN rather than an identifier.
+
+    v3 could only read identifier shapes, so a line like "ski jackets" never
+    entered the fact store at all and the reply had nothing to confirm back.
+    These candidates live outside `_facts` on purpose: adding them to the
+    selector's candidate list would change what the model sees and therefore
+    every recorded selection, so they are surfaced by the semantic layer
+    instead. Every match is still a verbatim substring of the source.
+    """
+    out, spans = [], []
+    for rx in (PRODUCT_NAME_RE, CJK_PRODUCT_NAME_RE):
+        for m in rx.finditer(email):
+            head = email[max(0, m.start() - 24):m.start()]
+            if PRODUCT_NAME_BLOCK_RE.search(head):
+                continue
+            s, e = m.start("p"), m.end("p")
+            if any(s < te and ts < e for ts, te in spans):
+                continue
+            spans.append((s, e))
+            rec = _mk(email, s, e, "product_name", method="parser:product_name")
+            rec["value"] = email[s:e].strip()
+            out.append(rec)
+    out.sort(key=lambda f: f["span_start"])
+    # one line may repeat the noun; keep the first occurrence of each phrase
+    seen, uniq = set(), []
+    for f in out:
+        k = _norm_key(f["value"])
+        if k in seen:
+            continue
+        seen.add(k)
+        uniq.append(f)
+    return uniq
+
+
+def _norm_key(s):
+    return re.sub(r"\s+", " ", str(s or "").strip().lower())
 
 
 def _dates(email):
     out, taken = [], []
     for m in RANGE_RE.finditer(email):
-        out.append(_mk(email, m.start(), m.end(), "date_range"))
+        out.append(_mk(email, m.start(), m.end(), "date_range",
+                       relation=_relation(email, m.start())))
         taken.append((m.start(), m.end()))
     for rx in DATE_PATS:
         for m in rx.finditer(email):
@@ -464,6 +630,7 @@ def _dates(email):
             # recall a deadline the selector omitted without promoting every
             # date in the email.
             out.append(_mk(email, m.start(), m.end(), "date",
+                           relation=_relation(email, m.start()),
                            deadline_hint=_deadline_hint(email, m.start())))
     for m in BARE_MONTH_RE.finditer(email):
         if any(m.start() < te and ts < m.end() for ts, te in taken):
@@ -471,11 +638,13 @@ def _dates(email):
         q = QUALIFIED_MONTH_RE.search(email[max(0, m.start() - 20):m.end()])
         out.append(_mk(email, m.start(), m.end(), "date_bare_month",
                        month=MONTH_CANON[m.group(0).lower().rstrip(".")],
+                       relation=_relation(email, m.start()),
                        qualified=bool(q)))
     for m in CJK_BARE_MONTH_RE.finditer(email):
         if any(m.start() < te and ts < m.end() for ts, te in taken):
             continue
-        out.append(_mk(email, m.start(), m.end(), "date_bare_month", month=m.group(1) + "月"))
+        out.append(_mk(email, m.start(), m.end(), "date_bare_month", month=m.group(1) + "月",
+                       relation=_relation(email, m.start())))
     out.sort(key=lambda f: f["span_start"])
     return out
 
@@ -646,6 +815,10 @@ def collect(email):
         idx.setdefault(f["type"], []).append(f["id"])
     parsed["_facts"] = facts
     parsed["_index"] = idx
+    # Merchandise named with a common noun. Deliberately NOT part of `_facts`:
+    # adding it would change the selector's candidate list and therefore every
+    # recorded selection. The semantic layer consumes it directly.
+    parsed["_product_names"] = _product_names(email)
     return parsed
 
 

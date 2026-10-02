@@ -6,6 +6,42 @@ reply drafting. It provides a draft for human review and has no email-sending
 integration. V2 remains available through `PIPELINE_VERSION=v2` when running
 the Python server directly.
 
+## v4 semantic layer (business fact model)
+
+v3 proved a value was *evidenced*; it could not say what the customer was *doing*
+with it. The v4 layer (`src/semantics.py`) types every validated fact along
+three independent axes, downstream of evidence validation:
+
+| axis | values | why |
+| --- | --- | --- |
+| `semantic_role` | FACT / REQUEST / TARGET / QUESTION / COMMITMENT / UNKNOWN | the speech act the value performs |
+| `stance` | customer / customer_claimed_prior / company / unattributed | whose position it is. In an inbound mail the first person is the CUSTOMER, so "we agreed" is their stance, never ours |
+| `status` | supported / unconfirmed / not_stated | whether it is settled fact |
+
+Qualifiers (`approx` / `min` / `max`), delivery relations (`before` / `by` /
+`after`) and an Incoterm's named place now travel with the value, so
+"around 300 pcs", "before Dec 20" and "FOB Qingdao" survive as claims instead of
+flattening into `300`, `Dec 20` and `FOB`. Merchandise named with a common noun
+("ski jackets") is extracted too — the candidate set could previously only see
+identifier shapes.
+
+Consequences enforced mechanically in `guard_semantics`:
+
+  * an inquiry is never written as "已收到贵司订单" unless a PO anchor and a live
+    commitment both exist
+  * a TARGET is only ever framed as the customer's target
+  * a requested date is only ever framed as their requirement
+  * commitment words are blocked inside any sentence holding an unsettled value
+
+**Known limits.** `company_commitments` is expected to be EMPTY for inbound
+email — that is the design, not a gap; a first-person commitment in a customer's
+mail is theirs. Semantic roles are assigned deterministically and the model may
+never upgrade one, so an unusual phrasing falls back to the less committal role
+rather than being recognised correctly. REQUEST-role framing is enforced in the
+prompt but only TARGET and requested-DEADLINE framing are hard-enforced, because
+enforcing the rest over-blocked legitimate replies. The full 144-call benchmark
+has not been re-run since the refactor.
+
 With no `LLM_BASE_URL`, v3 runs a deterministic parser/evidence demonstration.
 Its classification is a placeholder and no Apertus inference occurs. This mode
 must not be used as evidence of model quality. Configure the official `LLM_*`
@@ -18,8 +54,19 @@ Run from `track_2b/`, using Python 3.12 or later:
 ```sh
 python -B src/selftest.py
 python -B src/selftest_v3.py
+python -B src/acceptance.py
 python -B src/server.py
 ```
+
+`src/acceptance.py` is the business-owner acceptance suite: nine realistic
+synthetic emails covering TARGET vs COMMITMENT, REQUEST vs CONFIRMED and
+INQUIRY vs ORDER, plus guard tests and phrasings that appear in no case (the
+anti-hardcode checks). It is deliberately separate from `data/bench/cases.json`
+so the benchmark ground truth never has to move when the semantic model changes.
+
+`src/snapshot_extraction.py` prints a deterministic extraction snapshot of all 48
+benchmark cases, so a refactor can be diffed against a baseline without spending
+model calls.
 
 `GET /health` reports the mode and pipeline. `POST /process` accepts
 `{"email": "a synthetic email"}` and returns classification, extraction,

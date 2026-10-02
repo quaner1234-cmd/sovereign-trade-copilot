@@ -464,11 +464,26 @@ class FactStore:
                 # by the neighbouring identifiers so a later line's count cannot
                 # leak backwards, and preference is by distance rather than
                 # "after first": "Send 50 pcs of KY-900" puts the count BEFORE.
-                prev_end = order[i - 1]["span_end"] if i else 0
-                nxt = order[i + 1]["span_start"] if i + 1 < len(order) else float("inf")
+                #
+                # The boundaries come from a POSITION-sorted view of the ids,
+                # not from `order`. `order` serves skus before doc_ids, so when a
+                # document number precedes the style code ("PO-5566, 7,000 pcs
+                # TS-303") the "next identifier" in `order` sits BEFORE this one,
+                # the window collapses and the quantity is silently dropped.
+                by_pos = sorted(ids, key=lambda x: x["span_start"])
+                j = by_pos.index(ident)
+                prev_end = by_pos[j - 1]["span_end"] if j else 0
+                nxt = by_pos[j + 1]["span_start"] if j + 1 < len(by_pos) else float("inf")
                 window = [q for q in all_qty
                           if q.get("_bound_to") is None and q["id"] not in have
                           and prev_end <= q["span_end"] and q["span_start"] < nxt]
+                # A DOCUMENT identifier names paperwork, not goods, so it may
+                # only claim the goods count. Given "460 cartons, 11,040 pcs,
+                # SKU JK-450" alongside INV-2026-88, binding the invoice number
+                # to the carton count invents a product line that does not exist.
+                if ident["type"] == "doc_id":
+                    window = [q for q in window
+                              if str(q.get("unit") or "").strip().lower() in PIECE_UNITS]
                 pick = _pick_qty_near(window, ident)
             if pick is None:
                 # An identifier added by recall shares the line's quantity ONLY
@@ -532,7 +547,9 @@ class FactStore:
                     owner = next((x for x in ids if x["id"] == cand["_bound_to"]), None)
                     if owner is not None and abs(owner["span_start"] - ident["span_start"]) <= 60:
                         bound = cand
-            nxt = ids[i + 1]["span_start"] if i + 1 < len(ids) else float("inf")
+            by_pos = sorted(ids, key=lambda x: x["span_start"])
+            j = by_pos.index(ident)
+            nxt = by_pos[j + 1]["span_start"] if j + 1 < len(by_pos) else float("inf")
             if bound is not None:
                 q = bound
             else:
