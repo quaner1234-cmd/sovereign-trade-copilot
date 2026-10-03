@@ -1,0 +1,610 @@
+{
+  "data_classification": "synthetic",
+  "provider": "CSCS",
+  "model": "swiss-ai/Apertus-v1.5-70B",
+  "email": "Please quote about 420 pcs of canvas totes. Our target price is USD 12.50 FOB Shanghai. We request delivery before Nov 15. Best, Jamie Rowan",
+  "process": {
+    "classification": {
+      "intent": "inquiry",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Jamie Rowan",
+      "products": [
+        {
+          "sku": null,
+          "qty": "420",
+          "desc": ""
+        }
+      ],
+      "incoterm": "FOB",
+      "payment_terms": null,
+      "deadline": "Nov 15",
+      "amounts": [
+        "USD 12.50"
+      ],
+      "not_stated": [
+        "payment_terms"
+      ],
+      "product_names": [
+        "canvas totes"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "420 pcs",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": "approx",
+            "raw": "about",
+            "approx": true
+          },
+          "status": "unconfirmed",
+          "source_span": "420 pcs",
+          "span": [
+            19,
+            26
+          ],
+          "fact_type": "requested_quantity",
+          "evidence_type": "qty",
+          "role_reason": "request_cue",
+          "number": "420",
+          "unit": "pcs"
+        },
+        {
+          "id": "pn30",
+          "field": "products",
+          "value": "canvas totes",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "canvas totes",
+          "span": [
+            30,
+            42
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f002",
+          "field": "amounts",
+          "value": "USD 12.50",
+          "semantic_role": "TARGET",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 12.50",
+          "span": [
+            64,
+            73
+          ],
+          "fact_type": "target_price",
+          "evidence_type": "amount",
+          "role_reason": "target_cue",
+          "number": "12.50"
+        },
+        {
+          "id": "f003",
+          "field": "incoterm",
+          "value": "FOB",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "FOB",
+          "span": [
+            74,
+            77
+          ],
+          "fact_type": "incoterm",
+          "evidence_type": "incoterm",
+          "role_reason": "no_cue",
+          "named_place": "Shanghai"
+        },
+        {
+          "id": "f004",
+          "field": "deadline",
+          "value": "Nov 15",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "Nov 15",
+          "span": [
+            115,
+            121
+          ],
+          "fact_type": "requested_delivery",
+          "evidence_type": "date",
+          "role_reason": "request_cue",
+          "relation": "before",
+          "deadline_hint": true
+        },
+        {
+          "id": "f005",
+          "field": "buyer",
+          "value": "Jamie Rowan",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "Jamie Rowan",
+          "span": [
+            129,
+            140
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "已记录：产品为 canvas totes，采用 FOB 条款，装运港上海，买方为 Jamie Rowan。  \n贵司提出订购数量及交货期要求，我司将核实后回复；关于付款条款，我司也将核实后回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "retry"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Jamie Rowan",
+        "facts": [
+          {
+            "id": "f005",
+            "value": "Jamie Rowan",
+            "type": "buyer_signature",
+            "source_span": "Jamie Rowan",
+            "status": "supported",
+            "span": [
+              129,
+              140
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": null,
+            "qty": "420",
+            "_qty_fact": "f001"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f001",
+            "value": "420 pcs",
+            "type": "qty",
+            "source_span": "420 pcs",
+            "status": "supported",
+            "span": [
+              19,
+              26
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "supported",
+        "value": "FOB",
+        "facts": [
+          {
+            "id": "f003",
+            "value": "FOB",
+            "type": "incoterm",
+            "source_span": "FOB",
+            "status": "supported",
+            "span": [
+              74,
+              77
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "supported",
+        "value": "Nov 15",
+        "facts": [
+          {
+            "id": "f004",
+            "value": "Nov 15",
+            "type": "date",
+            "source_span": "Nov 15",
+            "status": "supported",
+            "span": [
+              115,
+              121
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "USD 12.50"
+        ],
+        "facts": [
+          {
+            "id": "f002",
+            "value": "USD 12.50",
+            "type": "amount",
+            "source_span": "USD 12.50",
+            "status": "supported",
+            "span": [
+              64,
+              73
+            ],
+            "contested": true,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "inquiry",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f005\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [\"f003\"],\n  \"payment_terms\": [],\n  \"deadline\": [\"f004\"],\n  \"amounts\": [\"f002\"]\n}",
+      "selection": {
+        "buyer": [
+          "f005"
+        ],
+        "products": [
+          "f001"
+        ],
+        "incoterm": [
+          "f003"
+        ],
+        "payment_terms": [],
+        "deadline": [
+          "f004"
+        ],
+        "amounts": [
+          "f002"
+        ]
+      },
+      "draft": "已记录：产品为 canvas totes，采用 FOB 条款，装运港上海，买方为 Jamie Rowan。  \n贵司要求订购约 420 pcs，交货期目标为 11 月 15 日前；贵司目标价格为 USD 12.50/件。  \n关于付款条款，我司需进一步核实后回复。  \n感谢来函询盘，我司尽快完成相关确认并回复。",
+      "draft_retry": "已记录：产品为 canvas totes，采用 FOB 条款，装运港上海，买方为 Jamie Rowan。  \n贵司提出订购数量及交货期要求，我司将核实后回复；关于付款条款，我司也将核实后回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "pipeline": "v4",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 2953,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1266,
+            "total_tokens": 1292,
+            "completion_tokens": 26,
+            "prompt_tokens_details": {
+              "cached_tokens": 1248,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 5
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1902,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 694,
+            "total_tokens": 759,
+            "completion_tokens": 65,
+            "prompt_tokens_details": {
+              "cached_tokens": 672,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": [
+            "payment_terms"
+          ]
+        },
+        "semantics": {
+          "typed": 6,
+          "order_act": false,
+          "roles": {
+            "FACT": 3,
+            "REQUEST": 2,
+            "TARGET": 1,
+            "QUESTION": 0,
+            "COMMITMENT": 0,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 2768,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 960,
+            "total_tokens": 1087,
+            "completion_tokens": 127,
+            "prompt_tokens_details": {
+              "cached_tokens": 928,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        },
+        "retry": {
+          "mode": "llm",
+          "latency_ms": 2227,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1147,
+            "total_tokens": 1222,
+            "completion_tokens": 75,
+            "prompt_tokens_details": {
+              "cached_tokens": 1056,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "passed": true,
+          "issues": []
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": false,
+          "issues": [
+            "unsupported_number:11",
+            "requested_date_stated_as_our_delivery:f004"
+          ]
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "retry"
+        }
+      },
+      "retry_used": true
+    }
+  },
+  "judgment": {
+    "request": {
+      "scenario": "inquiry",
+      "subject": "UI-INQUIRY",
+      "sources": [
+        {
+          "id": "customer-email",
+          "party": "customer",
+          "format": "email",
+          "text": "Please quote about 420 pcs of canvas totes. Our target price is USD 12.50 FOB Shanghai. We request delivery before Nov 15. Best, Jamie Rowan"
+        }
+      ]
+    },
+    "response": {
+      "schema_version": "1.0",
+      "scenario": "inquiry",
+      "action": "REQUEST_INFORMATION",
+      "owner": "sales",
+      "reason": "内部核价所需的产品、数量或规格尚不完整；先补齐相应信息。",
+      "evidence": [
+        {
+          "fact_id": "customer-email:f001",
+          "source_id": "customer-email",
+          "field": "quantity",
+          "value": 420,
+          "quote": "420 pcs",
+          "span": [
+            19,
+            26
+          ],
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "status": "unconfirmed"
+        },
+        {
+          "fact_id": "customer-email:f001:qualifier",
+          "source_id": "customer-email",
+          "field": "quantity_qualifier",
+          "value": "approx",
+          "quote": "Please quote about 420 pcs of canvas totes",
+          "span": [
+            0,
+            42
+          ],
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "status": "unconfirmed"
+        },
+        {
+          "fact_id": "customer-email:pn30",
+          "source_id": "customer-email",
+          "field": "product",
+          "value": "canvas totes",
+          "quote": "canvas totes",
+          "span": [
+            30,
+            42
+          ],
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "status": "supported"
+        },
+        {
+          "fact_id": "customer-email:f002",
+          "source_id": "customer-email",
+          "field": "target_price",
+          "value": "USD 12.50",
+          "quote": "USD 12.50",
+          "span": [
+            64,
+            73
+          ],
+          "semantic_role": "TARGET",
+          "stance": "customer",
+          "status": "unconfirmed"
+        },
+        {
+          "fact_id": "customer-email:f003",
+          "source_id": "customer-email",
+          "field": "incoterm",
+          "value": "FOB",
+          "quote": "FOB",
+          "span": [
+            74,
+            77
+          ],
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "status": "supported"
+        },
+        {
+          "fact_id": "customer-email:f004",
+          "source_id": "customer-email",
+          "field": "requested_delivery",
+          "value": "Nov 15",
+          "quote": "Nov 15",
+          "span": [
+            115,
+            121
+          ],
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "status": "unconfirmed"
+        }
+      ],
+      "blocking_conditions": [
+        {
+          "field": "specification",
+          "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+          "evidence_ids": [],
+          "blocks_current_action": false,
+          "scope": "internal_costing"
+        },
+        {
+          "field": "target_price",
+          "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+          "evidence_ids": [
+            "customer-email:f002"
+          ],
+          "blocks_current_action": false,
+          "scope": "internal_costing"
+        },
+        {
+          "field": "requested_delivery",
+          "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+          "evidence_ids": [
+            "customer-email:f004"
+          ],
+          "blocks_current_action": false,
+          "scope": "internal_costing"
+        },
+        {
+          "field": "price_approved",
+          "reason": "商业确认仍需有授权来源和人工批准。",
+          "evidence_ids": [],
+          "blocks_current_action": false,
+          "scope": "commercial_commitment"
+        },
+        {
+          "field": "delivery_approved",
+          "reason": "商业确认仍需有授权来源和人工批准。",
+          "evidence_ids": [],
+          "blocks_current_action": false,
+          "scope": "commercial_commitment"
+        }
+      ],
+      "needs_human_approval": true,
+      "next_customer_action": "仅补充判断卡列出的缺失信息；已提供的内容不重复询问。",
+      "confidence": "low"
+    }
+  },
+  "observed_draft_limit": "Retry omitted the concrete quantity and target price and did not ask for the missing specifications. Final guard PASS does not mean business completeness."
+}

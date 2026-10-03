@@ -1,0 +1,170 @@
+{
+  "status": "PASS for UI flow and frozen hero assertions; draft business completeness remains limited",
+  "recorded_at": "2026-10-03T04:43:29.234Z",
+  "backend_base_commit": "58b7740f0d4a5b71cfa8c7f7c3ebb25c23ac9310",
+  "backend_hash_manifest": "../matcher-fix-001/summary.json",
+  "backend_unchanged": true,
+  "ui_source_sha256_lf": "70cf48f0b5bb1a78f93dab661ba7cf4d5e23c6a550b616986d63ebaddcd55f49",
+  "clean_docker_source_tree": "e88d23aa24cbf82dbf03dd04173d2b3c2471da55",
+  "docker_image_id": "sha256:bf595864e9912e2f1df312c65d2abf050fc5139bb9a255b2cf5e8397abc10b28",
+  "docker_result": "make run in clean staged source export; browser GET /ui, /health, /samples and POST /process then /judgment all HTTP 200",
+  "desktop": {
+    "width": 1440,
+    "height": 1000,
+    "checks": [
+      "no fabricated result before Analyze; hero preloaded",
+      "same email through existing process and judgment; frozen hero expectations pass",
+      "action, evidence, uncertainty, human approval appear in first desktop viewport; details collapsed",
+      "draft evidence highlights exact original source span",
+      "independent decision evidence adapter and exact source link",
+      "technical expansion exposes original model, guard, usage and source payload",
+      "390px responsive layout: no horizontal document overflow",
+      "editing invalidates stale results and disables copying"
+    ],
+    "primary_bounds": {
+      "actionTitle": {
+        "top": 319.5,
+        "bottom": 349.5
+      },
+      "approvalTitle": {
+        "top": 286.5,
+        "bottom": 313.5
+      },
+      "evidenceList": {
+        "top": 625.5,
+        "bottom": 977
+      },
+      "uncertainty": {
+        "top": 557.5,
+        "bottom": 889.5
+      }
+    }
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844,
+    "result": "no horizontal document overflow; full page rendered"
+  },
+  "live": {
+    "hero_runs": 1,
+    "model_calls": 4,
+    "token_usage": 4360,
+    "browser_flow_latency_ms": 10013,
+    "stages": {
+      "classify": {
+        "mode": "llm",
+        "latency_ms": 2953,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1266,
+          "total_tokens": 1292,
+          "completion_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 1248,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop",
+        "attempts": 1,
+        "json_ok": true
+      },
+      "select": {
+        "mode": "llm",
+        "latency_ms": 1902,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 694,
+          "total_tokens": 759,
+          "completion_tokens": 65,
+          "prompt_tokens_details": {
+            "cached_tokens": 672,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop",
+        "attempts": 1,
+        "json_ok": true
+      },
+      "reply": {
+        "mode": "llm",
+        "latency_ms": 2768,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 960,
+          "total_tokens": 1087,
+          "completion_tokens": 127,
+          "prompt_tokens_details": {
+            "cached_tokens": 928,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop",
+        "ok": true
+      },
+      "retry": {
+        "mode": "llm",
+        "latency_ms": 2227,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1147,
+          "total_tokens": 1222,
+          "completion_tokens": 75,
+          "prompt_tokens_details": {
+            "cached_tokens": 1056,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop",
+        "passed": true,
+        "issues": []
+      }
+    },
+    "guard": {
+      "passed": true,
+      "issues": [],
+      "via": "retry"
+    },
+    "raw_guard": {
+      "passed": false,
+      "issues": [
+        "unsupported_number:11",
+        "requested_date_stated_as_our_delivery:f004"
+      ]
+    },
+    "action": "REQUEST_INFORMATION",
+    "owner": "sales",
+    "human_approval_required": true
+  },
+  "fault_injection": {
+    "status": "PASS",
+    "method": "UI script fault injection with stub DOM/fetch; not backend or live-model evidence",
+    "checks": [
+      "network failure withholds current recommendation and draft",
+      "failed final guard withholds draft and disables copy",
+      "provider errors remain visible despite safe deterministic recovery",
+      "late response after editing cannot restore stale results",
+      "missing mandatory human approval prevents recommendation display",
+      "Python code-point spans survive non-BMP Unicode in the browser",
+      "source and model text are escaped rather than executed as HTML"
+    ]
+  },
+  "scope_limits": [
+    "No backend changes; prompts, guards, semantics, Judgment policies and existing acceptance expectations unchanged.",
+    "The live retry is source-safe under the configured guard but incomplete for the recommended customer follow-up.",
+    "Draft language remains the frozen backend output language.",
+    "30-second explanation is a design target; no independent newcomer comprehension study was conducted.",
+    "No new nine-case live acceptance run or full 144 benchmark.",
+    "Native browser bridges were unavailable; rendered and interacted with isolated headless Edge using its DevTools protocol.",
+    "Real OS clipboard write was not exercised; copying does not change approval state."
+  ],
+  "unchanged_preexisting_tracked_files": 87,
+  "changed_preexisting_files": [
+    "README.md",
+    "track_2b/src/ui/index.html"
+  ],
+  "screenshots": "Desktop and mobile render captures retained in local validation artifacts; binary screenshot content is excluded from the source index."
+}

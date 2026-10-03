@@ -13,6 +13,10 @@ cd track_2b
 make run
 ```
 
+Open `http://localhost:8000/ui`, load the synthetic hero and click **Analyze inquiry**.
+Recommended Action, Evidence, Uncertainty and Human Approval lead the workspace;
+model output and metadata are under Technical Details. See the [UI demo guide](track_2b/docs/UI-DEMO.md).
+
 The service listens on port 8000: `GET /health`, `POST /process` with an `email`
 string, `GET /ui` for the operator console (paste an email, see every value with
 its source span, the draft and the guard verdict) and `GET /samples` for the
@@ -26,7 +30,7 @@ Never place an actual API key in a tracked file.
 
 See [current status and limitations](track_2b/docs/STATUS.md) for tests,
 benchmark commands, synthetic data scope and remaining submission deliverables.
-The Docker command is supplied; container execution remains to be verified.
+Local Docker execution is verified in offline and real CSCS Apertus modes.
 
 ## Official template contract
 

@@ -1,0 +1,45 @@
+{
+  "id": "hero-rfq-420",
+  "data_classification": "synthetic; fictional buyer and figures",
+  "email": "Please quote about 420 pcs of canvas totes. Our target price is USD 12.50 FOB Shanghai. We request delivery before Nov 15. Best, Jamie Rowan",
+  "workflow": "inquiry",
+  "expected": {
+    "action": "REQUEST_INFORMATION",
+    "owner": "sales",
+    "needs_human_approval": true,
+    "missing_field": "specification",
+    "pending_company_approvals": [
+      "price_approved",
+      "delivery_approved"
+    ],
+    "typed_facts": [
+      {
+        "value": "420 pcs",
+        "semantic_role": "REQUEST",
+        "qualifier": "approx"
+      },
+      {
+        "value": "USD 12.50",
+        "semantic_role": "TARGET"
+      },
+      {
+        "value": "Nov 15",
+        "semantic_role": "REQUEST",
+        "relation": "before"
+      },
+      {
+        "value": "FOB",
+        "named_place": "Shanghai"
+      },
+      {
+        "value": "canvas totes",
+        "fact_type": "product"
+      }
+    ],
+    "final_guard_passed": true,
+    "company_commitments": [],
+    "order_act": false
+  },
+  "frozen_before_live_validation": true,
+  "scope": "UI demonstration of the existing inquiry scenario; no backend expectation changed"
+}

@@ -1,334 +1,248 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sovereign Trade Copilot — operator console</title>
+<link rel="icon" href="data:,">
+<title>Sovereign Trade Copilot — evidence to action</title>
 <style>
-  :root {
-    --bg:#f6f7f9; --card:#fff; --line:#dfe3e8; --ink:#14181d; --muted:#5b6572;
-    --accent:#1f4e79; --ok:#1c7a4a; --okbg:#e6f4ec; --bad:#a11f24; --badbg:#fbe9e9;
-    --warnbg:#fff6e0; --warn:#8a5b00; --role:#5b6572; --mono:ui-monospace,Menlo,Consolas,monospace;
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink);
-         font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Helvetica,Arial,sans-serif; }
-  header { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
-           padding:16px 24px; background:var(--accent); color:#fff; }
-  header h1 { margin:0; font-size:19px; font-weight:650; letter-spacing:.2px; }
-  header .sub { margin:2px 0 0; font-size:13px; opacity:.85; }
-  .badge { padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.14);
-           font-size:13px; font-family:var(--mono); white-space:nowrap; }
-  .notice { margin:0; padding:10px 24px; background:var(--warnbg); color:var(--warn);
-            border-bottom:1px solid #f0dfae; font-size:13.5px; }
-  main { max-width:1180px; margin:0 auto; padding:20px 24px 40px; }
-  .panel { background:var(--card); border:1px solid var(--line); border-radius:10px;
-           padding:16px 18px; margin-bottom:18px; }
-  .panel h2 { margin:0 0 10px; font-size:14px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); }
-  .row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:10px; }
-  textarea { width:100%; min-height:132px; padding:10px; border:1px solid var(--line); border-radius:8px;
-             font:14px/1.5 var(--mono); resize:vertical; }
-  textarea:focus, input:focus { outline:2px solid #9dc0e0; outline-offset:1px; }
-  button { font:inherit; padding:7px 14px; border-radius:7px; border:1px solid var(--accent);
-           background:var(--accent); color:#fff; cursor:pointer; }
-  button.ghost { background:#fff; color:var(--accent); }
-  button:hover { filter:brightness(1.07); }
-  button[disabled] { opacity:.5; cursor:progress; }
-  .samples { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
-  .samples button { background:#fff; color:var(--accent); border:1px solid #b9cfe2; font-size:12.5px; padding:4px 10px; }
-  table { width:100%; border-collapse:collapse; font-size:13.5px; }
-  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
-  th { font-size:11.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); font-weight:600; }
-  td.num, .span { font-family:var(--mono); font-size:12.5px; }
-  .span { color:var(--accent); }
-  .chip { display:inline-block; padding:1px 8px; border-radius:999px; font-size:11.5px;
-          font-weight:600; letter-spacing:.3px; background:#eef1f4; color:var(--role); }
-  .chip.TARGET { background:#fdeee0; color:#a2541a; }
-  .chip.REQUEST { background:#e7f0fa; color:#1f4e79; }
-  .chip.QUESTION { background:#f0e9fa; color:#5b3ba1; }
-  .chip.COMMITMENT { background:#e6f4ec; color:#1c7a4a; }
-  .chip.UNKNOWN { background:#f0f0f0; color:#777; }
-  .verdict { display:inline-block; padding:3px 10px; border-radius:6px; font-size:13px; font-weight:600; }
-  .verdict.ok { background:var(--okbg); color:var(--ok); }
-  .verdict.bad { background:var(--badbg); color:var(--bad); }
-  .draft { white-space:pre-wrap; background:#fbfcfd; border:1px solid var(--line); border-left:3px solid var(--accent);
-           border-radius:6px; padding:12px 14px; font-size:15px; }
-  .issues { margin:8px 0 0; padding-left:20px; color:var(--bad); font-size:13px; font-family:var(--mono); }
-  .meta { color:var(--muted); font-size:12.5px; margin-top:8px; }
-  .cols { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
-  @media (max-width:900px) { .cols { grid-template-columns:1fr; } }
-  h3 { margin:16px 0 6px; font-size:13px; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); }
-  footer { max-width:1180px; margin:0 auto; padding:0 24px 32px; color:var(--muted); font-size:12.5px; }
-  code { font-family:var(--mono); font-size:12.5px; background:#eef1f4; padding:1px 5px; border-radius:4px; }
-  .pre { white-space:pre-wrap; font-family:var(--mono); font-size:12.5px; background:#fbfcfd;
-         border:1px solid var(--line); border-radius:6px; padding:10px 12px; }
+:root{--bg:#f3f5f4;--ink:#172c2a;--muted:#526762;--line:#d9e3df;--accent:#126859;--soft:#eaf4ef;--amber:#885519;--amberbg:#fff5e6;--red:#9b3434;--redbg:#fff0ef;--mono:ui-monospace,Consolas,monospace}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,"Segoe UI",sans-serif}
+button,textarea,select{font:inherit}button,select,summary{cursor:pointer}
+button{border:1px solid var(--line);border-radius:9px;padding:9px 13px;background:#fff;color:var(--ink)}
+button:hover{border-color:var(--accent);background:var(--soft)}button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:650}button:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid #599dce;outline-offset:3px}
+header,main,footer{max-width:1320px;margin:auto;padding:0 28px}
+header{padding-top:22px;padding-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.brand{font-size:17px;font-weight:750;letter-spacing:-.3px}.brand-dot{display:inline-block;background:var(--accent);width:11px;height:11px;border-radius:4px;margin-right:9px}
+.pill{display:inline-block;padding:4px 9px;border-radius:20px;background:var(--soft);color:var(--accent);font-size:12px;font-weight:650}.pill.warn{background:var(--amberbg);color:var(--amber)}.pill.bad{background:var(--redbg);color:var(--red)}
+.muted,.caption{color:var(--muted)}.caption{font-size:12px}h1{font-size:30px;line-height:1.2;letter-spacing:-.7px;margin:8px 0}h2{font-size:16px;margin:0}h3{font-size:14px;margin:0 0 5px}p{margin:6px 0}
+.intro{margin-bottom:16px}.intro p{max-width:780px}.flow{display:flex;gap:8px;padding:11px 0 19px;margin:0;list-style:none;flex-wrap:wrap;font-size:12px;color:var(--muted)}.flow li:not(:last-child)::after{content:'→';margin-left:8px;color:#8ca39c}.flow b{color:var(--accent);margin-right:4px}
+.workspace{display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}.heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.kicker{font-size:11px;font-weight:750;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:7px}label{display:block;margin:14px 0 6px;font-size:12px;font-weight:650}
+textarea,select{width:100%;border:1px solid var(--line);border-radius:8px;background:#fafcfb;color:var(--ink);padding:10px}textarea{min-height:220px;resize:vertical;font-size:14px;line-height:1.6}select{font-size:13px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.controls{margin-top:12px}.source{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.85;padding:12px;border-radius:9px;background:#f6f8f7}mark{background:#ffe0a5;color:var(--ink);padding:2px 0;border-radius:3px}.source:focus{outline:2px solid #599dce}
+.hint{border-top:1px solid var(--line);padding-top:12px;margin-top:16px}.status{margin-top:10px;font-size:13px;overflow-wrap:anywhere}.status.error{color:var(--red)}
+.empty{min-height:390px;display:grid;align-content:center;padding:36px;background:linear-gradient(135deg,#fff,#edf5f0)}.empty h2{font-size:25px;max-width:480px;line-height:1.3}.empty ol{padding-left:20px;color:var(--muted)}.empty li{margin:12px 0}
+.outcome{display:grid;grid-template-columns:minmax(0,1fr) 245px;gap:14px;margin-bottom:14px}.action{background:var(--accent);color:#fff;border-color:var(--accent)}.action .kicker,.action .caption{color:#d7f1e4}.action h2{font-size:25px;line-height:1.2;margin:10px 0}.action .pill{background:rgba(255,255,255,.15);color:#fff}.action .basis button{margin:7px 3px 0 0;font-size:11px;padding:3px 7px;color:#fff;background:transparent;border-color:#73a99b}
+.approval{background:var(--amberbg);border-color:#ead5b2}.approval h2{font-size:18px;margin:10px 0;color:var(--amber)}.approval .kicker{color:var(--amber)}.review-note{font-size:13px}
+.decision-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px}.tabs{display:flex;gap:5px;margin:10px 0}.tabs button{font-size:12px;padding:6px 10px}.tabs button[aria-pressed="true"]{background:var(--soft);border-color:#8dbbad;color:var(--accent)}
+#evidenceList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.evidence{display:block;width:100%;text-align:left;margin-top:0;padding:9px 11px;border-radius:8px}.evidence .value{display:block;font-size:14px;font-weight:650}.evidence .quote{display:block;color:var(--muted);font-size:12px;margin-top:4px;overflow-wrap:anywhere}.evidence .pill{font-size:10px;margin-top:4px}.evidence[aria-pressed="true"]{background:var(--amberbg);border-color:#d6b279}
+.uncertainty-group+.uncertainty-group{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.uncertainty-group ul{padding-left:17px;margin:5px 0}.uncertainty-group li{font-size:13px;margin-top:7px}.uncertainty-group small{display:block;color:var(--muted);font-size:11px}
+.guard{margin:14px 0;display:flex;align-items:start;justify-content:space-between;gap:15px;background:var(--soft)}.guard.bad{background:var(--redbg)}.guard h2{margin-bottom:5px}.draft{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;margin:14px 0 10px;padding:16px;background:#f8faf9;border-left:3px solid var(--accent);border-radius:5px}
+details{margin-top:16px}summary{font-weight:650;font-size:14px;padding:3px}details[open]>summary{margin-bottom:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 var(--mono);background:#f5f7f6;padding:14px;border-radius:8px;max-height:450px;overflow:auto}.technical{margin-top:18px}.technical h3{margin-top:18px}.advanced textarea{min-height:240px;font:12px/1.6 var(--mono)}footer{padding-top:22px;padding-bottom:30px;font-size:12px;color:var(--muted)}
+@media(max-width:1100px){.workspace{grid-template-columns:285px minmax(0,1fr)}.outcome{grid-template-columns:1fr}.approval{padding:13px 18px}.approval h2{display:inline;margin-right:10px}}
+@media(max-width:760px){header,main,footer{padding-left:16px;padding-right:16px}header{align-items:start}h1{font-size:26px}.workspace,.decision-grid,#evidenceList{grid-template-columns:1fr}.empty{min-height:240px;padding:24px}.guard{display:block}.guard .pill{margin-top:8px}.panel{padding:16px}}
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>Sovereign Trade Copilot</h1>
-    <p class="sub">Evidence-first reply drafting for garment trade email &middot; Hack Apertus Track 2B</p>
-  </div>
-  <div class="badge" id="health">checking /health…</div>
-</header>
-<p class="notice" id="modeNotice" hidden>
-  <strong>Offline demo mode.</strong> Deterministic parser and evidence layer only — no Apertus
-  inference happens, so nothing on this page measures model quality. Set
-  <code>LLM_NAME</code> / <code>LLM_BASE_URL</code> / <code>LLM_API_KEY</code> in the runtime
-  environment for a real run.
-</p>
-
+<header><div class="brand"><span class="brand-dot"></span>Sovereign Trade Copilot</div><span class="pill" id="health">Connecting…</span></header>
 <main>
-  <section class="panel">
-    <h2>1 &middot; Customer email</h2>
-    <div class="samples" id="samples"></div>
-    <textarea id="email" spellcheck="false" placeholder="Paste the inbound customer email here, then press Analyze."></textarea>
-    <div class="row">
-      <button id="run">Analyze email</button>
-      <button class="ghost" id="clear">Clear</button>
-      <span class="meta" id="busy"></span>
-    </div>
-  </section>
-
-  <section class="panel" id="results" hidden>
-    <h2>2 &middot; Result &mdash; every value keeps its source</h2>
-
-    <div class="cols">
-      <div>
-        <h3>Classification</h3>
-        <div id="cls" class="pre"></div>
-
-        <h3>Reply draft for human review</h3>
-        <div class="draft" id="draft"></div>
-        <div class="row"><span class="verdict" id="guardVerdict"></span><span class="meta" id="guardVia"></span></div>
-        <ul class="issues" id="guardIssues"></ul>
-        <p class="meta">The system never sends mail and never commits terms. A passing guard means no
-          unsupported value or speech act reached the text — it is not business-owner approval.</p>
-      </div>
-
-      <div>
-        <h3>Business semantics &mdash; what the customer was <em>doing</em></h3>
-        <table><thead><tr><th>Value</th><th>Speech act</th><th>Stance</th><th>Status</th><th>Qualifier</th></tr></thead>
-          <tbody id="semRows"></tbody></table>
-
-        <h3>Evidence store</h3>
-        <table><thead><tr><th>Field</th><th>Value</th><th>Fact</th><th>Source span</th></tr></thead>
-          <tbody id="evRows"></tbody></table>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h2>3 &middot; Judgment layer &mdash; source-backed next action</h2>
-    <div class="samples" id="jButtons"></div>
-    <textarea id="jReq" spellcheck="false" style="min-height:170px"></textarea>
-    <div class="row"><button id="jRun">Get recommendation</button><span class="meta" id="jBusy"></span></div>
-    <div id="jOut" class="pre" style="margin-top:12px" hidden></div>
-  </section>
+<div class="intro"><div class="kicker">Hack Apertus · Track 2B</div><h1>A next step you can trace to the email.</h1><p class="muted">See what is known, what still needs confirmation, and what a person should do next.</p></div>
+<p class="caption" id="modeNotice" role="status">Checking runtime mode…</p>
+<ol class="flow" aria-label="How it works"><li><b>1</b>Email</li><li><b>2</b>Evidence</li><li><b>3</b>Uncertainty</li><li><b>4</b>Guard</li><li><b>5</b>Judgment</li><li><b>6</b>Draft for review</li></ol>
+<div class="workspace">
+<aside class="panel" aria-labelledby="sourceTitle">
+<div class="heading"><h2 id="sourceTitle">Customer email</h2><span class="pill" id="sourceLabel">Synthetic hero</span></div>
+<div class="row"><button id="hero">Load hero case</button><button id="clear">Clear</button></div>
+<div id="editor"><label for="workflow">Workflow</label><select id="workflow"><option value="inquiry">New inquiry · email + next action</option><option value="draft_only">Email drafting only</option></select><label for="email">Inbound customer email</label><textarea id="email" spellcheck="false" placeholder="Paste a new inquiry. Use synthetic data for demonstrations."></textarea></div>
+<div id="sourceView" hidden><p class="caption" id="sourceCaption">Original source · click an evidence card to highlight</p><div id="sourceText" class="source" tabindex="-1"></div><button id="edit" class="controls">Edit email</button></div>
+<div class="row controls"><button class="primary" id="run">Analyze inquiry</button></div>
+<p id="busy" class="status" role="status" aria-live="polite"></p>
+<p class="caption hint" id="heroHint">A fictional buyer gives an approximate quantity, a target price and a requested date. Product specifications are absent. No company approvals are supplied.</p>
+<details><summary>Other synthetic email samples</summary><p class="caption">Drafting only. These do not automatically request an inquiry judgment.</p><div class="row" id="samples"></div></details>
+</aside>
+<div>
+<section class="panel empty" id="empty"><div class="kicker">One email · one review workspace</div><h2>What should we do before we reply?</h2><ol><li>Read customer targets and requests with their source.</li><li>Find missing information and pending company approvals.</li><li>Review the recommended action and guarded reply draft.</li></ol><p class="caption">Press Analyze inquiry to run the current backend. Results are generated only after that request.</p></section>
+<div id="results" hidden>
+<div class="outcome">
+<section class="panel action" aria-labelledby="actionTitle"><div class="kicker">Recommended Action</div><span class="pill" id="owner"></span><h2 id="actionTitle" tabindex="-1"></h2><p id="reason"></p><p class="caption" id="confidence"></p><div class="basis" id="basis" aria-label="Decision evidence links"></div></section>
+<section class="panel approval"><div class="kicker">Human Approval</div><h2 id="approvalTitle">Required · pending</h2><p class="review-note" id="approvalText">A person must review the recommendation and draft before any commercial action.</p><p class="caption">This workspace has no approval recording or email sending function.</p></section>
+</div>
+<div class="decision-grid">
+<section class="panel"><div class="heading"><h2>Evidence</h2><span class="caption" id="evidenceCount"></span></div><p class="caption">Quoted from the source. A customer statement is not company approval.</p><div class="tabs" role="group" aria-label="Evidence source adapter"><button id="draftEvidence" aria-pressed="true">Draft evidence</button><button id="decisionEvidence" aria-pressed="false">Decision evidence</button></div><div id="evidenceList"></div><p class="caption" id="evidenceAdapter"></p></section>
+<section class="panel"><div class="heading"><h2>Uncertainty</h2><span class="pill warn" id="uncertaintyCount"></span></div><div id="uncertainty"></div><p class="caption hint">Missing information prompts a question. Customer requirements stay pending until an authorized company source confirms them.</p></section>
+</div>
+<section class="panel guard" id="guardPanel"><div><div class="kicker">Guard</div><h2 id="guardTitle"></h2><p class="review-note" id="guardText"></p><p class="caption">Passing configured checks does not establish completeness or business approval.</p></div><span class="pill" id="guardPath"></span></section>
+<section class="panel"><div class="heading"><h2>Draft for human review</h2><button id="copy" disabled>Copy draft for review</button></div><p class="caption" id="nextCustomer"></p><div class="draft" id="draft"></div><p class="caption" id="copyStatus" role="status">Read the missing conditions above before using this draft. It has not been sent.</p></section>
+<details class="panel technical" id="technical"><summary>Technical Details · model output, metadata &amp; debug</summary><p class="caption">Apertus classifies, selects candidate IDs and drafts in live mode. Judgment independently uses the frozen deterministic email adapter and rules. The two evidence views expose these separate sources.</p><h3>Model calls &amp; runtime</h3><pre id="runtime"></pre><h3>Classification</h3><pre id="classification"></pre><h3>Raw model output, retry &amp; fallback</h3><pre id="rawModel"></pre><h3>Typed semantic facts</h3><pre id="typedFacts"></pre><h3>Guard checks</h3><pre id="guardDebug"></pre><h3>Judgment request &amp; response</h3><pre id="judgmentDebug"></pre><h3>Full process response</h3><pre id="processDebug"></pre></details>
+</div>
+</div>
+</div>
+<details class="panel advanced"><summary>Other existing workflows · payment &amp; sample test</summary><p class="caption">These use operator-provided fact cards, not automatic extraction from the email above. Source party is attested by the operator; it is not authenticated. Synthetic templates only.</p><div class="row" id="jButtons"></div><label for="jReq">Judgment source payload</label><textarea id="jReq" spellcheck="false"></textarea><div class="row controls"><button id="jRun">Evaluate fact cards</button><span class="caption" id="jBusy" role="status"></span></div><pre id="jOut" hidden></pre></details>
 </main>
-
-<footer>
-  Every figure above is quoted from the email with its span, or refused. Judgment output always
-  carries <code>needs_human_approval</code>. Synthetic fixtures only &mdash; no real customer records.
-</footer>
-
+<footer>Evidence → uncertainty → a human decision. Runtime credentials belong in the server environment. Use synthetic records for public demonstrations.</footer>
 <script>
 "use strict";
 const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
-  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-
-async function api(path, body) {
-  const opts = body === undefined
-    ? {}
-    : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
-  const res = await fetch(path, opts);
-  let data;
-  try { data = await res.json(); } catch (e) { throw new Error("HTTP " + res.status + ": non-JSON response"); }
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pretty = (v) => JSON.stringify(v, null, 2);
+const HERO = {id:"hero-rfq-420",email:"Please quote about 420 pcs of canvas totes. Our target price is USD 12.50 FOB Shanghai. We request delivery before Nov 15. Best, Jamie Rowan"};
+const ACTIONS = {REQUEST_INFORMATION:"Ask for missing information",INTERNAL_COSTING:"Prepare internal costing",WAIT:"Wait for the payment node",RECHECK:"Recheck the source records",REQUEST_CONFIRMATION:"Request confirmation",CONTINUE_REVIEW:"Continue to human review",PASS:"Single test within supplied limits",REWORK:"Rework and test again",ESCALATE:"Escalate the conflict"};
+const OWNERS = {sales:"Sales",costing:"Costing team",finance:"Finance",technical:"Technical team",business_owner:"Business owner"};
+const FIELDS = {product:"Product",product_code:"Product code",quantity:"Quantity",quantity_qualifier:"Quantity qualifier",specification:"Product specifications",target_price:"Target price",requested_delivery:"Requested delivery",incoterm:"Incoterm",price_approved:"Company price approval",delivery_approved:"Company delivery approval",payment_terms:"Payment terms",payment_status:"Payment status",test_value:"Test value",test_min:"Test minimum",test_max:"Test maximum",metric:"Metric",unit:"Unit"};
+const DISPLAY_TEXT = {
+  "内部核价所需的产品、数量或规格尚不完整；先补齐相应信息。":"Product, quantity or specifications are incomplete for internal costing. Ask for the missing information first.",
+  "产品、数量和规格已有来源，可进行初步内部核价；客户要求不构成我方承诺。":"Product, quantity and specifications have sources for preliminary internal costing. Customer requirements remain subject to company confirmation.",
+  "已验证来源之间存在冲突；先由业务负责人解决，不据此放行。":"Validated sources conflict. The business owner must resolve the conflict before release.",
+  "该项缺失或没有可用于当前判断的已验证来源。":"Missing, or no validated source is available for this decision.",
+  "同一对象存在不同值；保留来源并由人工解决冲突。":"Sources give different values for the same subject. A person must resolve the conflict.",
+  "该来源主张未获我方确认，或测量缺少自身单位/指标。":"Not established for this decision by the supplied sources.",
+  "商业确认仍需有授权来源和人工批准。":"An authorized company source and human approval are still required.",
+  "仅补充判断卡列出的缺失信息；已提供的内容不重复询问。":"Request only the missing information listed above. Do not ask again for facts already supplied.",
+  "当前先由我方内部核价；商业条件确认后再由业务员回复。":"Prepare internal costing first. Sales replies after the commercial terms are confirmed.",
+  "需要时由业务负责人提出有来源的澄清问题。":"The business owner raises source-backed clarification questions when needed."
+};
+const displayText = (text) => DISPLAY_TEXT[text] || text;
+const ROLES = {FACT:"Customer statement",TARGET:"Customer target",REQUEST:"Customer request",QUESTION:"Customer question",COMMITMENT:"Customer commitment",UNKNOWN:"Unclassified statement"};
+let version = 0, active = null, current = null, evidenceView = "draft", evidenceItems = [];
+async function api(path, body, signal) {
+  const res = await fetch(path,body === undefined ? {signal} : {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal});
+  let data; try { data = await res.json(); } catch (_) { throw new Error("HTTP " + res.status + ": invalid response"); }
   if (!res.ok) throw new Error("HTTP " + res.status + ": " + (data.error || "request failed"));
   return data;
 }
-
-/* ---- health + mode honesty ------------------------------------------- */
+function reset(message = "") {
+  version++; if (active) active.abort(); active = null; current = null;
+  $("results").hidden = true; $("empty").hidden = false; $("editor").hidden = false; $("sourceView").hidden = true;
+  $("run").disabled = false; $("busy").className = "status"; $("busy").textContent = message;
+  $("copy").disabled = true; $("technical").open = false; $("empty").setAttribute("aria-busy","false");
+}
+function inputChanged() { reset("Email changed. Analyze again to generate matching evidence and recommendations."); $("sourceLabel").textContent = "Current input"; $("heroHint").hidden = true; }
+function workflowLabel() { $("run").textContent = $("workflow").value === "inquiry" ? "Analyze inquiry" : "Analyze email"; }
+function loadHero() { reset(); $("email").value = HERO.email; $("workflow").value = "inquiry"; workflowLabel(); $("sourceLabel").textContent = "Synthetic hero"; $("heroHint").hidden = false; }
+function sourceHighlight(item) {
+  if (!current) return;
+  const chars = Array.from(current.email), span = item && item.span;
+  if (!span || !Number.isInteger(span[0]) || !Number.isInteger(span[1]) || span[0] < 0 || span[1] > chars.length || span[0] >= span[1] || chars.slice(span[0],span[1]).join("") !== item.quote) {
+    $("sourceText").textContent = current.email;
+    $("sourceCaption").textContent = item ? "Source locator unavailable; inspect Technical Details." : "Original source · click an evidence card to highlight";
+    return;
+  }
+  $("sourceText").innerHTML = esc(chars.slice(0,span[0]).join("")) + "<mark>" + esc(item.quote) + "</mark>" + esc(chars.slice(span[1]).join(""));
+  $("sourceCaption").textContent = "Source: " + item.id + " · exact quoted span";
+  $("sourceText").focus({preventScroll:true});
+  $("sourceText").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function semanticValue(t) {
+  let v = String(t.value == null ? "" : t.value), q = (t.qualifier || {}).kind;
+  if (q) v = ({approx:"about ",min:"at least ",max:"at most "}[q] || q + " ") + v;
+  if (t.relation) v = t.relation + " " + v;
+  if (t.named_place) v += " " + t.named_place;
+  return v;
+}
+function renderEvidence() {
+  const p = current.process, j = current.judgment;
+  $("draftEvidence").setAttribute("aria-pressed",evidenceView === "draft"); $("decisionEvidence").setAttribute("aria-pressed",evidenceView === "decision"); $("decisionEvidence").disabled = !j;
+  evidenceItems = evidenceView === "draft" ? ((p.semantics || {}).typed_facts || []).map(t => ({id:t.id,value:semanticValue(t),quote:t.source_span,span:t.span,role:t.semantic_role,status:t.status,stance:t.stance})) : (j ? j.evidence : []).map(t => ({id:t.fact_id,value:(FIELDS[t.field] || t.field) + ": " + t.value,quote:t.quote,span:t.span,role:t.semantic_role,status:t.status,stance:t.stance}));
+  $("evidenceCount").textContent = evidenceItems.length + " sourced facts";
+  $("evidenceList").innerHTML = evidenceItems.length ? evidenceItems.map((t,i) => '<button class="evidence" data-evidence="'+i+'" aria-pressed="false"><span class="value">'+esc(t.value)+'</span><span class="pill '+(t.status === "unconfirmed" ? "warn" : "")+'">'+esc(t.stance === "customer_claimed_prior" ? "Customer claims prior agreement" : ROLES[t.role] || t.role)+'</span> <span class="caption">'+esc(t.status === "supported" ? "Source supported" : "Awaiting confirmation")+'</span><span class="quote">“'+esc(t.quote)+'” · Show source ↗</span></button>').join("") : '<p class="caption">No admitted facts for this view.</p>';
+  $("evidenceAdapter").textContent = evidenceView === "draft" ? "Draft evidence: validated selection and typed semantics. Source supported does not mean commercially approved." : "Decision evidence: independently validated by the deterministic Judgment email adapter.";
+}
+function renderJudgment(j) {
+  $("owner").textContent = j ? "Owner: " + (OWNERS[j.owner] || j.owner) : "Drafting only";
+  $("actionTitle").textContent = j ? (ACTIONS[j.action] || j.action) : "No recommendation requested";
+  $("reason").textContent = j ? displayText(j.reason) : "This email ran the drafting pipeline only. Choose New inquiry for a source-backed inquiry recommendation.";
+  $("confidence").textContent = j ? "Rule-based recommendation · source coverage: " + ({low:"limited",medium:"partial",high:"complete for this rule"}[j.confidence] || j.confidence) : "No business decision has been inferred from the email classification.";
+  $("basis").innerHTML = j ? '<span class="caption">Decision basis · </span>' + j.evidence.map((e,i) => '<button data-basis="'+i+'">'+esc(FIELDS[e.field] || e.field)+'</button>').join("") : "";
+  const conditions = j ? j.blocking_conditions : [];
+  $("uncertaintyCount").textContent = j ? conditions.length + " open conditions" : "Review needed";
+  if (!j) { $("uncertainty").textContent = "Business conditions were not evaluated in drafting-only mode."; return; }
+  const groups = [
+    {title:"Before the next business step",items:conditions.filter(c => c.scope !== "commercial_commitment" && !c.evidence_ids.length)},
+    {title:"Customer positions / unresolved sources",items:conditions.filter(c => c.scope !== "commercial_commitment" && c.evidence_ids.length)},
+    {title:"Before a company commitment",items:conditions.filter(c => c.scope === "commercial_commitment")}
+  ];
+  $("uncertainty").innerHTML = groups.filter(g => g.items.length).map(g => '<div class="uncertainty-group"><h3>'+esc(g.title)+'</h3><ul>'+g.items.map(c => '<li><strong>'+esc(FIELDS[c.field] || c.field)+'</strong><small>'+esc(displayText(c.reason))+'</small></li>').join("")+'</ul></div>').join("") || '<p>All conditions required by this rule have sources. Human approval is still required.</p>';
+}
+function render() {
+  const p = current.process, j = current.judgment, g = (p.validation || {}).guard || {}, meta = p.meta || {};
+  $("empty").hidden = true; $("results").hidden = false; $("editor").hidden = true; $("sourceView").hidden = false;
+  sourceHighlight(null); renderJudgment(j); evidenceView = "draft"; renderEvidence();
+  $("approvalTitle").textContent = "Required · pending";
+  $("approvalText").textContent = "A person must review the recommendation, missing conditions and draft before any commercial action.";
+  const finalSafe = g.passed === true && typeof p.draft === "string" && !!p.draft.trim();
+  $("guardPanel").className = "panel guard" + (finalSafe ? "" : " bad");
+  $("guardTitle").textContent = finalSafe ? "Final draft passed configured checks" : "Draft withheld · guard did not clear it";
+  const rawIssues = ((meta.guards || {}).raw || {}).issues || [];
+  const providerErrors = Object.values(meta.stages || {}).filter(stage => stage.error);
+  $("guardText").textContent = providerErrors.length ? "The provider reported " + providerErrors.length + " errors. Review the checked recovery path and Technical Details." : rawIssues.length ? "The first model draft triggered " + rawIssues.length + " guard issues. The final text below follows the backend's checked recovery path." : finalSafe ? "No final guard issues reported. Check the business meaning and missing details during human review." : "Review the failed checks in Technical Details. No draft is available to copy.";
+  const paths = {raw:"Model draft",retry:"Model retry",deterministic_fallback:"Deterministic fallback",demo:"Offline deterministic draft",withheld:"Withheld"};
+  $("guardPath").textContent = paths[g.via] || g.via || "No validated path";
+  $("draft").textContent = finalSafe ? p.draft : "Withheld. No candidate passed the configured final checks."; $("copy").disabled = !finalSafe;
+  $("nextCustomer").textContent = j ? "Next customer step: " + displayText(j.next_customer_action) : "Human review is required before using this text.";
+  $("copyStatus").textContent = "Read the missing conditions above before using this draft. It has not been sent.";
+  $("runtime").textContent = pretty(meta); $("classification").textContent = pretty(p.classification); $("rawModel").textContent = pretty(p.raw_model); $("typedFacts").textContent = pretty(p.semantics);
+  $("guardDebug").textContent = pretty({validation:p.validation,guards:meta.guards}); $("judgmentDebug").textContent = pretty({request:current.judgmentRequest,response:j}); $("processDebug").textContent = pretty(p);
+  if (providerErrors.length) { $("health").textContent = "Live mode · provider error"; $("health").className = "pill warn"; }
+  if (window.innerWidth <= 760) $("actionTitle").scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function run() {
+  const email = $("email").value.trim(), inquiry = $("workflow").value === "inquiry";
+  if (!email) { $("busy").textContent = "Add an email first."; $("email").focus(); return; }
+  reset(); const stamp = version, controller = new AbortController(); active = controller;
+  $("run").disabled = true; $("empty").setAttribute("aria-busy","true"); $("busy").textContent = "Reading the email, validating evidence and checking the draft…";
+  try {
+    const p = await api("/process",{email},controller.signal); if (stamp !== version) return;
+    let j = null, request = null;
+    if (inquiry) {
+      $("busy").textContent = "Draft checked. Evaluating the inquiry from validated sources…";
+      request = {scenario:"inquiry",subject:"UI-INQUIRY",sources:[{id:"customer-email",party:"customer",format:"email",text:email}]};
+      j = await api("/judgment",request,controller.signal);
+      if (j.needs_human_approval !== true) throw new Error("Judgment response is missing mandatory human approval.");
+    }
+    if (stamp !== version) return;
+    current = {email,process:p,judgment:j,judgmentRequest:request}; render();
+    $("busy").textContent = Object.values((p.meta || {}).stages || {}).some(stage => stage.error) ? "Provider errors reported. Review the recovery path and Technical Details." : p.meta && p.meta.mode === "llm" ? "Live pipeline completed. Human review pending." : "Offline demonstration completed. No model inference.";
+  } catch(e) {
+    if (stamp === version && e.name !== "AbortError") { $("busy").className = "status error"; $("busy").textContent = "Analysis incomplete: " + e.message + " No current recommendation or draft is shown."; }
+  } finally {
+    if (stamp === version) { active = null; $("run").disabled = false; $("empty").setAttribute("aria-busy","false"); }
+  }
+}
 async function health() {
-  const el = $("health");
   try {
     const h = await api("/health");
-    el.textContent = h.mode + " · " + h.pipeline + " · " + h.model;
-    $("modeNotice").hidden = h.mode !== "demo";
-  } catch (e) {
-    el.textContent = "server unreachable";
-  }
+    $("health").textContent = h.mode === "llm" ? "Live Apertus · " + h.pipeline : "Offline demo · " + h.pipeline; $("health").className = "pill" + (h.mode === "demo" ? " warn" : "");
+    $("modeNotice").textContent = h.mode === "llm" ? "Live model configured: " + h.model + ". Each analysis calls the server; Technical Details records stage results and any provider errors." : "Offline demo — deterministic evidence and rules, no Apertus inference. Model quality is not measured in this mode.";
+  } catch(e) { $("health").textContent = "Server unavailable"; $("health").className = "pill bad"; $("modeNotice").textContent = "Cannot reach the runtime. Analysis requires the server."; }
 }
-
-/* ---- samples ---------------------------------------------------------- */
 async function samples() {
   try {
-    const d = await api("/samples");
-    $("samples").innerHTML = d.samples.map((s) =>
-      '<button class="ghost" data-id="' + esc(s.id) + '">' + esc(s.id) + "</button>").join("");
-    $("samples").onclick = (e) => {
-      const b = e.target.closest("button[data-id]");
-      if (!b) return;
-      const s = d.samples.find((x) => x.id === b.dataset.id);
-      $("email").value = s.email;
-      $("email").focus();
-    };
-  } catch (e) { /* samples are a convenience only */ }
+    const d = await api("/samples"); $("samples").innerHTML = d.samples.map((s,i) => '<button data-sample="'+i+'">'+esc(s.id)+'</button>').join("");
+    $("samples").onclick = e => { const b = e.target.closest("button[data-sample]"); if (!b) return; const s = d.samples[Number(b.dataset.sample)]; reset(); $("email").value = s.email; $("workflow").value = "draft_only"; workflowLabel(); $("sourceLabel").textContent = s.id; $("heroHint").hidden = true; $("email").focus(); };
+  } catch(_) { $("samples").textContent = "Sample picker unavailable. The embedded hero and email input still work."; }
 }
-
-/* ---- /process -------------------------------------------------------- */
-const FIELD_LABELS = { buyer: "Buyer", products: "Products", incoterm: "Incoterm",
-  payment_terms: "Payment terms", deadline: "Delivery", amounts: "Amounts" };
-
-function show(v) {
-  return typeof v === "string" ? v : JSON.stringify(v, null, 1);
-}
-
-function render(r) {
-  $("results").hidden = false;
-  $("cls").textContent = show(r.classification);
-
-  const sem = (r.semantics && r.semantics.typed_facts) || [];
-  $("semRows").innerHTML = sem.length ? sem.map((t) =>
-    "<tr><td class='num'>" + esc(t.value) +
-      (t.named_place ? " " + esc(t.named_place) : "") + "</td>" +
-    "<td><span class='chip " + esc(t.semantic_role) + "'>" + esc(t.semantic_role) + "</span><br><span class='meta'>" +
-      esc(t.fact_type) + "</span></td>" +
-    "<td class='meta'>" + esc(t.stance) + "</td>" +
-    "<td class='meta'>" + esc(t.status) + "</td>" +
-    "<td class='meta'>" + esc((t.qualifier && t.qualifier.kind) || (t.relation || "—")) + "</td></tr>").join("")
-    : "<tr><td colspan='5' class='meta'>no admitted facts</td></tr>";
-
-  let rows = "";
-  const facts = r.facts || {};
-  Object.keys(FIELD_LABELS).forEach((f) => {
-    const cell = facts[f] || {};
-    if (!cell.facts || !cell.facts.length) return;
-    cell.facts.forEach((x) => {
-      rows += "<tr><td>" + esc(FIELD_LABELS[f]) + "</td><td class='num'>" + esc(show(x.value)) +
-        "</td><td class='meta'>" + esc(x.type) + " · " + esc(x.status) +
-        (x.contested ? " · contested" : "") + (x.customer_asserted ? " · asserted" : "") +
-        (x.negated ? " · negated" : "") + "</td>" +
-        "<td class='span'>" + esc(x.source_span) + (x.span ? " [" + x.span[0] + "," + x.span[1] + "]" : "") + "</td></tr>";
-    });
-  });
-  const ns = (r.extraction && r.extraction.not_stated) || [];
-  if (ns.length) rows += "<tr><td>Not stated</td><td colspan='3' class='meta'>" +
-    esc(ns.join(", ")) + " — the reply asks instead of guessing</td></tr>";
-  $("evRows").innerHTML = rows || "<tr><td colspan='4' class='meta'>no admitted facts</td></tr>";
-
-  $("draft").textContent = r.draft || "(withheld — no candidate passed the guard)";
-  const g = (r.validation && r.validation.guard) || {};
-  const v = $("guardVerdict");
-  v.className = "verdict " + (g.passed ? "ok" : "bad");
-  v.textContent = g.passed ? "guard passed" : "guard FAILED — draft withheld";
-  $("guardVia").textContent = g.via ? "produced by: " + g.via : "";
-  const iss = (g.issues || []);
-  $("guardIssues").innerHTML = iss.map((i) => "<li>" + esc(i) + "</li>").join("");
-  $("busy").textContent = "";
-  $("run").disabled = false;
-}
-
-async function run() {
-  const email = $("email").value.trim();
-  if (!email) { $("busy").textContent = "paste an email first"; return; }
-  $("run").disabled = true;
-  $("busy").textContent = "running the v4 pipeline…";
-  try {
-    render(await api("/process", { email: email }));
-  } catch (e) {
-    $("busy").textContent = "error: " + e.message;
-    $("run").disabled = false;
-  }
-}
-
-/* ---- /judgment -------------------------------------------------------- */
-const JUDGMENT_TEMPLATES = {
-  inquiry: {
-    label: "Inquiry",
-    body: {
-      scenario: "inquiry", subject: "RFQ-1",
-      sources: [{ id: "buyer", party: "customer", format: "email",
-        text: "Hi, please quote TS-901 padded jackets, 3,000 pcs CIF Hamburg, delivery before Dec 5. Payment 30% T/T. Anna Berg" }]
-    }
-  },
-  payment: {
-    label: "Payment node",
-    body: {
-      scenario: "payment", subject: "ORDER-101", as_of: "2026-10-04",
-      sources: [{ id: "finance", party: "company", format: "fact_card",
-        text: '{"subject":"ORDER-101","payment_status":"pending","payment_due":"2026-10-05","payment_checked_at":"2026-10-04","pi_sent":true}' }]
-    }
-  },
-  sample_test: {
-    label: "Sample test",
-    body: {
-      scenario: "sample_test", subject: "SAMPLE-101",
-      sources: [
-        { id: "lab", party: "lab", format: "fact_card",
-          text: '{"subject":"SAMPLE-101","metric":"shrinkage","unit":"percent","test_value":6}' },
-        { id: "qa", party: "company", format: "fact_card",
-          text: '{"subject":"SAMPLE-101","metric":"shrinkage","unit":"percent","test_min":0,"test_max":3}' }]
-    }
-  }
+const CARD_TEMPLATES = {
+  payment:{scenario:"payment",subject:"ORDER-101",as_of:"2026-10-04",sources:[{id:"finance",party:"company",format:"fact_card",text:'{"subject":"ORDER-101","payment_status":"pending","payment_due":"2026-10-05","payment_checked_at":"2026-10-04","pi_sent":true}'}]},
+  sample_test:{scenario:"sample_test",subject:"SAMPLE-101",sources:[{id:"lab",party:"lab",format:"fact_card",text:'{"subject":"SAMPLE-101","metric":"shrinkage","unit":"percent","test_value":6}'},{id:"qa",party:"company",format:"fact_card",text:'{"subject":"SAMPLE-101","metric":"shrinkage","unit":"percent","test_min":0,"test_max":3}'}]}
 };
-
-function judgmentUI() {
-  $("jButtons").innerHTML = Object.keys(JUDGMENT_TEMPLATES).map((k) =>
-    '<button class="ghost" data-k="' + k + '">' + esc(JUDGMENT_TEMPLATES[k].label) + "</button>").join("");
-  $("jButtons").onclick = (e) => {
-    const b = e.target.closest("button[data-k]");
-    if (b) $("jReq").value = JSON.stringify(JUDGMENT_TEMPLATES[b.dataset.k].body, null, 2);
-  };
-  $("jReq").value = JSON.stringify(JUDGMENT_TEMPLATES.inquiry.body, null, 2);
-}
-
-async function runJudgment() {
-  let req;
-  try { req = JSON.parse($("jReq").value); }
-  catch (e) { $("jBusy").textContent = "invalid JSON: " + e.message; return; }
-  $("jBusy").textContent = "evaluating policy…";
-  try {
-    const out = await api("/judgment", req);
-    const lines = [
-      "action: " + out.action + "   owner: " + out.owner + "   confidence: " + out.confidence,
-      "reason: " + out.reason,
-      "needs_human_approval: " + out.needs_human_approval,
-      "next_customer_action: " + (out.next_customer_action || "—")
-    ];
-    if ((out.evidence || []).length) {
-      lines.push("", "evidence:");
-      out.evidence.forEach((e) => lines.push(
-        "  · [" + e.fact_id + "] " + e.field + " = " + JSON.stringify(e.value) +
-        "  role=" + e.semantic_role + " stance=" + e.stance + " status=" + e.status +
-        "\n    " + e.source_id + " " + JSON.stringify(e.quote) +
-        (e.span ? " @" + e.span.join("-") : "")));
-    }
-    if ((out.blocking_conditions || []).length) {
-      lines.push("", "blocking_conditions:");
-      out.blocking_conditions.forEach((b) => lines.push("  · " + (b.reason || JSON.stringify(b))));
-    }
-    $("jOut").hidden = false;
-    $("jOut").textContent = lines.join("\n");
-    $("jBusy").textContent = "";
-  } catch (e) {
-    $("jBusy").textContent = "error: " + e.message;
-  }
-}
-
-$("run").onclick = run;
-$("clear").onclick = () => {
-  $("email").value = ""; $("results").hidden = true; $("busy").textContent = ""; $("email").focus();
+let cardVersion = 0;
+function cardChanged() { cardVersion++; $("jOut").hidden = true; $("jBusy").textContent = ""; $("jRun").disabled = false; }
+$("jButtons").innerHTML = '<button data-card="payment">Payment node</button><button data-card="sample_test">Sample test</button>'; $("jReq").value = pretty(CARD_TEMPLATES.payment);
+$("jButtons").onclick = e => { const b = e.target.closest("button[data-card]"); if (b) { cardChanged(); $("jReq").value = pretty(CARD_TEMPLATES[b.dataset.card]); } }; $("jReq").oninput = cardChanged;
+$("jRun").onclick = async () => {
+  cardChanged(); const stamp = cardVersion; $("jRun").disabled = true;
+  try { const req = JSON.parse($("jReq").value); $("jBusy").textContent = "Evaluating provided sources…"; const out = await api("/judgment",req); if (stamp !== cardVersion) return; $("jOut").hidden = false; $("jOut").textContent = pretty(out); $("jBusy").textContent = "Recommendation only · human approval required."; }
+  catch(e) { if (stamp === cardVersion) $("jBusy").textContent = e.message; }
+  finally { if (stamp === cardVersion) $("jRun").disabled = false; }
 };
-$("jRun").onclick = runJudgment;
-$("email").addEventListener("keydown", (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
-});
-health();
-samples();
-judgmentUI();
+$("run").onclick = run; $("hero").onclick = loadHero;
+$("clear").onclick = () => { reset(); $("email").value = ""; $("sourceLabel").textContent = "Current input"; $("heroHint").hidden = true; $("email").focus(); };
+$("edit").onclick = () => { reset("Editing clears the previous result. Analyze again after changes."); $("email").focus(); }; $("email").oninput = inputChanged;
+$("workflow").onchange = () => { reset("Workflow changed. Analyze again."); workflowLabel(); };
+$("email").onkeydown = e => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && !$("run").disabled) { e.preventDefault(); run(); } };
+$("draftEvidence").onclick = () => { if (current) { evidenceView = "draft"; renderEvidence(); } }; $("decisionEvidence").onclick = () => { if (current && current.judgment) { evidenceView = "decision"; renderEvidence(); } };
+$("evidenceList").onclick = e => { const b = e.target.closest("button[data-evidence]"); if (!b) return; document.querySelectorAll("button[data-evidence]").forEach(x => x.setAttribute("aria-pressed",x === b)); sourceHighlight(evidenceItems[Number(b.dataset.evidence)]); };
+$("basis").onclick = e => { const b = e.target.closest("button[data-basis]"); if (b && current.judgment) { const f = current.judgment.evidence[Number(b.dataset.basis)]; sourceHighlight({id:f.fact_id,span:f.span,quote:f.quote}); } };
+$("copy").onclick = async () => {
+  if (!current || $("copy").disabled) return;
+  const stamp = version, text = current.process.draft;
+  try { await navigator.clipboard.writeText(text); if (stamp === version) $("copyStatus").textContent = "Copied for human review. Approval remains pending; no email was sent."; }
+  catch(_) { if (stamp === version) $("copyStatus").textContent = "Clipboard unavailable. Select and copy the draft manually for review."; }
+};
+loadHero(); health(); samples();
 </script>
 </body>
 </html>
