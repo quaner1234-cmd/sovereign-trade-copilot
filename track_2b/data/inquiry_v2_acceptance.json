@@ -1,0 +1,174 @@
+{
+  "fixture_version": "inquiry-v2-p0-p2-1",
+  "provenance": "Entirely fictional decision patterns authored for acceptance; no customer or private company seed data.",
+  "scope": "P0-P2 understanding, provenance, correctness gates and judgment. No automatic reply workflow required.",
+  "fictional_company_context": {
+    "source_id": "fictional-company-policy",
+    "text": "The manufacturer specialises in lightweight weatherwear and work vests. Standard bulk MOQ is 240 pieces per style; colour and material minimums require internal checking. Custom development can be assessed. One-off prototypes, below-MOQ runs, branded-material sourcing, current stock and performance certifications require human approval. An approved lightweight-shell reference sheet exists with image-use permission. Quoting needs a scoped garment/material/construction, quantity basis and required changes; preliminary development costing may use a documented working assumption. No prices or delivery guarantees are pre-approved.",
+    "values": [
+      {"id": "cc-scope", "key": "company.product_scope", "value": ["lightweight weatherwear", "work vests"], "status": "company_confirmed", "scope": "company.default"},
+      {"id": "cc-moq", "key": "moq.style", "value": 240, "unit": "pcs/style", "status": "company_confirmed", "scope": "bulk.per_style", "conditions": ["Colour and material minimums require internal checking."]},
+      {"id": "cc-review", "key": "capability.development_review", "value": true, "status": "company_confirmed", "scope": "reversible.technical_review"},
+      {"id": "cc-asset", "key": "asset.reference_sheet", "value": "approved lightweight-shell reference sheet", "status": "company_confirmed", "scope": "weatherwear.reference_only"}
+    ]
+  },
+  "invariants": {
+    "one_preferred_advance": true,
+    "max_customer_questions": 3,
+    "needs_human_approval": true,
+    "hard_blocker_for_representatives": null,
+    "unknown_does_not_force_customer_question": true,
+    "source_spans_must_round_trip": true,
+    "company_candidates_require_company_source": true,
+    "no_send_purchase_payment_or_production": true
+  },
+  "cases": [
+    {
+      "id": "S01", "group": "representative", "pattern": "developed-design-low-volume",
+      "body": "We have finished designs for a commuter rain cape and packable overshirt. We would like 80 of each for launch. Can you quote samples, production, packaging and transport? Please show similar work.",
+      "expect": {"route": "low_volume_review", "line_count_min": 2, "products": ["commuter rain cape", "packable overshirt"], "quantity_values": [80, 80], "owners": ["sales", "technical"], "max_questions": 2, "forbidden_question_fields": ["full_specification", "freight_arrangement"], "hard_blocker": null, "not_global_conflict": true, "moq": 240, "moq_scope": "bulk.per_style", "forbid_confirmed_price": true},
+      "rationale": "The developed design already exists. MOQ economics and one priority design can be assessed without a new complete specification questionnaire."
+    },
+    {
+      "id": "S02", "group": "representative", "pattern": "licensed-material-internal-owner",
+      "body": "For our first lightweight safety vest, we want genuine licensed reflective material from a named supplier. Please confirm traceability, available stock, all certificates and an immediate custom sample. We have not opened a supplier account.",
+      "expect": {"route": "sourcing_verification", "owners": ["purchasing"], "max_questions": 1, "forbidden_question_fields": ["company_sourcing_authority", "company_stock", "company_certification"], "hard_blocker": null, "internal_unknown_class": "C", "forbid_confirmed_capability": true},
+      "rationale": "Purchasing owns verification. An absent buyer supplier account does not prevent reversible reference evaluation."
+    },
+    {
+      "id": "S03", "group": "representative", "pattern": "current-scope-before-future-story",
+      "body": "We are launching cotton tote bags and lounge shorts, roughly 160–320 per item. In future we will sell technical rainwear. Can you price all volumes and every customization option?",
+      "expect": {"route": "company_fit_review", "owners": ["business_owner"], "barrier_owner": "business_owner", "current_products": ["cotton tote bags", "lounge shorts"], "future_products": ["technical rainwear"], "quantity_range": [160, 320], "max_questions": 1, "hard_blocker": null, "not_global_conflict": true, "company_fit": "needs_internal_review"},
+      "rationale": "Future rainwear ambition is not current production fit or evidence of future order value."
+    },
+    {
+      "id": "S04", "group": "representative", "pattern": "single-engineered-prototype",
+      "body": "We need one prototype of an insulated cycling overshirt for a fit trial, with a short front, drop-tail back, underarm panels and removable hood. We have a dimensioned drawing and fabric-weight preferences ready. Please cost the pattern work and explain what performance can be tested.",
+      "expect": {"route": "development_costing", "owners": ["technical"], "quantity_values": [1], "quantity_purpose": "prototype", "spec_cues_min": 3, "max_questions": 1, "hard_blocker": null, "must_have_internal_costing": true, "forbid_bulk_moq_rejection": true, "forbid_confirmed_performance": true},
+      "rationale": "One unit is development, not a one-unit bulk order. Existing technical requirements support a reversible review and preliminary costing."
+    },
+    {
+      "id": "S05", "group": "representative", "pattern": "sample-before-interest-volume",
+      "body": "The platform form shows 960 pieces. Before deciding, can I evaluate one work vest and see my logo placement?",
+      "platform_fields": [{"name": "quantity", "value": 960}],
+      "expect": {"route": "sample_route_verification", "owners": ["sample_coordinator"], "sample_quantity": 1, "quantity_purpose": "evaluation_sample", "platform_quantity": 960, "platform_status": "system_reported", "max_questions": 1, "forbidden_question_fields": ["sample_intent"], "hard_blocker": null, "stage": "new_lead", "forbid_order_upgrade": true},
+      "rationale": "The sample request is explicit and platform interest is not a confirmed order."
+    },
+    {
+      "id": "S06", "group": "representative", "pattern": "tiny-lot-moq-freight-known",
+      "body": "What is the MOQ and final factory price for 18 vests? I will arrange collection through my own forwarder.",
+      "expect": {"route": "low_volume_review", "owners": ["sales"], "quantity_values": [18], "max_questions": 1, "forbidden_question_fields": ["freight_arrangement", "forwarder", "delivery_destination"], "hard_blocker": null, "moq": 240, "forbid_confirmed_price": true, "internal_check_owners": ["sales", "management"]},
+      "rationale": "Answer the known MOQ. The freight arrangement has already been answered and the exception belongs internally."
+    },
+    {
+      "id": "S07", "group": "representative", "pattern": "sparse-listing-spanish",
+      "body": "Me interesa el chaleco de la ficha. ¿Me puedes dar un precio?",
+      "research_sources": [{"id": "listing", "url": "https://catalog.example.invalid/vest", "text": "The referenced listing is a lightweight work vest with a zipped front, two pockets and no logo customization stated.", "coverage": "parsed", "scope": "listing.reference"}],
+      "expect": {"route": "targeted_customer_clarification", "owners": ["sales"], "language": "es", "question_fields": ["quantity", "customization"], "max_questions": 2, "forbidden_question_fields": ["delivery_destination", "incoterm", "full_specification", "buyer_identity"], "hard_blocker": null, "must_use_listing_before_question": true, "forbid_confirmed_price": true},
+      "rationale": "Use the accessible listing before asking only quantity and unchanged/customized model."
+    },
+    {
+      "id": "S01-P", "group": "polarity", "base": "S01",
+      "body": "We have finished designs for a commuter rain cape and packable overshirt. We would like 400 of each for launch. Can you quote samples, production, packaging and transport? Please show similar work.",
+      "expect": {"route": "internal_costing", "must_have_internal_costing": true, "quantity_values": [400, 400], "line_count_min": 2, "not_global_conflict": true, "max_questions": 1, "hard_blocker": null},
+      "rationale": "Above-MOQ developed designs should progress to technical/preliminary costing rather than low-volume alignment."
+    },
+    {
+      "id": "S02-P", "group": "polarity", "base": "S02",
+      "body": "For our first lightweight safety vest, we want genuine licensed reflective material from the authorized distributor Beacon Supply. Please check that route before any custom sample. We have not opened a supplier account.",
+      "expect": {"route": "sourcing_verification", "owners": ["purchasing"], "max_questions": 1, "hard_blocker": null, "must_use_supplied_sourcing_route": true, "forbid_confirmed_capability": true},
+      "rationale": "A named claimed authorized route narrows internal investigation, but does not establish company authority."
+    },
+    {
+      "id": "S03-P", "group": "polarity", "base": "S03",
+      "body": "We are launching lightweight technical rainwear now, roughly 160–320 per item. Our reference drawing shows a packable weather shell with taped seams. Can you assess the production route?",
+      "expect": {"route": "low_volume_review", "company_fit": "fit", "quantity_range": [160, 320], "max_questions": 1, "hard_blocker": null},
+      "rationale": "Changing the current product to the confirmed company scope must change fit, even while range/MOQ uncertainty remains."
+    },
+    {
+      "id": "S04-P", "group": "polarity", "base": "S04",
+      "body": "We need 300 pieces of an insulated cycling overshirt for production, with a short front, drop-tail back, underarm panels and removable hood. We have a dimensioned drawing and fabric-weight preferences ready. Please cost the garment and explain what performance can be tested.",
+      "expect": {"route": "internal_costing", "must_have_internal_costing": true, "quantity_values": [300], "quantity_purpose": "bulk_interest", "max_questions": 1, "hard_blocker": null},
+      "rationale": "A bulk volume changes the prototype route to production costing; final technical approval is still not a prerequisite for reversible review."
+    },
+    {
+      "id": "S05-P", "group": "polarity", "base": "S05",
+      "body": "We have confirmed our order for 960 work vests. Please issue the PI now.",
+      "expect": {"route": "out_of_scope_review", "stage": "out_of_scope", "quantity_values": [960], "max_questions": 0, "hard_blocker": null, "needs_human_approval": true},
+      "rationale": "A confirmed order requiring a PI is not a new-inquiry first-reply workflow."
+    },
+    {
+      "id": "S06-P", "group": "polarity", "base": "S06",
+      "body": "Please prepare a preliminary factory quote for 400 lightweight work vests, zipped front and two pockets, no logo changes, FOB Qingdao. My own forwarder will arrange collection.",
+      "expect": {"route": "internal_costing", "must_have_internal_costing": true, "quantity_values": [400], "max_questions": 0, "forbidden_question_fields": ["quantity", "freight_arrangement", "forwarder", "full_specification"], "hard_blocker": null},
+      "rationale": "A scoped garment and quantity basis support internal costing without an independent specification field."
+    },
+    {
+      "id": "S07-P", "group": "polarity", "base": "S07",
+      "body": "Me interesa el chaleco de la ficha. Necesito 200 unidades. ¿Me puedes dar un precio?",
+      "research_sources": [{"id": "listing", "url": "https://catalog.example.invalid/vest", "text": "The referenced listing is a lightweight work vest with a zipped front, two pockets and no logo customization stated.", "coverage": "parsed", "scope": "listing.reference"}],
+      "expect": {"language": "es", "quantity_values": [200], "max_questions": 1, "forbidden_question_fields": ["quantity", "delivery_destination", "incoterm", "full_specification"], "hard_blocker": null},
+      "rationale": "The supplied quantity must remove the quantity question regardless of route details."
+    },
+    {
+      "id": "S01-W", "group": "paraphrase", "base": "S01",
+      "body": "For launch, the quantities are 80 commuter rain capes plus 80 packable overshirts. The designs are already finished. Please review similar work and the sample, manufacturing, packing and shipping cost route.",
+      "expect": {"route": "low_volume_review", "line_count_min": 2, "quantity_values": [80, 80], "max_questions": 2, "not_global_conflict": true, "hard_blocker": null},
+      "rationale": "Same operative design and quantity facts expressed as a collection must preserve the decision route."
+    },
+    {
+      "id": "S02-W", "group": "paraphrase", "base": "S02",
+      "body": "Our first product is a lightweight safety vest using genuine licensed reflective fabric. No supplier account has been opened by us. Can your purchasing team establish the sourcing and documentation route, then check stock and a custom sample?",
+      "expect": {"route": "sourcing_verification", "owners": ["purchasing"], "max_questions": 1, "hard_blocker": null, "forbid_confirmed_capability": true},
+      "rationale": "Buyer-account wording cannot turn an internal sourcing task into a hard blocker."
+    },
+    {
+      "id": "S03-W", "group": "paraphrase", "base": "S03",
+      "body": "Cotton tote bags and lounge shorts are the launch items, with each item at about 160 to 320 units. Technical rainwear is only a later idea. Could you review all pricing and customization options?",
+      "expect": {"route": "company_fit_review", "barrier_owner": "business_owner", "quantity_range": [160, 320], "company_fit": "needs_internal_review", "not_global_conflict": true, "max_questions": 1, "hard_blocker": null},
+      "rationale": "Current versus future wording changes neither fit nor the preserved quantity range."
+    },
+    {
+      "id": "S04-W", "group": "paraphrase", "base": "S04",
+      "body": "A single insulated cycling overshirt is needed for development and fitting. Our dimensioned drawing and fabric-weight preferences are ready: short front, longer back, underarm panels, hood removable. We need an initial pattern-development cost review and advice on possible tests.",
+      "expect": {"route": "development_costing", "must_have_internal_costing": true, "quantity_values": [1], "quantity_purpose": "prototype", "max_questions": 1, "forbid_bulk_moq_rejection": true, "hard_blocker": null},
+      "rationale": "A single development garment and an existing drawing carry the same prototype purpose."
+    },
+    {
+      "id": "S05-W", "group": "paraphrase", "base": "S05",
+      "body": "960 pieces is the quantity on the platform form, not an order decision. First I want one evaluation sample of the work vest with a logo-placement review.",
+      "platform_fields": [{"name": "quantity", "value": 960}],
+      "expect": {"route": "sample_route_verification", "sample_quantity": 1, "quantity_purpose": "evaluation_sample", "max_questions": 1, "forbidden_question_fields": ["sample_intent"], "forbid_order_upgrade": true, "hard_blocker": null},
+      "rationale": "Explicit evaluation and non-order wording must preserve sample-first routing."
+    },
+    {
+      "id": "S06-W", "group": "paraphrase", "base": "S06",
+      "body": "My freight agent will collect. For an 18-vest lot, what minimum order applies and can you provide the factory price?",
+      "expect": {"route": "low_volume_review", "quantity_values": [18], "max_questions": 1, "forbidden_question_fields": ["freight_arrangement", "forwarder"], "moq": 240, "forbid_confirmed_price": true, "hard_blocker": null},
+      "rationale": "Front-loaded freight information must prevent the same repeated logistics question."
+    },
+    {
+      "id": "S07-W", "group": "paraphrase", "base": "S07",
+      "body": "Quisiera saber el precio del chaleco que aparece en la ficha.",
+      "research_sources": [{"id": "listing", "url": "https://catalog.example.invalid/vest", "text": "The referenced listing is a lightweight work vest with a zipped front, two pockets and no logo customization stated.", "coverage": "parsed", "scope": "listing.reference"}],
+      "expect": {"route": "targeted_customer_clarification", "language": "es", "question_fields": ["quantity", "customization"], "max_questions": 2, "forbidden_question_fields": ["delivery_destination", "incoterm", "full_specification"], "hard_blocker": null},
+      "rationale": "Sparse Spanish wording must preserve the listing-first, two-variable discrimination."
+    }
+  ],
+  "regressions": [
+    {"id": "R01", "body": "We need ONE prototype of a cycling overshirt. * 3-layer shell, 20K waterproof target and a 5% stretch specification.", "expect": {"quantity_values": [1], "quantity_purpose": "prototype", "forbidden_quantity_values": [3, 20, 5], "construction": "3-layer shell"}},
+    {"id": "R02", "body": "Please evaluate 3 shells with taped seams.", "expect": {"quantity_values": [3]}},
+    {"id": "R03", "body": "Me interesa el chaleco blanco del catálogo. ¿Puede enviarme una ficha?", "expect": {"payment_terms": []}},
+    {"id": "R04", "body": "For 400 work vests we request L/C at sight. This is our request; your finance team has not confirmed it.", "expect": {"payment_terms": ["L/C"], "forbid_company_confirmation": true}},
+    {"id": "R05", "body": "We need 30–50 work vests for evaluation, with no production decision yet.", "safe_draft": "Your evaluation range is 30–50 work vests; sales will check the available route.", "unsafe_draft": "Your evaluation quantity is around 50 work vests.", "expect": {"quantity_range": [30, 50], "unsafe_issue": "qualifier_changed"}},
+    {"id": "R06", "body": "We need 400 work vests, zipped front and two pockets.", "safe_draft": "We will review the costing basis for 400 work vests.", "unsafe_draft": "We will review the costing basis for 400 ski jackets.", "expect": {"unsafe_issue": "unsupported_product"}},
+    {"id": "R07", "body": "Please quote 400 work vests.", "safe_draft": "Finance will verify the requested payment route before approval.", "unsafe_draft": "We support L/C at sight for these work vests.", "expect": {"unsafe_issue": "unsupported_company_capability"}},
+    {"id": "R08", "body": "Please use the quantities and construction in our attached brief.", "thread": [{"party": "customer", "text": "The quantity is 400 work vests. The construction is zipped front and two pockets. No logo changes."}], "expect": {"forbidden_question_fields": ["quantity", "full_specification", "customization"], "must_have_internal_costing": true}},
+    {"id": "R09", "body": "Please review the attached dimensioned prototype drawing for a cycling overshirt.", "attachments": [{"name": "fictional-drawing.pdf", "status": "referenced_unread"}], "expect": {"coverage_gap": "referenced_unread", "forbid_claim_not_provided": true, "must_have_internal_verification": true}},
+    {"id": "R10", "body": "Please quote our work vests using the parsed brief.", "attachments": [{"name": "fictional-brief.txt", "status": "parsed", "text": "400 work vests, zipped front, two pockets, no logo changes."}], "expect": {"forbidden_question_fields": ["quantity", "full_specification", "customization"], "must_have_internal_costing": true}},
+    {"id": "R11", "body": "Please cost 300 work vests with a taped construction. Performance must be tested before we decide on a claim.", "expect": {"must_have_internal_costing": true, "unknown_class": "D", "internal_owner": "technical", "hard_blocker": null}},
+    {"id": "R12", "body": "We request 400 work vests, zipped front, two pockets, no logo changes, FOB Qingdao. Price and delivery are not approved yet.", "zero_context": true, "expect": {"must_have_internal_costing": true, "no_invented_company_values": true, "hard_blocker": null}},
+    {"id": "R13", "body": "Could you show us a real photo of the listed work vest?", "zero_context": true, "research_available": false, "expect": {"core_must_run_offline": true, "no_invented_company_values": true, "hard_blocker": null}},
+    {"id": "R14", "body": "We are looking at approximately 400 work vests, not a confirmed order.", "safe_draft": "Your approximate interest is 400 work vests, subject to review.", "unsafe_draft": "Your confirmed order is 400 work vests.", "expect": {"unsafe_issue": "commitment_upgrade"}}
+  ]
+}

@@ -6,12 +6,14 @@ GET  /samples -> the synthetic demonstration fixtures, for the console's picker
 POST /process {"email": "..."} -> classification + extraction + draft + validation
                  plus, on v4, the validated fact store with per-fact provenance.
 POST /judgment -> source-backed next-action advice; human approval required.
+POST /v2/inquiry -> P0-P2 source coverage, typed lines and reversible inquiry judgment.
 PIPELINE_VERSION defaults to v4; v3 is a compatibility alias for v4.
 """
 import json, os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import llm_client
 import judgment
+import inquiry_v2
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 UI_PATH = os.path.join(HERE, "ui", "index.html")
@@ -67,7 +69,7 @@ class Handler(BaseHTTPRequestHandler):
                              "hint": "GET /ui, GET /health, GET /samples, POST /process or POST /judgment"})
 
     def do_POST(self):
-        if self.path not in ("/process", "/judgment"):
+        if self.path not in ("/process", "/judgment", "/v2/inquiry"):
             return self._send(404, {"error": "not found"})
         try:
             n = int(self.headers.get("Content-Length", 0))
@@ -78,6 +80,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(400, {"error": "invalid json"})
         if not isinstance(body, dict):
             return self._send(400, {"error": "JSON object required"})
+        if self.path == "/v2/inquiry":
+            try:
+                return self._send(200, inquiry_v2.analyze(body))
+            except ValueError as e:
+                return self._send(400, {"error": str(e)})
         if self.path == "/judgment":
             try:
                 return self._send(200, judgment.judge(body))
