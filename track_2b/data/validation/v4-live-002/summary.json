@@ -1,0 +1,251 @@
+{
+  "cases": [
+    {
+      "id": "acc01_new_inquiry",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": true,
+      "raw_drift_classes": [
+        "A_hedge_fidelity"
+      ],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": false,
+        "issues": [
+          "hedge_invented:f001"
+        ]
+      },
+      "final_via": "retry",
+      "latency_ms": 6545,
+      "usage": {
+        "prompt_tokens": 3694,
+        "completion_tokens": 184,
+        "total_tokens": 3878
+      },
+      "model_calls": 4
+    },
+    {
+      "id": "acc02_target_price",
+      "status": "FAIL",
+      "failures": [
+        {
+          "name": "acc02_target_price: draft contains '目标'",
+          "passed": false,
+          "detail": "已收到贵司来函，产品代码 TS-880、产品为 softshell jackets，买方为 Lukas Meier。我司将核实相关事项后尽快回复。"
+        }
+      ],
+      "raw_business_pass": true,
+      "raw_drift_classes": [
+        "A_hedge_fidelity"
+      ],
+      "final_guard_passed": true,
+      "final_business_pass": false,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": false,
+        "issues": [
+          "hedge_invented:f003"
+        ]
+      },
+      "final_via": "retry",
+      "latency_ms": 6984,
+      "usage": {
+        "prompt_tokens": 3951,
+        "completion_tokens": 224,
+        "total_tokens": 4175
+      },
+      "model_calls": 4
+    },
+    {
+      "id": "acc03_requested_delivery",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": true,
+      "raw_drift_classes": [],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 4811,
+      "usage": {
+        "prompt_tokens": 2798,
+        "completion_tokens": 150,
+        "total_tokens": 2948
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc04_approx_quantity",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": true,
+      "raw_drift_classes": [],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 4916,
+      "usage": {
+        "prompt_tokens": 2773,
+        "completion_tokens": 140,
+        "total_tokens": 2913
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc05_incoterm_port",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": true,
+      "raw_drift_classes": [
+        "A_hedge_fidelity",
+        "C_identifier_kind"
+      ],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": false,
+        "issues": [
+          "contested_value_echoed:f004",
+          "target_stated_as_our_price:f004",
+          "identifier_kind_conflict:f003:sku<-doc_id",
+          "hedge_invented:f002"
+        ]
+      },
+      "final_via": "deterministic_fallback",
+      "latency_ms": 8534,
+      "usage": {
+        "prompt_tokens": 4086,
+        "completion_tokens": 248,
+        "total_tokens": 4334
+      },
+      "model_calls": 4
+    },
+    {
+      "id": "acc06_confirm_existing_quote",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": true,
+      "raw_drift_classes": [
+        "A_hedge_fidelity",
+        "B_role_framing"
+      ],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": false,
+        "issues": [
+          "hedge_invented:f001",
+          "role_framing_conflict:f003:QUESTION<-TARGET",
+          "role_framing_conflict:f005:QUESTION<-TARGET"
+        ]
+      },
+      "final_via": "deterministic_fallback",
+      "latency_ms": 7421,
+      "usage": {
+        "prompt_tokens": 4054,
+        "completion_tokens": 255,
+        "total_tokens": 4309
+      },
+      "model_calls": 4
+    },
+    {
+      "id": "acc07_claims_agreed_price",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": false,
+      "raw_drift_classes": [
+        "B_role_framing"
+      ],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": false,
+        "issues": [
+          "commitment_language_on_unsettled_value:f004:QUESTION",
+          "role_framing_conflict:f004:QUESTION<-REQUEST"
+        ]
+      },
+      "final_via": "retry",
+      "latency_ms": 7130,
+      "usage": {
+        "prompt_tokens": 4018,
+        "completion_tokens": 254,
+        "total_tokens": 4272
+      },
+      "model_calls": 4
+    },
+    {
+      "id": "acc08_confirmed_order",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": true,
+      "raw_drift_classes": [
+        "A_hedge_fidelity",
+        "B_role_framing",
+        "C_identifier_kind"
+      ],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": false,
+        "issues": [
+          "promise_language",
+          "identifier_kind_conflict:f003:sku<-doc_id",
+          "hedge_invented:f002",
+          "role_framing_conflict:f004:COMMITMENT<-TARGET",
+          "role_framing_conflict:f005:COMMITMENT<-TARGET"
+        ]
+      },
+      "final_via": "deterministic_fallback",
+      "latency_ms": 8004,
+      "usage": {
+        "prompt_tokens": 4322,
+        "completion_tokens": 262,
+        "total_tokens": 4584
+      },
+      "model_calls": 4
+    },
+    {
+      "id": "acc09_manual_ski_jackets",
+      "status": "PASS",
+      "failures": [],
+      "raw_business_pass": true,
+      "raw_drift_classes": [],
+      "final_guard_passed": true,
+      "final_business_pass": true,
+      "final_drift_classes": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 5255,
+      "usage": {
+        "prompt_tokens": 2948,
+        "completion_tokens": 182,
+        "total_tokens": 3130
+      },
+      "model_calls": 3
+    }
+  ],
+  "frozen_sources_unchanged": true,
+  "passed": 8,
+  "raw_business_correctness_passed": 8,
+  "final_system_safety_passed": 9,
+  "finished_at": "2026-10-03T02:27:37.327047+00:00"
+}

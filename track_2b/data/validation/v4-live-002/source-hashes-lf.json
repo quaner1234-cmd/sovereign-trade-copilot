@@ -1,0 +1,29 @@
+{
+  "normalization": "UTF-8 decoded text, CRLF to LF, SHA-256",
+  "source_hashes": {
+    "acceptance.py": "578fa0fa1756d3ea520879e69f7aeaeb86761f83bcd4cef9e66f9f5d7673a591",
+    "acceptance_live.py": "8c75305f2d354b54746c3eda36b3b118d3f4e1f0ce70cf2cb5949c491144a1d1",
+    "audit_parser_ceiling.py": "d0a8c2c704722adbbacf45cbafcf765d95fa929810a4204aaae5e0d67b9a2a0b",
+    "bench.py": "2e884f121e3519edea4f5516f877d24d0f625f987b66734f5cabbcc5e597d78c",
+    "bench_v3.py": "2295b2ea8f4da8a3fa336ba587ad8ccc9841965030e9b43fbaeaf2a654f5b1ca",
+    "business_facts.py": "a6c6ee8ef9067b6b739061c9832bb3258010361892680268beba4e78296113e5",
+    "fact_parsers.py": "38f52667407fc8378a39492737923c542f80d672d533b9c86a71fb8cfab87e29",
+    "fact_store.py": "5be876c81eb42e10b17de6cbabe0244463581c048eab3e22e9ce70616be3dcab",
+    "judgment.py": "d96bf1ec27767cefc140bd2087194513046c91764e0d4b23125dd54df7f235b8",
+    "llm_client.py": "00d1bbb505e8c455fa86ec9364070a91e1b92c9a2ebd4015c3710930364591e1",
+    "pipeline.py": "33c61bcef501eef932ddbb85e03a9e323b50c69068cf964d61c3865c998d5ef3",
+    "pipeline_v3.py": "6814343cd0ee79f84aa6cdca7e47e44fb3ce942a202982ea853c26b12a567042",
+    "selftest.py": "4247f209ea4089a7c286e619b619e73403667de3202d23cd6985fe984e055c18",
+    "selftest_http.py": "dd237834fe5c4aa2ffc63376130a2f3eae27b004c45ee3d2d5661ce551e8530a",
+    "selftest_judgment.py": "365b25a6a7c3e468b37ce66647f3dfc7a44032c00aa17a668cbe601e7d46d1c3",
+    "selftest_safety.py": "ac04197cb0abc1ae46e935922431e2adb11d2df08cd675eaf9975fa44194a3a2",
+    "selftest_v3.py": "7d29b520acad5f2d17377a0a01b30fce2e2e3901f30f027a1d85bfed27c6798c",
+    "semantics.py": "31e2beaa54eb65faf87491dcd5f63c004c2cc487f7c9358011d0b1a571aa0368",
+    "server.py": "e068d5f3ab6069282f03fc890cf67514260f2714f08c425036ea97fed5d34965",
+    "snapshot_extraction.py": "03efe6d155145d36b19f94e1b1dfeb02434a79a245c7b5f9f9f50697c454bb02",
+    "validators.py": "a36935cdc372f7dca5534256710a9ca22380727b718b5b0a19f0d3ae058eb6d9",
+    "prompts/v1.json": "e07770c54da0de59394ecad40ced476462cde85fd8f04afd64eee8b6f7c3e31d",
+    "prompts/v2.json": "5a7e707709257686cc381532a7bdfe0feb9a0cd4fea3ce74056d6beafe9f9307",
+    "prompts/v3.json": "fba5e5850cdc74cc086ecebcf80707d45336b50f17eda89d65732cc7ae958d27"
+  }
+}

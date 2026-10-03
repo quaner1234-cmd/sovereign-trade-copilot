@@ -11,6 +11,88 @@ Version names: HTTP `/health` and processing metadata report `v4`. The existing
 compatibility; `PIPELINE_VERSION=v3` is an alias for the current v4 implementation.
 No prompt content was changed during this task.
 
+## 2026-10-03 final semantic guard: three drift classes, and the backend freeze
+
+The v4-live-001 source-to-draft review found three SYSTEMATIC classes of semantic
+drift in the model's own drafts. `guard_drift` (stage 6b) now detects exactly those
+three, and nothing else:
+
+| class | drift | detected as |
+| --- | --- | --- |
+| A hedge fidelity | an exact value softened ("约 500 pcs" out of "500 pcs"), or a hedged value hardened back to a flat number | `hedge_invented` / `hedge_dropped` |
+| B role framing | the business act changes: a price they asked us to confirm read as their target, a price from OUR invoice read as their proposal, a claimed prior agreement read as a target | `role_framing_conflict` / `role_framing_missing` |
+| C identifier kind | a PO/PI number read as a product code, or a style number read as an order number | `identifier_kind_conflict` |
+
+Each class is a rule about a VALUE, never about a sentence or an email: no product,
+customer, price or document appears in the code, and attribution is resolved by
+BINDING (a label attaches to the value it most immediately introduces), so
+"贵司目标价格 USD 2.05" is caught while "贵司目标价格 USD 45，要求交期 Dec 20 前" is
+allowed. Where a value cannot be located safely — a bare one-digit number — the
+check stays silent rather than guessing. The same change made the deterministic
+fallback render `单据号 PO-8821` / `款号 TS-770` instead of calling both a 款号;
+without that the guard would have rejected its own compliant fallback.
+
+Cases, expectations, prompts, `semantics.py` and the Judgment Layer are unchanged;
+the run's `case_hash` equals v4-live-001's. No benchmark was run and no scenario
+was added.
+
+### v4-live-002: 9 cases x 1 run, real CSCS Apertus v1.5 70B
+
+31 model calls, 34,543 tokens, 59.6 s cumulative pipeline time. Full records, the
+frozen changed sources and portable hashes are in `data/validation/v4-live-002/`.
+
+**RAW BUSINESS CORRECTNESS (what the MODEL wrote, guard verdict excluded)**
+
+* frozen business rubric on the raw draft: **8/9** (only acc07 fails, on
+  `draft_must_not_contain '已确认'`)
+* raw drafts carrying at least one of the three drift classes: **6/9**
+  (A in 5, B in 3, C in 2; acc08 carries all three)
+
+The old rubric alone catches 1 of those 6, which is why the second number is the
+one that matters: the model reliably reproduces the right NUMBER and the right
+value's provenance, and still drifts on the business meaning around it.
+
+**FINAL SYSTEM SAFETY (what SHIPS)**
+
+* **9/9**: every shipped draft passes the full guard, and 0 of the 9 carry any of
+  the three drift classes. Nothing was withheld.
+* path taken: raw 3 (acc03/04/09), retry 3 (acc01/02/07), deterministic fallback 3
+  (acc05/06/08)
+* interception: **6 of 6** drifted raw drafts were stopped. acc05 and acc08 drifted
+  again in the retry and were caught a second time, then dropped to the
+  deterministic fallback.
+* independent check: replaying the three detectors over the v4-live-001 drafts
+  flags the same 6 cases the source-to-draft review marked FAIL and stays silent on
+  the 3 it marked PASS.
+
+### What the guard costs, and what is still open
+
+Safety here is partly bought by refusing to say too much. The retry instruction
+("remove every number, date, price and commitment not present in FACTS") makes the
+model over-correct: acc02's shipped reply drops the customer's target price and
+3,000 pcs entirely (frozen rubric 8/9 on the shipped text), and acc01 and acc07
+ship correct but commercially empty text. Nothing unsafe reaches the customer, but
+three of nine replies are weaker than a salesperson would write. A completeness
+rule — every admitted value must appear or be explicitly deferred — is the obvious
+next backend change and is NOT part of these three classes.
+
+Two further findings are recorded rather than fixed, because they are outside the
+three observed classes:
+
+1. `_value_in` matches on digits alone, so "Dec 20" is "found" inside the clause
+   "款号 TS-201" (`20` inside `201`). That pre-existing matcher can make
+   `requested_date_stated_as_our_delivery` fire on the system's own compliant
+   fallback and push it down the fallback ladder. The new detectors are immune —
+   they match literal tokens. A one-line change to `_value_in` is available.
+2. `_value_spans` treats `min`/`max` qualifiers as unchecked: only `approx` has a
+   mechanical rendering rule. 至少/至多 framing is still prompt-only.
+
+**Freeze.** On this evidence the backend is frozen: the three high-risk drift
+classes are mechanically intercepted in every case where they occurred, and the
+next work is the operator UI over the existing HTTP surface. A pass here is a
+safety measurement on nine synthetic cases, not human business-owner approval and
+not a claim about model accuracy.
+
 ## 2026-10-03 validation and Judgment 1.0
 
 The nine existing realistic acceptance cases were run once each against real
@@ -154,9 +236,11 @@ requirements. A successful schema/guard check does not prove business accuracy.
 
 This is a development code snapshot, not a finished competition submission.
 The technical report is still the official placeholder; the six-page PDF,
-two-minute video and user-facing workflow remain to be completed. A complete
-Swiss deployment has not been verified. Local Docker demo and real Apertus
-end-to-end execution are verified; this does not verify a production deployment.
+two-minute video and the operator UI over the existing HTTP surface (the only
+remaining build item, started after this freeze) remain to be completed. A
+complete Swiss deployment has not been verified. Local Docker demo and real
+Apertus end-to-end execution are verified; this does not verify a production
+deployment.
 
 The imported source commit and per-file hashes are in `sync-provenance.json`.
 Runtime code was imported from committed research code; raw responses, temporary

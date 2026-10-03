@@ -1,0 +1,1065 @@
+{
+  "case_id": "acc09_manual_ski_jackets",
+  "parser_candidates": {
+    "amounts": [
+      {
+        "value": "USD 45",
+        "source_span": "USD 45",
+        "span_start": 108,
+        "span_end": 114,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "45",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      }
+    ],
+    "quantities": [
+      {
+        "value": "300 pcs",
+        "source_span": "300 pcs",
+        "span_start": 79,
+        "span_end": 86,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "300",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": "approx",
+          "raw": "around",
+          "approx": true
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "dates": [
+      {
+        "value": "Dec 20",
+        "source_span": "Dec 20",
+        "span_start": 143,
+        "span_end": 149,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": "before",
+        "deadline_hint": true,
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": true
+      }
+    ],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [],
+    "incoterms": [
+      {
+        "value": "FOB",
+        "source_span": "FOB",
+        "span_start": 167,
+        "span_end": 170,
+        "type": "incoterm",
+        "status": "supported",
+        "method": "parser:incoterm",
+        "normalized": "FOB",
+        "place": "Qingdao",
+        "named_place": "Qingdao",
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "payment_terms": [],
+    "buyer": [
+      {
+        "value": "David",
+        "source_span": "David",
+        "span_start": 195,
+        "span_end": 200,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f005",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "300 pcs",
+        "source_span": "300 pcs",
+        "span_start": 79,
+        "span_end": 86,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "300",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": "approx",
+          "raw": "around",
+          "approx": true
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "USD 45",
+        "source_span": "USD 45",
+        "span_start": 108,
+        "span_end": 114,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "45",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      },
+      {
+        "value": "Dec 20",
+        "source_span": "Dec 20",
+        "span_start": 143,
+        "span_end": 149,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": "before",
+        "deadline_hint": true,
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": true
+      },
+      {
+        "value": "FOB",
+        "source_span": "FOB",
+        "span_start": 167,
+        "span_end": 170,
+        "type": "incoterm",
+        "status": "supported",
+        "method": "parser:incoterm",
+        "normalized": "FOB",
+        "place": "Qingdao",
+        "named_place": "Qingdao",
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "David",
+        "source_span": "David",
+        "span_start": 195,
+        "span_end": 200,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f005",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "qty": [
+        "f001"
+      ],
+      "amount": [
+        "f002"
+      ],
+      "date": [
+        "f003"
+      ],
+      "incoterm": [
+        "f004"
+      ],
+      "buyer_signature": [
+        "f005"
+      ]
+    },
+    "_product_names": [
+      {
+        "value": "ski jackets",
+        "source_span": "ski jackets",
+        "span_start": 36,
+        "span_end": 47,
+        "type": "product_name",
+        "status": "supported",
+        "method": "parser:product_name"
+      }
+    ],
+    "_email": "Hi Alex,\n\nWe are interested in your ski jackets.\nInitial order would be around 300 pcs.\nOur target price is USD 45 and we need delivery before Dec 20.\nCould you quote FOB Qingdao?\n\nBest regards,\nDavid"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\n  \"intent\": \"inquiry\",\n  \"language\": \"en\",\n  \"urgency\": \"normal\"\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1265,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1279,
+          "total_tokens": 1305,
+          "completion_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 1248,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f005\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [\"f004\"],\n  \"payment_terms\": [],\n  \"deadline\": [\"f003\"],\n  \"amounts\": [\"f002\"]\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1807,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 713,
+          "total_tokens": 778,
+          "completion_tokens": 65,
+          "prompt_tokens_details": {
+            "cached_tokens": 704,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "已记录：产品为 ski jackets，约 300 pcs，采用 FOB Qingdao 条款，买方为 David。  \n贵司要求交期 Dec 20 前，我司将核实 payment_terms 等细节后尽快回复。  \n贵司目标价格为 USD 45，我司评估后回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 2178,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 956,
+          "total_tokens": 1047,
+          "completion_tokens": 91,
+          "prompt_tokens_details": {
+            "cached_tokens": 928,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "inquiry",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "David",
+      "products": [
+        {
+          "sku": null,
+          "qty": "300",
+          "desc": ""
+        }
+      ],
+      "incoterm": "FOB",
+      "payment_terms": null,
+      "deadline": "Dec 20",
+      "amounts": [
+        "USD 45"
+      ],
+      "not_stated": [
+        "payment_terms"
+      ],
+      "product_names": [
+        "ski jackets"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "pn36",
+          "field": "products",
+          "value": "ski jackets",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "ski jackets",
+          "span": [
+            36,
+            47
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "300 pcs",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": "approx",
+            "raw": "around",
+            "approx": true
+          },
+          "status": "supported",
+          "source_span": "300 pcs",
+          "span": [
+            79,
+            86
+          ],
+          "fact_type": "stated_quantity",
+          "evidence_type": "qty",
+          "role_reason": "no_cue",
+          "number": "300",
+          "unit": "pcs"
+        },
+        {
+          "id": "f002",
+          "field": "amounts",
+          "value": "USD 45",
+          "semantic_role": "TARGET",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 45",
+          "span": [
+            108,
+            114
+          ],
+          "fact_type": "target_price",
+          "evidence_type": "amount",
+          "role_reason": "target_cue",
+          "number": "45"
+        },
+        {
+          "id": "f003",
+          "field": "deadline",
+          "value": "Dec 20",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "Dec 20",
+          "span": [
+            143,
+            149
+          ],
+          "fact_type": "requested_delivery",
+          "evidence_type": "date",
+          "role_reason": "request_cue",
+          "relation": "before",
+          "deadline_hint": true
+        },
+        {
+          "id": "f004",
+          "field": "incoterm",
+          "value": "FOB",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "FOB",
+          "span": [
+            167,
+            170
+          ],
+          "fact_type": "incoterm",
+          "evidence_type": "incoterm",
+          "role_reason": "no_cue",
+          "named_place": "Qingdao"
+        },
+        {
+          "id": "f005",
+          "field": "buyer",
+          "value": "David",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "David",
+          "span": [
+            195,
+            200
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "已记录：产品为 ski jackets，约 300 pcs，采用 FOB Qingdao 条款，买方为 David。  \n贵司要求交期 Dec 20 前，我司将核实 payment_terms 等细节后尽快回复。  \n贵司目标价格为 USD 45，我司评估后回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "raw"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "David",
+        "facts": [
+          {
+            "id": "f005",
+            "value": "David",
+            "type": "buyer_signature",
+            "source_span": "David",
+            "status": "supported",
+            "span": [
+              195,
+              200
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": null,
+            "qty": "300",
+            "_qty_fact": "f001"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f001",
+            "value": "300 pcs",
+            "type": "qty",
+            "source_span": "300 pcs",
+            "status": "supported",
+            "span": [
+              79,
+              86
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "supported",
+        "value": "FOB",
+        "facts": [
+          {
+            "id": "f004",
+            "value": "FOB",
+            "type": "incoterm",
+            "source_span": "FOB",
+            "status": "supported",
+            "span": [
+              167,
+              170
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "supported",
+        "value": "Dec 20",
+        "facts": [
+          {
+            "id": "f003",
+            "value": "Dec 20",
+            "type": "date",
+            "source_span": "Dec 20",
+            "status": "supported",
+            "span": [
+              143,
+              149
+            ],
+            "contested": true,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "USD 45"
+        ],
+        "facts": [
+          {
+            "id": "f002",
+            "value": "USD 45",
+            "type": "amount",
+            "source_span": "USD 45",
+            "status": "supported",
+            "span": [
+              108,
+              114
+            ],
+            "contested": true,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "inquiry",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f005\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [\"f004\"],\n  \"payment_terms\": [],\n  \"deadline\": [\"f003\"],\n  \"amounts\": [\"f002\"]\n}",
+      "selection": {
+        "buyer": [
+          "f005"
+        ],
+        "products": [
+          "f001"
+        ],
+        "incoterm": [
+          "f004"
+        ],
+        "payment_terms": [],
+        "deadline": [
+          "f003"
+        ],
+        "amounts": [
+          "f002"
+        ]
+      },
+      "draft": "已记录：产品为 ski jackets，约 300 pcs，采用 FOB Qingdao 条款，买方为 David。  \n贵司要求交期 Dec 20 前，我司将核实 payment_terms 等细节后尽快回复。  \n贵司目标价格为 USD 45，我司评估后回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "pipeline": "v4",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1265,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1279,
+            "total_tokens": 1305,
+            "completion_tokens": 26,
+            "prompt_tokens_details": {
+              "cached_tokens": 1248,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 5
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1807,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 713,
+            "total_tokens": 778,
+            "completion_tokens": 65,
+            "prompt_tokens_details": {
+              "cached_tokens": 704,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": [
+            "payment_terms"
+          ]
+        },
+        "semantics": {
+          "typed": 6,
+          "order_act": false,
+          "roles": {
+            "FACT": 4,
+            "REQUEST": 1,
+            "TARGET": 1,
+            "QUESTION": 0,
+            "COMMITMENT": 0,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 2178,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 956,
+            "total_tokens": 1047,
+            "completion_tokens": 91,
+            "prompt_tokens_details": {
+              "cached_tokens": 928,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": true,
+          "issues": []
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "raw"
+        }
+      },
+      "retry_used": false
+    }
+  },
+  "checks": [
+    {
+      "name": "acc09_manual_ski_jackets: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: USD 45 as TARGET",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: Dec 20 as REQUEST",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: quantity 300",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: qualifier approx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: product 'ski jackets'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: incoterm FOB",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: port Qingdao",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: order_act == False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: no company commitment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft contains 'ski jackets'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft contains '约 300 pcs'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft contains '目标'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft contains '要求交期'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft contains 'Qingdao'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft avoids '订单'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft avoids '我方确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft avoids '我司确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft avoids '已确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc09_manual_ski_jackets: draft avoids '报价 USD 45'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "shipped draft carries none of the three drift classes",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "raw_business": {
+    "draft": "已记录：产品为 ski jackets，约 300 pcs，采用 FOB Qingdao 条款，买方为 David。  \n贵司要求交期 Dec 20 前，我司将核实 payment_terms 等细节后尽快回复。  \n贵司目标价格为 USD 45，我司评估后回复。",
+    "guard_issues": [],
+    "drift_classes": [],
+    "business_checks": [
+      {
+        "name": "acc09_manual_ski_jackets: USD 45 as TARGET",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: Dec 20 as REQUEST",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: quantity 300",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: qualifier approx",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: product 'ski jackets'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: incoterm FOB",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: port Qingdao",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: order_act == False",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: no company commitment",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains 'ski jackets'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains '约 300 pcs'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains '目标'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains '要求交期'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains 'Qingdao'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '订单'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '我方确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '我司确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '已确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '报价 USD 45'",
+        "passed": true,
+        "detail": ""
+      }
+    ],
+    "business_pass": true
+  },
+  "final_system": {
+    "draft": "已记录：产品为 ski jackets，约 300 pcs，采用 FOB Qingdao 条款，买方为 David。  \n贵司要求交期 Dec 20 前，我司将核实 payment_terms 等细节后尽快回复。  \n贵司目标价格为 USD 45，我司评估后回复。",
+    "guard_issues": [],
+    "guard_passed": true,
+    "via": "raw",
+    "drift_classes": [],
+    "business_checks": [
+      {
+        "name": "acc09_manual_ski_jackets: USD 45 as TARGET",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: Dec 20 as REQUEST",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: quantity 300",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: qualifier approx",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: product 'ski jackets'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: incoterm FOB",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: port Qingdao",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: order_act == False",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: no company commitment",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains 'ski jackets'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains '约 300 pcs'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains '目标'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains '要求交期'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft contains 'Qingdao'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '订单'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '我方确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '我司确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '已确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc09_manual_ski_jackets: draft avoids '报价 USD 45'",
+        "passed": true,
+        "detail": ""
+      }
+    ],
+    "business_pass": true,
+    "guard_and_business_pass": true
+  },
+  "latency_ms": 5255,
+  "usage": {
+    "prompt_tokens": 2948,
+    "completion_tokens": 182,
+    "total_tokens": 3130
+  }
+}

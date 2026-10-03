@@ -1,0 +1,671 @@
+{
+  "case_id": "acc03_requested_delivery",
+  "parser_candidates": {
+    "amounts": [],
+    "quantities": [],
+    "dates": [
+      {
+        "value": "Dec 5",
+        "source_span": "Dec 5",
+        "span_start": 73,
+        "span_end": 78,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": "before",
+        "deadline_hint": true,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [
+      {
+        "value": "TS-901",
+        "source_span": "TS-901",
+        "span_start": 14,
+        "span_end": 20,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "incoterms": [],
+    "payment_terms": [],
+    "buyer": [
+      {
+        "value": "Nora Fischer",
+        "source_span": "Nora Fischer",
+        "span_start": 119,
+        "span_end": 131,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "TS-901",
+        "source_span": "TS-901",
+        "span_start": 14,
+        "span_end": 20,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Dec 5",
+        "source_span": "Dec 5",
+        "span_start": 73,
+        "span_end": 78,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": "before",
+        "deadline_hint": true,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Nora Fischer",
+        "source_span": "Nora Fischer",
+        "span_start": 119,
+        "span_end": 131,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "sku": [
+        "f001"
+      ],
+      "date": [
+        "f002"
+      ],
+      "buyer_signature": [
+        "f003"
+      ]
+    },
+    "_product_names": [
+      {
+        "value": "padded jackets",
+        "source_span": "padded jackets",
+        "span_start": 21,
+        "span_end": 35,
+        "type": "product_name",
+        "status": "supported",
+        "method": "parser:product_name"
+      }
+    ],
+    "_email": "Hi Alex,\n\nThe TS-901 padded jackets must arrive in Hamburg no later than Dec 5. Please confirm you can make it.\n\nBest,\nNora Fischer"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\n  \"intent\": \"logistics\",\n  \"language\": \"en\",\n  \"urgency\": \"normal\"\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1244,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1260,
+          "total_tokens": 1286,
+          "completion_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 1248,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f003\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [\"f002\"],\n  \"amounts\": []\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1686,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 653,
+          "total_tokens": 708,
+          "completion_tokens": 55,
+          "prompt_tokens_details": {
+            "cached_tokens": 640,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "已记录：产品 TS-901 padded jackets，买方为 Nora Fischer。  \n贵司要求交期 Dec 5 前，我司评估后回复；关于 incoterm、payment_terms、amounts，我司团队将核实后尽快回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1877,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 885,
+          "total_tokens": 954,
+          "completion_tokens": 69,
+          "prompt_tokens_details": {
+            "cached_tokens": 864,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "logistics",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Nora Fischer",
+      "products": [
+        {
+          "sku": "TS-901",
+          "qty": null,
+          "desc": ""
+        }
+      ],
+      "incoterm": null,
+      "payment_terms": null,
+      "deadline": "Dec 5",
+      "amounts": null,
+      "not_stated": [
+        "incoterm",
+        "payment_terms",
+        "amounts"
+      ],
+      "product_names": [
+        "padded jackets"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "TS-901",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "TS-901",
+          "span": [
+            14,
+            20
+          ],
+          "fact_type": "product_code",
+          "evidence_type": "sku",
+          "role_reason": "non_negotiable_type"
+        },
+        {
+          "id": "pn21",
+          "field": "products",
+          "value": "padded jackets",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "padded jackets",
+          "span": [
+            21,
+            35
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f002",
+          "field": "deadline",
+          "value": "Dec 5",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "Dec 5",
+          "span": [
+            73,
+            78
+          ],
+          "fact_type": "requested_delivery",
+          "evidence_type": "date",
+          "role_reason": "request_cue",
+          "relation": "before",
+          "deadline_hint": true
+        },
+        {
+          "id": "f003",
+          "field": "buyer",
+          "value": "Nora Fischer",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "Nora Fischer",
+          "span": [
+            119,
+            131
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "已记录：产品 TS-901 padded jackets，买方为 Nora Fischer。  \n贵司要求交期 Dec 5 前，我司评估后回复；关于 incoterm、payment_terms、amounts，我司团队将核实后尽快回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "raw"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Nora Fischer",
+        "facts": [
+          {
+            "id": "f003",
+            "value": "Nora Fischer",
+            "type": "buyer_signature",
+            "source_span": "Nora Fischer",
+            "status": "supported",
+            "span": [
+              119,
+              131
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": "TS-901",
+            "qty": null,
+            "_qty_fact": null
+          }
+        ],
+        "facts": [
+          {
+            "id": "f001",
+            "value": "TS-901",
+            "type": "sku",
+            "source_span": "TS-901",
+            "status": "supported",
+            "span": [
+              14,
+              20
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "supported",
+        "value": "Dec 5",
+        "facts": [
+          {
+            "id": "f002",
+            "value": "Dec 5",
+            "type": "date",
+            "source_span": "Dec 5",
+            "status": "supported",
+            "span": [
+              73,
+              78
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "logistics",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f003\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [\"f002\"],\n  \"amounts\": []\n}",
+      "selection": {
+        "buyer": [
+          "f003"
+        ],
+        "products": [
+          "f001"
+        ],
+        "incoterm": [],
+        "payment_terms": [],
+        "deadline": [
+          "f002"
+        ],
+        "amounts": []
+      },
+      "draft": "已记录：产品 TS-901 padded jackets，买方为 Nora Fischer。  \n贵司要求交期 Dec 5 前，我司评估后回复；关于 incoterm、payment_terms、amounts，我司团队将核实后尽快回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "pipeline": "v4",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1244,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1260,
+            "total_tokens": 1286,
+            "completion_tokens": 26,
+            "prompt_tokens_details": {
+              "cached_tokens": 1248,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 3
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1686,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 653,
+            "total_tokens": 708,
+            "completion_tokens": 55,
+            "prompt_tokens_details": {
+              "cached_tokens": 640,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": [
+            "incoterm",
+            "payment_terms",
+            "amounts"
+          ]
+        },
+        "semantics": {
+          "typed": 4,
+          "order_act": false,
+          "roles": {
+            "FACT": 3,
+            "REQUEST": 1,
+            "TARGET": 0,
+            "QUESTION": 0,
+            "COMMITMENT": 0,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 1877,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 885,
+            "total_tokens": 954,
+            "completion_tokens": 69,
+            "prompt_tokens_details": {
+              "cached_tokens": 864,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": true,
+          "issues": []
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "raw"
+        }
+      },
+      "retry_used": false
+    }
+  },
+  "checks": [
+    {
+      "name": "acc03_requested_delivery: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc03_requested_delivery: Dec 5 as REQUEST",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc03_requested_delivery: order_act == False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc03_requested_delivery: draft contains '要求交期'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc03_requested_delivery: draft avoids '我司确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc03_requested_delivery: draft avoids '我方确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "shipped draft carries none of the three drift classes",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "raw_business": {
+    "draft": "已记录：产品 TS-901 padded jackets，买方为 Nora Fischer。  \n贵司要求交期 Dec 5 前，我司评估后回复；关于 incoterm、payment_terms、amounts，我司团队将核实后尽快回复。",
+    "guard_issues": [],
+    "drift_classes": [],
+    "business_checks": [
+      {
+        "name": "acc03_requested_delivery: Dec 5 as REQUEST",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: order_act == False",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: draft contains '要求交期'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: draft avoids '我司确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: draft avoids '我方确认'",
+        "passed": true,
+        "detail": ""
+      }
+    ],
+    "business_pass": true
+  },
+  "final_system": {
+    "draft": "已记录：产品 TS-901 padded jackets，买方为 Nora Fischer。  \n贵司要求交期 Dec 5 前，我司评估后回复；关于 incoterm、payment_terms、amounts，我司团队将核实后尽快回复。",
+    "guard_issues": [],
+    "guard_passed": true,
+    "via": "raw",
+    "drift_classes": [],
+    "business_checks": [
+      {
+        "name": "acc03_requested_delivery: Dec 5 as REQUEST",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: order_act == False",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: draft contains '要求交期'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: draft avoids '我司确认'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc03_requested_delivery: draft avoids '我方确认'",
+        "passed": true,
+        "detail": ""
+      }
+    ],
+    "business_pass": true,
+    "guard_and_business_pass": true
+  },
+  "latency_ms": 4811,
+  "usage": {
+    "prompt_tokens": 2798,
+    "completion_tokens": 150,
+    "total_tokens": 2948
+  }
+}

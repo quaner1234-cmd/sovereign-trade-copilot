@@ -1,0 +1,668 @@
+{
+  "case_id": "acc01_new_inquiry",
+  "parser_candidates": {
+    "amounts": [],
+    "quantities": [
+      {
+        "value": "500 pcs",
+        "source_span": "500 pcs",
+        "span_start": 109,
+        "span_end": 116,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "500",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "dates": [],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [],
+    "incoterms": [],
+    "payment_terms": [],
+    "buyer": [
+      {
+        "value": "Emma Doyle",
+        "source_span": "Emma Doyle",
+        "span_start": 127,
+        "span_end": 137,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f002",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "500 pcs",
+        "source_span": "500 pcs",
+        "span_start": 109,
+        "span_end": 116,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "500",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Emma Doyle",
+        "source_span": "Emma Doyle",
+        "span_start": 127,
+        "span_end": 137,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f002",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "qty": [
+        "f001"
+      ],
+      "buyer_signature": [
+        "f002"
+      ]
+    },
+    "_product_names": [
+      {
+        "value": "yoga pants",
+        "source_span": "yoga pants",
+        "span_start": 71,
+        "span_end": 81,
+        "type": "product_name",
+        "status": "supported",
+        "method": "parser:product_name"
+      }
+    ],
+    "_email": "Hi Alex,\n\nWe saw your catalogue and would like to hear more about your yoga pants.\nCould you send prices for 500 pcs?\n\nThanks,\nEmma Doyle"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\n  \"intent\": \"inquiry\",\n  \"language\": \"en\",\n  \"urgency\": \"normal\"\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1687,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1259,
+          "total_tokens": 1285,
+          "completion_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 1248,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f002\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": []\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1564,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 644,
+          "total_tokens": 694,
+          "completion_tokens": 50,
+          "prompt_tokens_details": {
+            "cached_tokens": 640,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "已记录：产品为 yoga pants，贵司需求数量约 500 pcs，联系人为 Emma Doyle。关于 incoterm、payment_terms、deadline 及 amounts，我司将核实后尽快回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1726,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 842,
+          "total_tokens": 901,
+          "completion_tokens": 59,
+          "prompt_tokens_details": {
+            "cached_tokens": 832,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    },
+    {
+      "stage": "retry",
+      "text": "已记录：产品为 yoga pants，贵司提出需求，联系人为 Emma Doyle。关于 incoterm、payment_terms、deadline 及 amounts，我司将核实后回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1562,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 949,
+          "total_tokens": 998,
+          "completion_tokens": 49,
+          "prompt_tokens_details": {
+            "cached_tokens": 896,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.0
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "inquiry",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Emma Doyle",
+      "products": [
+        {
+          "sku": null,
+          "qty": "500",
+          "desc": ""
+        }
+      ],
+      "incoterm": null,
+      "payment_terms": null,
+      "deadline": null,
+      "amounts": null,
+      "not_stated": [
+        "incoterm",
+        "payment_terms",
+        "deadline",
+        "amounts"
+      ],
+      "product_names": [
+        "yoga pants"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "pn71",
+          "field": "products",
+          "value": "yoga pants",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "yoga pants",
+          "span": [
+            71,
+            81
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "500 pcs",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "500 pcs",
+          "span": [
+            109,
+            116
+          ],
+          "fact_type": "stated_quantity",
+          "evidence_type": "qty",
+          "role_reason": "no_cue",
+          "number": "500",
+          "unit": "pcs"
+        },
+        {
+          "id": "f002",
+          "field": "buyer",
+          "value": "Emma Doyle",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "Emma Doyle",
+          "span": [
+            127,
+            137
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "已记录：产品为 yoga pants，贵司提出需求，联系人为 Emma Doyle。关于 incoterm、payment_terms、deadline 及 amounts，我司将核实后回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "retry"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Emma Doyle",
+        "facts": [
+          {
+            "id": "f002",
+            "value": "Emma Doyle",
+            "type": "buyer_signature",
+            "source_span": "Emma Doyle",
+            "status": "supported",
+            "span": [
+              127,
+              137
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": null,
+            "qty": "500",
+            "_qty_fact": "f001"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f001",
+            "value": "500 pcs",
+            "type": "qty",
+            "source_span": "500 pcs",
+            "status": "supported",
+            "span": [
+              109,
+              116
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "inquiry",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f002\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": []\n}",
+      "selection": {
+        "buyer": [
+          "f002"
+        ],
+        "products": [
+          "f001"
+        ],
+        "incoterm": [],
+        "payment_terms": [],
+        "deadline": [],
+        "amounts": []
+      },
+      "draft": "已记录：产品为 yoga pants，贵司需求数量约 500 pcs，联系人为 Emma Doyle。关于 incoterm、payment_terms、deadline 及 amounts，我司将核实后尽快回复。",
+      "draft_retry": "已记录：产品为 yoga pants，贵司提出需求，联系人为 Emma Doyle。关于 incoterm、payment_terms、deadline 及 amounts，我司将核实后回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "pipeline": "v4",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1687,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1259,
+            "total_tokens": 1285,
+            "completion_tokens": 26,
+            "prompt_tokens_details": {
+              "cached_tokens": 1248,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 2
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1564,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 644,
+            "total_tokens": 694,
+            "completion_tokens": 50,
+            "prompt_tokens_details": {
+              "cached_tokens": 640,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": [
+            "incoterm",
+            "payment_terms",
+            "deadline",
+            "amounts"
+          ]
+        },
+        "semantics": {
+          "typed": 3,
+          "order_act": false,
+          "roles": {
+            "FACT": 3,
+            "REQUEST": 0,
+            "TARGET": 0,
+            "QUESTION": 0,
+            "COMMITMENT": 0,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 1726,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 842,
+            "total_tokens": 901,
+            "completion_tokens": 59,
+            "prompt_tokens_details": {
+              "cached_tokens": 832,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        },
+        "retry": {
+          "mode": "llm",
+          "latency_ms": 1562,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 949,
+            "total_tokens": 998,
+            "completion_tokens": 49,
+            "prompt_tokens_details": {
+              "cached_tokens": 896,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "passed": true,
+          "issues": []
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": false,
+          "issues": [
+            "hedge_invented:f001"
+          ]
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "retry"
+        }
+      },
+      "retry_used": true
+    }
+  },
+  "checks": [
+    {
+      "name": "acc01_new_inquiry: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc01_new_inquiry: no TARGET role",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc01_new_inquiry: no COMMITMENT role",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc01_new_inquiry: quantity 500",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc01_new_inquiry: product 'yoga pants'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc01_new_inquiry: order_act == False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "shipped draft carries none of the three drift classes",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "raw_business": {
+    "draft": "已记录：产品为 yoga pants，贵司需求数量约 500 pcs，联系人为 Emma Doyle。关于 incoterm、payment_terms、deadline 及 amounts，我司将核实后尽快回复。",
+    "guard_issues": [
+      "hedge_invented:f001"
+    ],
+    "drift_classes": [
+      "A_hedge_fidelity"
+    ],
+    "business_checks": [
+      {
+        "name": "acc01_new_inquiry: no TARGET role",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: no COMMITMENT role",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: quantity 500",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: product 'yoga pants'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: order_act == False",
+        "passed": true,
+        "detail": ""
+      }
+    ],
+    "business_pass": true
+  },
+  "final_system": {
+    "draft": "已记录：产品为 yoga pants，贵司提出需求，联系人为 Emma Doyle。关于 incoterm、payment_terms、deadline 及 amounts，我司将核实后回复。",
+    "guard_issues": [],
+    "guard_passed": true,
+    "via": "retry",
+    "drift_classes": [],
+    "business_checks": [
+      {
+        "name": "acc01_new_inquiry: no TARGET role",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: no COMMITMENT role",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: quantity 500",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: product 'yoga pants'",
+        "passed": true,
+        "detail": ""
+      },
+      {
+        "name": "acc01_new_inquiry: order_act == False",
+        "passed": true,
+        "detail": ""
+      }
+    ],
+    "business_pass": true,
+    "guard_and_business_pass": true
+  },
+  "latency_ms": 6545,
+  "usage": {
+    "prompt_tokens": 3694,
+    "completion_tokens": 184,
+    "total_tokens": 3878
+  }
+}
