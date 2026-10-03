@@ -1,0 +1,177 @@
+{
+  "recorded_at": "2026-10-03T03:08:45.456100+00:00",
+  "base_commit": "0ba31f269f3a886327461a801d17fd27e27eb6c3",
+  "backend_status": "FROZEN",
+  "freeze_identity": "backend_source_hashes below, UTF-8 text with CRLF normalized to LF",
+  "backend_source_hashes": {
+    "src/acceptance.py": "578fa0fa1756d3ea520879e69f7aeaeb86761f83bcd4cef9e66f9f5d7673a591",
+    "src/acceptance_live.py": "8c75305f2d354b54746c3eda36b3b118d3f4e1f0ce70cf2cb5949c491144a1d1",
+    "src/audit_parser_ceiling.py": "d0a8c2c704722adbbacf45cbafcf765d95fa929810a4204aaae5e0d67b9a2a0b",
+    "src/bench.py": "2e884f121e3519edea4f5516f877d24d0f625f987b66734f5cabbcc5e597d78c",
+    "src/bench_v3.py": "2295b2ea8f4da8a3fa336ba587ad8ccc9841965030e9b43fbaeaf2a654f5b1ca",
+    "src/business_facts.py": "a6c6ee8ef9067b6b739061c9832bb3258010361892680268beba4e78296113e5",
+    "src/fact_parsers.py": "38f52667407fc8378a39492737923c542f80d672d533b9c86a71fb8cfab87e29",
+    "src/fact_store.py": "5be876c81eb42e10b17de6cbabe0244463581c048eab3e22e9ce70616be3dcab",
+    "src/judgment.py": "d96bf1ec27767cefc140bd2087194513046c91764e0d4b23125dd54df7f235b8",
+    "src/llm_client.py": "00d1bbb505e8c455fa86ec9364070a91e1b92c9a2ebd4015c3710930364591e1",
+    "src/pipeline.py": "33c61bcef501eef932ddbb85e03a9e323b50c69068cf964d61c3865c998d5ef3",
+    "src/pipeline_v3.py": "e58d745a97dfaacc51eb4100cbd36bb2c2ffb3efca408738373822f0e61f3701",
+    "src/selftest.py": "4247f209ea4089a7c286e619b619e73403667de3202d23cd6985fe984e055c18",
+    "src/selftest_http.py": "dd237834fe5c4aa2ffc63376130a2f3eae27b004c45ee3d2d5661ce551e8530a",
+    "src/selftest_judgment.py": "365b25a6a7c3e468b37ce66647f3dfc7a44032c00aa17a668cbe601e7d46d1c3",
+    "src/selftest_matcher.py": "e9ad609d38689a15d2e6d13fcab8cbfbc64fcbc8704be8e97176fbd77fe3cc21",
+    "src/selftest_safety.py": "ac04197cb0abc1ae46e935922431e2adb11d2df08cd675eaf9975fa44194a3a2",
+    "src/selftest_v3.py": "bc559bb19493734109886eecd7a7724565bc63f4c86b4a7ac0a85c990ac21964",
+    "src/semantics.py": "31e2beaa54eb65faf87491dcd5f63c004c2cc487f7c9358011d0b1a571aa0368",
+    "src/server.py": "551d3d43a1f947c57ccd10899aa488b94ebd88a40a094df89091be1e779f7b77",
+    "src/snapshot_extraction.py": "03efe6d155145d36b19f94e1b1dfeb02434a79a245c7b5f9f9f50697c454bb02",
+    "src/validators.py": "a36935cdc372f7dca5534256710a9ca22380727b718b5b0a19f0d3ae058eb6d9",
+    "src/prompts/v1.json": "e07770c54da0de59394ecad40ced476462cde85fd8f04afd64eee8b6f7c3e31d",
+    "src/prompts/v2.json": "5a7e707709257686cc381532a7bdfe0feb9a0cd4fea3ce74056d6beafe9f9307",
+    "src/prompts/v3.json": "fba5e5850cdc74cc086ecebcf80707d45336b50f17eda89d65732cc7ae958d27",
+    "src/judgment_policies.json": "c9850c192590259610b26ffa58673e249e9c4060ca0b3cf8c586fbcd55ddbc68"
+  },
+  "runtime_change_scope": "_value_in only, verified by AST comparison",
+  "unchanged": [
+    "semantics.py",
+    "prompts",
+    "Judgment Layer",
+    "acceptance cases and expectations",
+    "guard_drift",
+    "min/max qualifier"
+  ],
+  "tests": {
+    "selftest_matcher": {
+      "groups": 7,
+      "status": "PASS"
+    },
+    "selftest": "PASS (legacy v2 fixture smoke only)",
+    "selftest_v3": "PASS",
+    "selftest_safety": "PASS (6 tests)",
+    "acceptance": "PASS"
+  },
+  "live_replay": {
+    "provider_calls": 0,
+    "record_set": "v4-live-002",
+    "cases": [
+      {
+        "case_id": "acc01_new_inquiry",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "retry"
+      },
+      {
+        "case_id": "acc02_target_price",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "retry"
+      },
+      {
+        "case_id": "acc03_requested_delivery",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "raw"
+      },
+      {
+        "case_id": "acc04_approx_quantity",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "raw"
+      },
+      {
+        "case_id": "acc05_incoterm_port",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "deterministic_fallback"
+      },
+      {
+        "case_id": "acc06_confirm_existing_quote",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "deterministic_fallback"
+      },
+      {
+        "case_id": "acc07_claims_agreed_price",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "retry"
+      },
+      {
+        "case_id": "acc08_confirmed_order",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "deterministic_fallback"
+      },
+      {
+        "case_id": "acc09_manual_ski_jackets",
+        "same_final_draft": true,
+        "same_final_guard": true,
+        "same_model_call_path": true,
+        "final_via": "raw"
+      }
+    ],
+    "status": "PASS"
+  },
+  "new_provider_calls": 0,
+  "full_benchmark_run": false,
+  "demo": [
+    {
+      "id": "inquiry_en",
+      "guard_passed": true,
+      "same_final_draft": true,
+      "before_template": "review_only",
+      "after_template": "review_only",
+      "role_aware_issues": [
+        "restates_customer_asserted_value:f005"
+      ]
+    },
+    {
+      "id": "inquiry_zh_mixed",
+      "guard_passed": true,
+      "same_final_draft": true,
+      "before_template": "role_aware",
+      "after_template": "role_aware",
+      "role_aware_issues": []
+    },
+    {
+      "id": "complaint_zh",
+      "guard_passed": true,
+      "same_final_draft": true,
+      "before_template": "legacy",
+      "after_template": "legacy",
+      "role_aware_issues": [
+        "restates_customer_asserted_value:f004"
+      ]
+    },
+    {
+      "id": "logistics_en",
+      "guard_passed": true,
+      "same_final_draft": true,
+      "before_template": "role_aware",
+      "after_template": "role_aware",
+      "role_aware_issues": []
+    },
+    {
+      "id": "quote_zh",
+      "guard_passed": true,
+      "same_final_draft": true,
+      "before_template": "role_aware",
+      "after_template": "role_aware",
+      "role_aware_issues": []
+    }
+  ],
+  "known_limits": [
+    "inquiry_en remains review_only and complaint_zh remains legacy because of restates_customer_asserted_value, independent of _value_in; both paths equal baseline.",
+    "min/max qualifier still prompt-only.",
+    "Single bare digits remain conservatively unlocatable."
+  ],
+  "docker": "Evidence for the committed clean checkout is stored separately in local validation artifacts; not included in this source freeze identity."
+}

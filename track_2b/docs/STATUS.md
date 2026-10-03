@@ -11,6 +11,33 @@ Version names: HTTP `/health` and processing metadata report `v4`. The existing
 compatibility; `PIPELINE_VERSION=v3` is an alias for the current v4 implementation.
 No prompt content was changed during this task.
 
+## 2026-10-03 matcher correction and backend re-freeze
+
+Only `_value_in` changed at runtime, verified by an AST comparison against
+`0ba31f2`. It now matches complete date/numeric tokens instead of flattened digit
+substrings, preserves decimal shape and thousands formatting, and excludes
+identifier digits. Normal money/percentage and month-name-to-Chinese-date matches
+have regression coverage; bare one-digit values retain their conservative behavior.
+The targeted date/identifier fallback regression now passes on its first,
+role-aware candidate. Semantics, prompts, Judgment, case expectations and the
+three drift detectors are unchanged. Min/max qualifier checking remains out of scope.
+
+Seven matcher test groups and all four requested offline commands (`selftest`,
+`selftest_v3`, `selftest_safety`, `acceptance`) pass. `selftest` is the legacy v2
+fixture smoke, not v4 business-quality evidence. Offline replay of all nine
+`v4-live-002` recorded model conversations reproduces the same final drafts,
+final guard verdicts and call paths. There were zero new CSCS calls and no full benchmark.
+
+All five current demo samples pass their final guard. Contrary to the prior
+diagnosis, the two reduced-detail demos have **not** recovered: `inquiry_en` stays
+`review_only` and `complaint_zh` stays `legacy`, both due to the separate
+`restates_customer_asserted_value` guard. All five final drafts equal the pre-fix
+baseline. Fixing those two independently would exceed the matcher-only scope.
+
+Backend is re-frozen by the normalized source hashes and acceptance evidence in
+`data/validation/matcher-fix-001/summary.json`; the commit adding this section
+identifies the corrected source. Original live records are preserved.
+
 ## 2026-10-03 final semantic guard: three drift classes, and the backend freeze
 
 The v4-live-001 source-to-draft review found three SYSTEMATIC classes of semantic
@@ -83,7 +110,8 @@ three observed classes:
    "款号 TS-201" (`20` inside `201`). That pre-existing matcher can make
    `requested_date_stated_as_our_delivery` fire on the system's own compliant
    fallback and push it down the fallback ladder. The new detectors are immune —
-   they match literal tokens. A one-line change to `_value_in` is available.
+   they match literal tokens. This matcher finding is resolved by the correction
+   above; it does not resolve the separate demo attribution failures.
 2. `_value_spans` treats `min`/`max` qualifiers as unchecked: only `approx` has a
    mechanical rendering rule. 至少/至多 framing is still prompt-only.
 

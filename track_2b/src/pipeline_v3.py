@@ -436,8 +436,47 @@ CONTESTED_OK_FRAMING_RE = re.compile(
 
 
 def _value_in(text, value):
-    """Same shape-aware matching the v3 contested check uses."""
-    return _echoes_contested(text, re.sub(r"\D", "", text), value)
+    """Match whole values, keeping dates/decimals and excluding identifier digits."""
+    s = _NUM_COMMA_RE.sub("", str(value or "").strip())
+    text = _NUM_COMMA_RE.sub("", text)
+    digits = re.sub(r"\D", "", s)
+    if not digits:
+        return False
+    # Dates need the complete date, not a day/month appearing in another value.
+    if FP.RANGE_RE.fullmatch(s) or any(rx.fullmatch(s) for rx in FP.DATE_PATS):
+        pat = r"\s*".join(re.escape(p) for p in s.split())
+        if re.search(r"(?<![A-Za-z0-9_./-])" + pat + r"(?![A-Za-z0-9_]|[./-][A-Za-z0-9])", text, re.I):
+            return True
+        # Preserve the existing month-name -> Chinese month/day rendering.
+        parts = s.split()
+        month = FP.MONTHS.get(parts[0].lower().rstrip(".")) if parts else None
+        if month and len(parts) == 2 and parts[1].isdigit():
+            return bool(re.search(r"(?<![A-Za-z0-9_./-])" + month + r"\s*月\s*" + parts[1]
+                                  + r"(?![A-Za-z0-9_]|[./-][A-Za-z0-9])", text))
+        return False
+    # Known document IDs can have spaces. Other mixed ASCII tokens are IDs unless
+    # they have a supported money, quantity or percentage shape (USD300, 300pcs).
+    text = FP.DOCID_RE.sub(lambda m: " " * len(m.group()), text)
+
+    def mask_ident(m):
+        token = m.group()
+        mixed = bool(re.search(r"[A-Za-z]", token) and re.search(r"\d", token))
+        numeric = FP.AMOUNT_RE.match(token) or FP.QTY_RE.fullmatch(token) or FP.PCT_RE.fullmatch(token)
+        return " " * len(token) if mixed and not numeric else token
+    text = re.sub(r"[A-Za-z0-9_./-]+", mask_ident, text)
+    numbers = re.findall(r"\d+(?:\.\d+)?", s)
+    pat = r"\s*[/:%-]?\s*".join(re.escape(n) for n in numbers)
+    if len(digits) == 1:
+        pct = re.fullmatch(r"\d\s*(?:%|percent|pct)", s, re.I)
+        if pct:
+            pat += r"\s*%"
+        elif re.fullmatch(r"\d", s):
+            return False  # retain the conservative treatment of a bare digit
+        else:
+            pat = r"\s*".join(re.escape(p) for p in s.split())
+    else:
+        pat = r"(?:(?:" + FP.CURRENCIES + r")\s*)?" + pat
+    return bool(re.search(r"(?<![A-Za-z0-9_./-])" + pat + r"(?![0-9_]|[.-][A-Za-z0-9])", text, re.I))
 
 
 # ============================================================ v4.1 drift classes
