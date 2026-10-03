@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sovereign Trade Copilot — operator console</title>
+<style>
+  :root {
+    --bg:#f6f7f9; --card:#fff; --line:#dfe3e8; --ink:#14181d; --muted:#5b6572;
+    --accent:#1f4e79; --ok:#1c7a4a; --okbg:#e6f4ec; --bad:#a11f24; --badbg:#fbe9e9;
+    --warnbg:#fff6e0; --warn:#8a5b00; --role:#5b6572; --mono:ui-monospace,Menlo,Consolas,monospace;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",Helvetica,Arial,sans-serif; }
+  header { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
+           padding:16px 24px; background:var(--accent); color:#fff; }
+  header h1 { margin:0; font-size:19px; font-weight:650; letter-spacing:.2px; }
+  header .sub { margin:2px 0 0; font-size:13px; opacity:.85; }
+  .badge { padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.14);
+           font-size:13px; font-family:var(--mono); white-space:nowrap; }
+  .notice { margin:0; padding:10px 24px; background:var(--warnbg); color:var(--warn);
+            border-bottom:1px solid #f0dfae; font-size:13.5px; }
+  main { max-width:1180px; margin:0 auto; padding:20px 24px 40px; }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:10px;
+           padding:16px 18px; margin-bottom:18px; }
+  .panel h2 { margin:0 0 10px; font-size:14px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); }
+  .row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:10px; }
+  textarea { width:100%; min-height:132px; padding:10px; border:1px solid var(--line); border-radius:8px;
+             font:14px/1.5 var(--mono); resize:vertical; }
+  textarea:focus, input:focus { outline:2px solid #9dc0e0; outline-offset:1px; }
+  button { font:inherit; padding:7px 14px; border-radius:7px; border:1px solid var(--accent);
+           background:var(--accent); color:#fff; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); }
+  button:hover { filter:brightness(1.07); }
+  button[disabled] { opacity:.5; cursor:progress; }
+  .samples { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+  .samples button { background:#fff; color:var(--accent); border:1px solid #b9cfe2; font-size:12.5px; padding:4px 10px; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:11.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); font-weight:600; }
+  td.num, .span { font-family:var(--mono); font-size:12.5px; }
+  .span { color:var(--accent); }
+  .chip { display:inline-block; padding:1px 8px; border-radius:999px; font-size:11.5px;
+          font-weight:600; letter-spacing:.3px; background:#eef1f4; color:var(--role); }
+  .chip.TARGET { background:#fdeee0; color:#a2541a; }
+  .chip.REQUEST { background:#e7f0fa; color:#1f4e79; }
+  .chip.QUESTION { background:#f0e9fa; color:#5b3ba1; }
+  .chip.COMMITMENT { background:#e6f4ec; color:#1c7a4a; }
+  .chip.UNKNOWN { background:#f0f0f0; color:#777; }
+  .verdict { display:inline-block; padding:3px 10px; border-radius:6px; font-size:13px; font-weight:600; }
+  .verdict.ok { background:var(--okbg); color:var(--ok); }
+  .verdict.bad { background:var(--badbg); color:var(--bad); }
+  .draft { white-space:pre-wrap; background:#fbfcfd; border:1px solid var(--line); border-left:3px solid var(--accent);
+           border-radius:6px; padding:12px 14px; font-size:15px; }
+  .issues { margin:8px 0 0; padding-left:20px; color:var(--bad); font-size:13px; font-family:var(--mono); }
+  .meta { color:var(--muted); font-size:12.5px; margin-top:8px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
+  @media (max-width:900px) { .cols { grid-template-columns:1fr; } }
+  h3 { margin:16px 0 6px; font-size:13px; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); }
+  footer { max-width:1180px; margin:0 auto; padding:0 24px 32px; color:var(--muted); font-size:12.5px; }
+  code { font-family:var(--mono); font-size:12.5px; background:#eef1f4; padding:1px 5px; border-radius:4px; }
+  .pre { white-space:pre-wrap; font-family:var(--mono); font-size:12.5px; background:#fbfcfd;
+         border:1px solid var(--line); border-radius:6px; padding:10px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Sovereign Trade Copilot</h1>
+    <p class="sub">Evidence-first reply drafting for garment trade email &middot; Hack Apertus Track 2B</p>
+  </div>
+  <div class="badge" id="health">checking /health…</div>
+</header>
+<p class="notice" id="modeNotice" hidden>
+  <strong>Offline demo mode.</strong> Deterministic parser and evidence layer only — no Apertus
+  inference happens, so nothing on this page measures model quality. Set
+  <code>LLM_NAME</code> / <code>LLM_BASE_URL</code> / <code>LLM_API_KEY</code> in the runtime
+  environment for a real run.
+</p>
+
+<main>
+  <section class="panel">
+    <h2>1 &middot; Customer email</h2>
+    <div class="samples" id="samples"></div>
+    <textarea id="email" spellcheck="false" placeholder="Paste the inbound customer email here, then press Analyze."></textarea>
+    <div class="row">
+      <button id="run">Analyze email</button>
+      <button class="ghost" id="clear">Clear</button>
+      <span class="meta" id="busy"></span>
+    </div>
+  </section>
+
+  <section class="panel" id="results" hidden>
+    <h2>2 &middot; Result &mdash; every value keeps its source</h2>
+
+    <div class="cols">
+      <div>
+        <h3>Classification</h3>
+        <div id="cls" class="pre"></div>
+
+        <h3>Reply draft for human review</h3>
+        <div class="draft" id="draft"></div>
+        <div class="row"><span class="verdict" id="guardVerdict"></span><span class="meta" id="guardVia"></span></div>
+        <ul class="issues" id="guardIssues"></ul>
+        <p class="meta">The system never sends mail and never commits terms. A passing guard means no
+          unsupported value or speech act reached the text — it is not business-owner approval.</p>
+      </div>
+
+      <div>
+        <h3>Business semantics &mdash; what the customer was <em>doing</em></h3>
+        <table><thead><tr><th>Value</th><th>Speech act</th><th>Stance</th><th>Status</th><th>Qualifier</th></tr></thead>
+          <tbody id="semRows"></tbody></table>
+
+        <h3>Evidence store</h3>
+        <table><thead><tr><th>Field</th><th>Value</th><th>Fact</th><th>Source span</th></tr></thead>
+          <tbody id="evRows"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>3 &middot; Judgment layer &mdash; source-backed next action</h2>
+    <div class="samples" id="jButtons"></div>
+    <textarea id="jReq" spellcheck="false" style="min-height:170px"></textarea>
+    <div class="row"><button id="jRun">Get recommendation</button><span class="meta" id="jBusy"></span></div>
+    <div id="jOut" class="pre" style="margin-top:12px" hidden></div>
+  </section>
+</main>
+
+<footer>
+  Every figure above is quoted from the email with its span, or refused. Judgment output always
+  carries <code>needs_human_approval</code>. Synthetic fixtures only &mdash; no real customer records.
+</footer>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+async function api(path, body) {
+  const opts = body === undefined
+    ? {}
+    : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
+  const res = await fetch(path, opts);
+  let data;
+  try { data = await res.json(); } catch (e) { throw new Error("HTTP " + res.status + ": non-JSON response"); }
+  if (!res.ok) throw new Error("HTTP " + res.status + ": " + (data.error || "request failed"));
+  return data;
+}
+
+/* ---- health + mode honesty ------------------------------------------- */
+async function health() {
+  const el = $("health");
+  try {
+    const h = await api("/health");
+    el.textContent = h.mode + " · " + h.pipeline + " · " + h.model;
+    $("modeNotice").hidden = h.mode !== "demo";
+  } catch (e) {
+    el.textContent = "server unreachable";
+  }
+}
+
+/* ---- samples ---------------------------------------------------------- */
+async function samples() {
+  try {
+    const d = await api("/samples");
+    $("samples").innerHTML = d.samples.map((s) =>
+      '<button class="ghost" data-id="' + esc(s.id) + '">' + esc(s.id) + "</button>").join("");
+    $("samples").onclick = (e) => {
+      const b = e.target.closest("button[data-id]");
+      if (!b) return;
+      const s = d.samples.find((x) => x.id === b.dataset.id);
+      $("email").value = s.email;
+      $("email").focus();
+    };
+  } catch (e) { /* samples are a convenience only */ }
+}
+
+/* ---- /process -------------------------------------------------------- */
+const FIELD_LABELS = { buyer: "Buyer", products: "Products", incoterm: "Incoterm",
+  payment_terms: "Payment terms", deadline: "Delivery", amounts: "Amounts" };
+
+function show(v) {
+  return typeof v === "string" ? v : JSON.stringify(v, null, 1);
+}
+
+function render(r) {
+  $("results").hidden = false;
+  $("cls").textContent = show(r.classification);
+
+  const sem = (r.semantics && r.semantics.typed_facts) || [];
+  $("semRows").innerHTML = sem.length ? sem.map((t) =>
+    "<tr><td class='num'>" + esc(t.value) +
+      (t.named_place ? " " + esc(t.named_place) : "") + "</td>" +
+    "<td><span class='chip " + esc(t.semantic_role) + "'>" + esc(t.semantic_role) + "</span><br><span class='meta'>" +
+      esc(t.fact_type) + "</span></td>" +
+    "<td class='meta'>" + esc(t.stance) + "</td>" +
+    "<td class='meta'>" + esc(t.status) + "</td>" +
+    "<td class='meta'>" + esc((t.qualifier && t.qualifier.kind) || (t.relation || "—")) + "</td></tr>").join("")
+    : "<tr><td colspan='5' class='meta'>no admitted facts</td></tr>";
+
+  let rows = "";
+  const facts = r.facts || {};
+  Object.keys(FIELD_LABELS).forEach((f) => {
+    const cell = facts[f] || {};
+    if (!cell.facts || !cell.facts.length) return;
+    cell.facts.forEach((x) => {
+      rows += "<tr><td>" + esc(FIELD_LABELS[f]) + "</td><td class='num'>" + esc(show(x.value)) +
+        "</td><td class='meta'>" + esc(x.type) + " · " + esc(x.status) +
+        (x.contested ? " · contested" : "") + (x.customer_asserted ? " · asserted" : "") +
+        (x.negated ? " · negated" : "") + "</td>" +
+        "<td class='span'>" + esc(x.source_span) + (x.span ? " [" + x.span[0] + "," + x.span[1] + "]" : "") + "</td></tr>";
+    });
+  });
+  const ns = (r.extraction && r.extraction.not_stated) || [];
+  if (ns.length) rows += "<tr><td>Not stated</td><td colspan='3' class='meta'>" +
+    esc(ns.join(", ")) + " — the reply asks instead of guessing</td></tr>";
+  $("evRows").innerHTML = rows || "<tr><td colspan='4' class='meta'>no admitted facts</td></tr>";
+
+  $("draft").textContent = r.draft || "(withheld — no candidate passed the guard)";
+  const g = (r.validation && r.validation.guard) || {};
+  const v = $("guardVerdict");
+  v.className = "verdict " + (g.passed ? "ok" : "bad");
+  v.textContent = g.passed ? "guard passed" : "guard FAILED — draft withheld";
+  $("guardVia").textContent = g.via ? "produced by: " + g.via : "";
+  const iss = (g.issues || []);
+  $("guardIssues").innerHTML = iss.map((i) => "<li>" + esc(i) + "</li>").join("");
+  $("busy").textContent = "";
+  $("run").disabled = false;
+}
+
+async function run() {
+  const email = $("email").value.trim();
+  if (!email) { $("busy").textContent = "paste an email first"; return; }
+  $("run").disabled = true;
+  $("busy").textContent = "running the v4 pipeline…";
+  try {
+    render(await api("/process", { email: email }));
+  } catch (e) {
+    $("busy").textContent = "error: " + e.message;
+    $("run").disabled = false;
+  }
+}
+
+/* ---- /judgment -------------------------------------------------------- */
+const JUDGMENT_TEMPLATES = {
+  inquiry: {
+    label: "Inquiry",
+    body: {
+      scenario: "inquiry", subject: "RFQ-1",
+      sources: [{ id: "buyer", party: "customer", format: "email",
+        text: "Hi, please quote TS-901 padded jackets, 3,000 pcs CIF Hamburg, delivery before Dec 5. Payment 30% T/T. Anna Berg" }]
+    }
+  },
+  payment: {
+    label: "Payment node",
+    body: {
+      scenario: "payment", subject: "ORDER-101", as_of: "2026-10-04",
+      sources: [{ id: "finance", party: "company", format: "fact_card",
+        text: '{"subject":"ORDER-101","payment_status":"pending","payment_due":"2026-10-05","payment_checked_at":"2026-10-04","pi_sent":true}' }]
+    }
+  },
+  sample_test: {
+    label: "Sample test",
+    body: {
+      scenario: "sample_test", subject: "SAMPLE-101",
+      sources: [
+        { id: "lab", party: "lab", format: "fact_card",
+          text: '{"subject":"SAMPLE-101","metric":"shrinkage","unit":"percent","test_value":6}' },
+        { id: "qa", party: "company", format: "fact_card",
+          text: '{"subject":"SAMPLE-101","metric":"shrinkage","unit":"percent","test_min":0,"test_max":3}' }]
+    }
+  }
+};
+
+function judgmentUI() {
+  $("jButtons").innerHTML = Object.keys(JUDGMENT_TEMPLATES).map((k) =>
+    '<button class="ghost" data-k="' + k + '">' + esc(JUDGMENT_TEMPLATES[k].label) + "</button>").join("");
+  $("jButtons").onclick = (e) => {
+    const b = e.target.closest("button[data-k]");
+    if (b) $("jReq").value = JSON.stringify(JUDGMENT_TEMPLATES[b.dataset.k].body, null, 2);
+  };
+  $("jReq").value = JSON.stringify(JUDGMENT_TEMPLATES.inquiry.body, null, 2);
+}
+
+async function runJudgment() {
+  let req;
+  try { req = JSON.parse($("jReq").value); }
+  catch (e) { $("jBusy").textContent = "invalid JSON: " + e.message; return; }
+  $("jBusy").textContent = "evaluating policy…";
+  try {
+    const out = await api("/judgment", req);
+    const lines = [
+      "action: " + out.action + "   owner: " + out.owner + "   confidence: " + out.confidence,
+      "reason: " + out.reason,
+      "needs_human_approval: " + out.needs_human_approval,
+      "next_customer_action: " + (out.next_customer_action || "—")
+    ];
+    if ((out.evidence || []).length) {
+      lines.push("", "evidence:");
+      out.evidence.forEach((e) => lines.push(
+        "  · [" + e.fact_id + "] " + e.field + " = " + JSON.stringify(e.value) +
+        "  role=" + e.semantic_role + " stance=" + e.stance + " status=" + e.status +
+        "\n    " + e.source_id + " " + JSON.stringify(e.quote) +
+        (e.span ? " @" + e.span.join("-") : "")));
+    }
+    if ((out.blocking_conditions || []).length) {
+      lines.push("", "blocking_conditions:");
+      out.blocking_conditions.forEach((b) => lines.push("  · " + (b.reason || JSON.stringify(b))));
+    }
+    $("jOut").hidden = false;
+    $("jOut").textContent = lines.join("\n");
+    $("jBusy").textContent = "";
+  } catch (e) {
+    $("jBusy").textContent = "error: " + e.message;
+  }
+}
+
+$("run").onclick = run;
+$("clear").onclick = () => {
+  $("email").value = ""; $("results").hidden = true; $("busy").textContent = ""; $("email").focus();
+};
+$("jRun").onclick = runJudgment;
+$("email").addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
+});
+health();
+samples();
+judgmentUI();
+</script>
+</body>
+</html>

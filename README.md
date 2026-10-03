@@ -14,8 +14,11 @@ make run
 ```
 
 The service listens on port 8000: `GET /health`, `POST /process` with an `email`
-string. `POST /judgment` returns source-backed advice for three narrow workflows;
-see the [Judgment Contract](track_2b/docs/JUDGMENT-CONTRACT.md). Set
+string, `GET /ui` for the operator console (paste an email, see every value with
+its source span, the draft and the guard verdict) and `GET /samples` for the
+demonstration fixtures. `POST /judgment` returns source-backed advice for three
+narrow workflows; see the [Judgment Contract](track_2b/docs/JUDGMENT-CONTRACT.md).
+Set
 `LLM_NAME`, `LLM_BASE_URL`, and `LLM_API_KEY` in the runtime
 environment for real inference. With no endpoint it runs a deterministic
 offline demonstration, which does not use Apertus or measure its quality.

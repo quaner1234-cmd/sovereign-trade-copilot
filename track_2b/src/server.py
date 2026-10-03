@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Track 2B HTTP server (stdlib only).
 GET  /health  -> {"status":"ok","mode":"llm"|"demo","pipeline":"v4"|"v2","model":...}
+GET  /ui      -> the operator console (single self-contained page, no external assets)
+GET  /samples -> the synthetic demonstration fixtures, for the console's picker
 POST /process {"email": "..."} -> classification + extraction + draft + validation
                  plus, on v4, the validated fact store with per-fact provenance.
 POST /judgment -> source-backed next-action advice; human approval required.
@@ -10,6 +12,10 @@ import json, os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import llm_client
 import judgment
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+UI_PATH = os.path.join(HERE, "ui", "index.html")
+SAMPLES_PATH = os.path.join(os.path.dirname(HERE), "data", "samples.json")
 
 PIPELINE_VERSION = os.environ.get("PIPELINE_VERSION", "v4").lower()
 if PIPELINE_VERSION in ("v3", "v4"):
@@ -29,14 +35,36 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b)
 
+    def _send_file(self, path, content_type):
+        try:
+            with open(path, "rb") as fh:
+                b = fh.read()
+        except OSError:
+            return self._send(404, {"error": "asset not found"})
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(b)))
+        self.end_headers()
+        self.wfile.write(b)
+
     def do_GET(self):
         if self.path == "/health":
             self._send(200, {"status": "ok",
                              "mode": "demo" if llm_client.demo_mode() else "llm",
                              "pipeline": PIPELINE_VERSION,
                              "model": llm_client.CONFIG["model"] or "(demo)"})
+        elif self.path in ("/ui", "/ui/"):
+            self._send_file(UI_PATH, "text/html; charset=utf-8")
+        elif self.path == "/samples":
+            try:
+                with open(SAMPLES_PATH, encoding="utf-8") as fh:
+                    data = json.load(fh)
+            except (OSError, ValueError):
+                return self._send(500, {"error": "sample fixtures unavailable"})
+            self._send(200, {"samples": data.get("samples", [])})
         else:
-            self._send(404, {"error": "not found", "hint": "GET /health, POST /process or POST /judgment"})
+            self._send(404, {"error": "not found",
+                             "hint": "GET /ui, GET /health, GET /samples, POST /process or POST /judgment"})
 
     def do_POST(self):
         if self.path not in ("/process", "/judgment"):

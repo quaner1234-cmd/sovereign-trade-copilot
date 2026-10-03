@@ -16,6 +16,7 @@ sys.path.insert(0, HERE)
 import fact_parsers as FP
 import fact_store as FS
 import pipeline_v3 as P3
+import semantics as SEM
 
 CASES = json.load(open(os.path.join(HERE, "..", "data", "bench", "cases.json"), encoding="utf-8"))["cases"]
 FAILS = []
@@ -64,9 +65,24 @@ def test_guard():
     fb = P3._fallback_reply(store, not_stated)
     ok_fb, _, fb_issues = P3.guard_reply(fb, store, email)
     check("fallback itself passes guard", ok_fb, f"issues={fb_issues} text={fb!r}")
-    check("fallback invents no numbers",
-          not P3._fallback_guard(fb, store, email),
-          f"leaked {P3._fallback_guard(fb, store, email)}")
+    # "invents no numbers" is the number/promise guard's claim, so it is measured
+    # with that guard. The FULL semantic guard is a different claim, asserted
+    # immediately below: this flat legacy template predates the semantic layer and
+    # must be refused whenever the customer left a value unsettled ("please quote
+    # ... CIF"), because it records their request as a settled fact. That is why
+    # checked_fallback() tries the role-aware template first and why this template
+    # is only reachable for all-FACT emails.
+    ok_legacy_full, _, legacy_full = P3.guard_reply(fb, store, email, FP.collect(email),
+                                                    SEM.build_typed(email, FP.collect(email), store))
+    check("fallback invents no numbers", not P3.guard_reply(fb, store, email)[2],
+          f"leaked {P3.guard_reply(fb, store, email)[2]}")
+    check("legacy template refused when a customer value is unsettled",
+          not ok_legacy_full, f"unexpectedly accepted: {fb!r}")
+    role_aware = P3._fallback_reply(store, not_stated,
+                                    SEM.build_typed(email, FP.collect(email), store), email)
+    ok_ra, _, ra_issues = P3.guard_reply(role_aware, store, email, FP.collect(email),
+                                         SEM.build_typed(email, FP.collect(email), store))
+    check("role-aware fallback is what ships instead", ok_ra, f"issues={ra_issues} text={role_aware!r}")
 
     # a good draft must pass
     good = "您好，TS-660 3,000 件 CIF Hamburg 的需求已记录，贸易术语与付款条款我司将尽快核实后回复。"

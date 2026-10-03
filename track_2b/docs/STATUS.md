@@ -93,6 +93,25 @@ next work is the operator UI over the existing HTTP surface. A pass here is a
 safety measurement on nine synthetic cases, not human business-owner approval and
 not a claim about model accuracy.
 
+## 2026-10-03 operator console (first UI increment, after the freeze)
+
+`GET /ui` serves one self-contained page (`src/ui/index.html`, no CDN, no build
+step, stdlib only) plus `GET /samples` for the synthetic fixtures. The console
+shows what the pipeline actually did rather than a summary: classification, the
+speech-act table (role / stance / status / qualifier), the evidence store with
+every fact's source span, the draft with its guard verdict and the path that
+produced it (`raw` / `retry` / `deterministic_fallback` / `withheld`), and the
+Judgment Layer with evidence quotes and span offsets. The offline-demo banner is
+deliberate: a demo run must never be mistaken for model quality.
+
+Verified in the operator's browser: page load, sample picker -> `Analyze email`,
+and `Sample test` -> `Get recommendation` (`REWORK`, `needs_human_approval:
+true`). Capture and the interaction table are in `data/validation/ui-001/`. Also
+verified from a directory containing only what the Dockerfile copies. `make run`
+and `docker build` were not executed here (no Docker daemon in this session), so
+the container path for `/ui` is unverified. No pipeline, guard, semantic or
+Judgment code changed for the UI; `server.py` gained two read-only routes.
+
 ## 2026-10-03 validation and Judgment 1.0
 
 The nine existing realistic acceptance cases were run once each against real
@@ -236,11 +255,10 @@ requirements. A successful schema/guard check does not prove business accuracy.
 
 This is a development code snapshot, not a finished competition submission.
 The technical report is still the official placeholder; the six-page PDF,
-two-minute video and the operator UI over the existing HTTP surface (the only
-remaining build item, started after this freeze) remain to be completed. A
-complete Swiss deployment has not been verified. Local Docker demo and real
-Apertus end-to-end execution are verified; this does not verify a production
-deployment.
+two-minute video and the operator UI beyond its first increment remain to be
+completed. A complete Swiss deployment has not been verified. Local Docker demo
+and real Apertus end-to-end execution are verified; this does not verify a
+production deployment.
 
 The imported source commit and per-file hashes are in `sync-provenance.json`.
 Runtime code was imported from committed research code; raw responses, temporary
