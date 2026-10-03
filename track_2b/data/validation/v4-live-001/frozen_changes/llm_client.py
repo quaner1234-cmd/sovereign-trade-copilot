@@ -19,11 +19,6 @@ def demo_mode():
     return not CONFIG["base_url"]
 
 
-def _safe_error(text):
-    key = CONFIG["api_key"]
-    return str(text).replace(key, "[redacted]") if key else str(text)
-
-
 def chat(messages, max_tokens=400, temperature=0.2, json_mode=False):
     """Returns (text, meta). meta: {"mode": "llm"|"demo", "latency_ms", "error"?}"""
     if demo_mode():
@@ -49,12 +44,12 @@ def chat(messages, max_tokens=400, temperature=0.2, json_mode=False):
                           "usage": data.get("usage"),
                           "finish_reason": data["choices"][0].get("finish_reason")}
         except urllib.error.HTTPError as e:
-            last = {"mode": "llm", "error": f"HTTP {e.code}: {_safe_error(e.read().decode('utf-8', 'replace'))[:300]}",
+            last = {"mode": "llm", "error": f"HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:300]}",
                     "latency_ms": round((time.time() - t0) * 1000)}
             if e.code < 500 and e.code != 429:  # client error: retrying cannot fix it
                 break
         except Exception as e:  # network/HTTP errors must not kill the demo path
-            last = {"mode": "llm", "error": f"{type(e).__name__}: {_safe_error(e)}",
+            last = {"mode": "llm", "error": f"{type(e).__name__}: {e}",
                     "latency_ms": round((time.time() - t0) * 1000)}
         if attempt < 2:
             time.sleep(5 * (attempt + 1))

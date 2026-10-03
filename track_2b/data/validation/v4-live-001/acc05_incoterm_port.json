@@ -1,0 +1,817 @@
+{
+  "case_id": "acc05_incoterm_port",
+  "parser_candidates": {
+    "amounts": [
+      {
+        "value": "EUR 3.20",
+        "source_span": "EUR 3.20",
+        "span_start": 99,
+        "span_end": 107,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "EUR",
+        "number": "3.20",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      }
+    ],
+    "quantities": [
+      {
+        "value": "1,200 pcs",
+        "source_span": "1,200 pcs",
+        "span_start": 39,
+        "span_end": 48,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "1,200",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false,
+        "_bound_to": "f003"
+      }
+    ],
+    "dates": [],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [
+      {
+        "value": "TS-445",
+        "source_span": "TS-445",
+        "span_start": 49,
+        "span_end": 55,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "incoterms": [
+      {
+        "value": "CIF",
+        "source_span": "CIF",
+        "span_start": 21,
+        "span_end": 24,
+        "type": "incoterm",
+        "status": "supported",
+        "method": "parser:incoterm",
+        "normalized": "CIF",
+        "place": "Rotterdam",
+        "named_place": "Rotterdam",
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "payment_terms": [],
+    "buyer": [
+      {
+        "value": "Sofia Almeida",
+        "source_span": "Sofia Almeida",
+        "span_start": 119,
+        "span_end": 132,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f005",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "CIF",
+        "source_span": "CIF",
+        "span_start": 21,
+        "span_end": 24,
+        "type": "incoterm",
+        "status": "supported",
+        "method": "parser:incoterm",
+        "normalized": "CIF",
+        "place": "Rotterdam",
+        "named_place": "Rotterdam",
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "1,200 pcs",
+        "source_span": "1,200 pcs",
+        "span_start": 39,
+        "span_end": 48,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "1,200",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false,
+        "_bound_to": "f003"
+      },
+      {
+        "value": "TS-445",
+        "source_span": "TS-445",
+        "span_start": 49,
+        "span_end": 55,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "EUR 3.20",
+        "source_span": "EUR 3.20",
+        "span_start": 99,
+        "span_end": 107,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "EUR",
+        "number": "3.20",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      },
+      {
+        "value": "Sofia Almeida",
+        "source_span": "Sofia Almeida",
+        "span_start": 119,
+        "span_end": 132,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f005",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "incoterm": [
+        "f001"
+      ],
+      "qty": [
+        "f002"
+      ],
+      "sku": [
+        "f003"
+      ],
+      "amount": [
+        "f004"
+      ],
+      "buyer_signature": [
+        "f005"
+      ]
+    },
+    "_product_names": [
+      {
+        "value": "winter beanies",
+        "source_span": "winter beanies",
+        "span_start": 56,
+        "span_end": 70,
+        "type": "product_name",
+        "status": "supported",
+        "method": "parser:product_name"
+      }
+    ],
+    "_email": "Hello,\n\nPlease quote CIF Rotterdam for 1,200 pcs TS-445 winter beanies. Our target landed price is EUR 3.20.\n\nRegards,\nSofia Almeida"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\n  \"intent\": \"inquiry\",\n  \"language\": \"en\",\n  \"urgency\": \"normal\"\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1214,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1269,
+          "total_tokens": 1295,
+          "completion_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 1216,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f005\"],\n  \"products\": [\"f003\", \"f002\"],\n  \"incoterm\": [\"f001\"],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": [\"f004\"]\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1789,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 711,
+          "total_tokens": 777,
+          "completion_tokens": 66,
+          "prompt_tokens_details": {
+            "cached_tokens": 544,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "已记录：产品 winter beanies，订单号关联 TS-445，买方 Sofia Almeida。  \n贵司要求贸易术语为 CIF（目的港 Rotterdam），数量约 1,200 pcs，目标单价 EUR 3.20。  \n关于付款条款、交货期等事项，我司将核实后尽快回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 2233,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 962,
+          "total_tokens": 1059,
+          "completion_tokens": 97,
+          "prompt_tokens_details": {
+            "cached_tokens": 736,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    },
+    {
+      "stage": "retry",
+      "text": "已记录：产品 winter beanies，订单号关联 TS-445，买方 Sofia Almeida。  \n贵司提出贸易术语 CIF（目的港 Rotterdam）及相关询盘，我司将核实后回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1798,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1121,
+          "total_tokens": 1185,
+          "completion_tokens": 64,
+          "prompt_tokens_details": {
+            "cached_tokens": 1056,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.0
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "inquiry",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Sofia Almeida",
+      "products": [
+        {
+          "sku": "TS-445",
+          "qty": "1,200",
+          "desc": ""
+        }
+      ],
+      "incoterm": "CIF",
+      "payment_terms": null,
+      "deadline": null,
+      "amounts": [
+        "EUR 3.20"
+      ],
+      "not_stated": [
+        "payment_terms",
+        "deadline"
+      ],
+      "product_names": [
+        "winter beanies"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "incoterm",
+          "value": "CIF",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "CIF",
+          "span": [
+            21,
+            24
+          ],
+          "fact_type": "requested_incoterm",
+          "evidence_type": "incoterm",
+          "role_reason": "request_cue",
+          "named_place": "Rotterdam"
+        },
+        {
+          "id": "f002",
+          "field": "products",
+          "value": "1,200 pcs",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "1,200 pcs",
+          "span": [
+            39,
+            48
+          ],
+          "fact_type": "requested_quantity",
+          "evidence_type": "qty",
+          "role_reason": "request_cue",
+          "number": "1,200",
+          "unit": "pcs"
+        },
+        {
+          "id": "f003",
+          "field": "products",
+          "value": "TS-445",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "TS-445",
+          "span": [
+            49,
+            55
+          ],
+          "fact_type": "product_code",
+          "evidence_type": "sku",
+          "role_reason": "non_negotiable_type"
+        },
+        {
+          "id": "pn56",
+          "field": "products",
+          "value": "winter beanies",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "winter beanies",
+          "span": [
+            56,
+            70
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f004",
+          "field": "amounts",
+          "value": "EUR 3.20",
+          "semantic_role": "TARGET",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "EUR 3.20",
+          "span": [
+            99,
+            107
+          ],
+          "fact_type": "target_price",
+          "evidence_type": "amount",
+          "role_reason": "target_cue",
+          "number": "3.20"
+        },
+        {
+          "id": "f005",
+          "field": "buyer",
+          "value": "Sofia Almeida",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "Sofia Almeida",
+          "span": [
+            119,
+            132
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "已记录：产品 winter beanies，订单号关联 TS-445，买方 Sofia Almeida。  \n贵司提出贸易术语 CIF（目的港 Rotterdam）及相关询盘，我司将核实后回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "retry"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Sofia Almeida",
+        "facts": [
+          {
+            "id": "f005",
+            "value": "Sofia Almeida",
+            "type": "buyer_signature",
+            "source_span": "Sofia Almeida",
+            "status": "supported",
+            "span": [
+              119,
+              132
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": "TS-445",
+            "qty": "1,200",
+            "_qty_fact": "f002"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f003",
+            "value": "TS-445",
+            "type": "sku",
+            "source_span": "TS-445",
+            "status": "supported",
+            "span": [
+              49,
+              55
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          },
+          {
+            "id": "f002",
+            "value": "1,200 pcs",
+            "type": "qty",
+            "source_span": "1,200 pcs",
+            "status": "supported",
+            "span": [
+              39,
+              48
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "supported",
+        "value": "CIF",
+        "facts": [
+          {
+            "id": "f001",
+            "value": "CIF",
+            "type": "incoterm",
+            "source_span": "CIF",
+            "status": "supported",
+            "span": [
+              21,
+              24
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "EUR 3.20"
+        ],
+        "facts": [
+          {
+            "id": "f004",
+            "value": "EUR 3.20",
+            "type": "amount",
+            "source_span": "EUR 3.20",
+            "status": "supported",
+            "span": [
+              99,
+              107
+            ],
+            "contested": true,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "inquiry",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f005\"],\n  \"products\": [\"f003\", \"f002\"],\n  \"incoterm\": [\"f001\"],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": [\"f004\"]\n}",
+      "selection": {
+        "buyer": [
+          "f005"
+        ],
+        "products": [
+          "f003",
+          "f002"
+        ],
+        "incoterm": [
+          "f001"
+        ],
+        "payment_terms": [],
+        "deadline": [],
+        "amounts": [
+          "f004"
+        ]
+      },
+      "draft": "已记录：产品 winter beanies，订单号关联 TS-445，买方 Sofia Almeida。  \n贵司要求贸易术语为 CIF（目的港 Rotterdam），数量约 1,200 pcs，目标单价 EUR 3.20。  \n关于付款条款、交货期等事项，我司将核实后尽快回复。",
+      "draft_retry": "已记录：产品 winter beanies，订单号关联 TS-445，买方 Sofia Almeida。  \n贵司提出贸易术语 CIF（目的港 Rotterdam）及相关询盘，我司将核实后回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1214,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1269,
+            "total_tokens": 1295,
+            "completion_tokens": 26,
+            "prompt_tokens_details": {
+              "cached_tokens": 1216,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 5
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1789,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 711,
+            "total_tokens": 777,
+            "completion_tokens": 66,
+            "prompt_tokens_details": {
+              "cached_tokens": 544,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": [
+            "payment_terms",
+            "deadline"
+          ]
+        },
+        "semantics": {
+          "typed": 6,
+          "order_act": false,
+          "roles": {
+            "FACT": 3,
+            "REQUEST": 2,
+            "TARGET": 1,
+            "QUESTION": 0,
+            "COMMITMENT": 0,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 2233,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 962,
+            "total_tokens": 1059,
+            "completion_tokens": 97,
+            "prompt_tokens_details": {
+              "cached_tokens": 736,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        },
+        "retry": {
+          "mode": "llm",
+          "latency_ms": 1798,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1121,
+            "total_tokens": 1185,
+            "completion_tokens": 64,
+            "prompt_tokens_details": {
+              "cached_tokens": 1056,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "passed": true,
+          "issues": []
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": false,
+          "issues": [
+            "contested_value_echoed:f004",
+            "target_stated_as_our_price:f004"
+          ]
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "retry"
+        }
+      },
+      "retry_used": true
+    }
+  },
+  "checks": [
+    {
+      "name": "acc05_incoterm_port: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc05_incoterm_port: EUR 3.20 as TARGET",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc05_incoterm_port: incoterm CIF",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc05_incoterm_port: port Rotterdam",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc05_incoterm_port: order_act == False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "latency_ms": 7037,
+  "usage": {
+    "prompt_tokens": 4063,
+    "completion_tokens": 253,
+    "total_tokens": 4316
+  }
+}

@@ -1,0 +1,210 @@
+[
+  {
+    "id": "acc01_new_inquiry",
+    "note": "plain inquiry: no price, no date, nothing to negotiate",
+    "email": "Hi Alex,\n\nWe saw your catalogue and would like to hear more about your yoga pants.\nCould you send prices for 500 pcs?\n\nThanks,\nEmma Doyle",
+    "expect": {
+      "products_contain": [
+        "yoga pants"
+      ],
+      "quantity": "500",
+      "order_act": false,
+      "no_role": [
+        "TARGET",
+        "COMMITMENT"
+      ],
+      "missing_asked": [
+        "payment_terms"
+      ]
+    }
+  },
+  {
+    "id": "acc02_target_price",
+    "note": "TARGET role: a price goal, not a deal",
+    "email": "Hello Alex,\n\nFor the TS-880 softshell jackets we are aiming for USD 18.50/pc. Volume would be 3,000 pcs.\nCan you work with that?\n\nRegards,\nLukas Meier",
+    "expect": {
+      "typed": [
+        {
+          "value": "USD 18.50",
+          "semantic_role": "TARGET",
+          "status": "unconfirmed"
+        }
+      ],
+      "quantity": "3,000",
+      "order_act": false,
+      "draft_must_contain": [
+        "目标"
+      ],
+      "draft_must_not_contain": [
+        "我方确认",
+        "已确认",
+        "报价为"
+      ]
+    }
+  },
+  {
+    "id": "acc03_requested_delivery",
+    "note": "requested delivery must keep both the role and the relation",
+    "email": "Hi Alex,\n\nThe TS-901 padded jackets must arrive in Hamburg no later than Dec 5. Please confirm you can make it.\n\nBest,\nNora Fischer",
+    "expect": {
+      "typed": [
+        {
+          "value": "Dec 5",
+          "semantic_role": "REQUEST",
+          "relation": "before"
+        }
+      ],
+      "order_act": false,
+      "draft_must_contain": [
+        "要求交期"
+      ],
+      "draft_must_not_contain": [
+        "我司确认",
+        "我方确认"
+      ]
+    }
+  },
+  {
+    "id": "acc04_approx_quantity",
+    "note": "approximate quantity keeps its hedge; and this is NOT an order",
+    "email": "Hi Alex,\n\nInitial run would be around 2,500 pcs of your canvas totes, roughly 500 units per colour.\nCould you quote?\n\nThanks,\nPriya Raman",
+    "expect": {
+      "quantity": "2,500",
+      "qualifier_kind": "approx",
+      "products_contain": [
+        "canvas totes"
+      ],
+      "order_act": false,
+      "draft_must_contain": [
+        "约"
+      ],
+      "draft_must_not_contain": [
+        "订单"
+      ]
+    }
+  },
+  {
+    "id": "acc05_incoterm_port",
+    "note": "Incoterm and its named place are two facts, not one",
+    "email": "Hello,\n\nPlease quote CIF Rotterdam for 1,200 pcs TS-445 winter beanies. Our target landed price is EUR 3.20.\n\nRegards,\nSofia Almeida",
+    "expect": {
+      "incoterm": "CIF",
+      "port": "Rotterdam",
+      "typed": [
+        {
+          "value": "EUR 3.20",
+          "semantic_role": "TARGET"
+        }
+      ],
+      "order_act": false
+    }
+  },
+  {
+    "id": "acc06_confirm_existing_quote",
+    "note": "POLARITY CONTROL for TARGET: they ask us to confirm OUR quoted price",
+    "email": "Hi Alex,\n\nYou quoted 6,000 pcs RS-204 sleeping bags at USD 7.85 on Nov 3. Is that still valid for a December shipment?\n\nPlease confirm.\nKarim Haddad",
+    "expect": {
+      "typed": [
+        {
+          "value": "USD 7.85",
+          "semantic_role": "QUESTION"
+        }
+      ],
+      "no_role": [
+        "TARGET",
+        "COMMITMENT"
+      ],
+      "order_act": false,
+      "draft_must_not_contain": [
+        "我方确认",
+        "我司确认",
+        "已确认",
+        "订单"
+      ]
+    }
+  },
+  {
+    "id": "acc07_claims_agreed_price",
+    "note": "POLARITY CONTROL: 'we agreed' is their claim about a past deal, not our record",
+    "email": "Alex,\n\nWe agreed on USD 2.05 for the 8,000 pcs TS-330 order last month. Your invoice shows USD 2.30.\nPlease honour the agreed price and reissue.\n\nTomas Novak",
+    "expect": {
+      "typed": [
+        {
+          "value": "USD 2.05",
+          "semantic_role": "COMMITMENT",
+          "stance": "customer_claimed_prior",
+          "status": "unconfirmed"
+        }
+      ],
+      "order_act": false,
+      "no_company_commitment": true,
+      "draft_must_not_contain": [
+        "我方确认",
+        "我司确认",
+        "已确认",
+        "同意"
+      ]
+    }
+  },
+  {
+    "id": "acc08_confirmed_order",
+    "note": "INQUIRY vs ORDER: a real PO plus a live commitment IS an order",
+    "email": "Alex,\n\nPO-8821 is confirmed. Please proceed with 4,000 pcs TS-770 down jackets at USD 3.10, FOB Ningbo, shipment before Mar 1.\nPayment by LC at sight.\n\nBest,\nGrace Tan",
+    "expect": {
+      "order_act": true,
+      "incoterm": "FOB",
+      "port": "Ningbo",
+      "quantity": "4,000",
+      "no_company_commitment": true,
+      "draft_must_contain": [
+        "订单"
+      ],
+      "draft_must_not_contain": [
+        "询盘",
+        "我方确认"
+      ]
+    }
+  },
+  {
+    "id": "acc09_manual_ski_jackets",
+    "note": "the business-owner case that started this refactor",
+    "email": "Hi Alex,\n\nWe are interested in your ski jackets.\nInitial order would be around 300 pcs.\nOur target price is USD 45 and we need delivery before Dec 20.\nCould you quote FOB Qingdao?\n\nBest regards,\nDavid",
+    "expect": {
+      "products_contain": [
+        "ski jackets"
+      ],
+      "quantity": "300",
+      "qualifier_kind": "approx",
+      "incoterm": "FOB",
+      "port": "Qingdao",
+      "typed": [
+        {
+          "value": "USD 45",
+          "semantic_role": "TARGET",
+          "status": "unconfirmed"
+        },
+        {
+          "value": "Dec 20",
+          "semantic_role": "REQUEST",
+          "relation": "before"
+        }
+      ],
+      "order_act": false,
+      "no_company_commitment": true,
+      "draft_must_contain": [
+        "ski jackets",
+        "约 300 pcs",
+        "目标",
+        "要求交期",
+        "Qingdao"
+      ],
+      "draft_must_not_contain": [
+        "订单",
+        "我方确认",
+        "我司确认",
+        "已确认",
+        "报价 USD 45"
+      ]
+    }
+  }
+]

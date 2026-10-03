@@ -1,0 +1,725 @@
+{
+  "case_id": "acc07_claims_agreed_price",
+  "parser_candidates": {
+    "amounts": [
+      {
+        "value": "USD 2.05",
+        "source_span": "USD 2.05",
+        "span_start": 20,
+        "span_end": 28,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "2.05",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": true,
+        "contested": false
+      },
+      {
+        "value": "USD 2.30",
+        "source_span": "USD 2.30",
+        "span_start": 91,
+        "span_end": 99,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "2.30",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "quantities": [
+      {
+        "value": "8,000 pcs",
+        "source_span": "8,000 pcs",
+        "span_start": 37,
+        "span_end": 46,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "8,000",
+        "unit": "pcs",
+        "role": "historical",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": true,
+        "contested": false
+      }
+    ],
+    "dates": [],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [
+      {
+        "value": "TS-330",
+        "source_span": "TS-330",
+        "span_start": 47,
+        "span_end": 53,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f003",
+        "customer_asserted": false,
+        "own_commitment": true,
+        "contested": false
+      }
+    ],
+    "incoterms": [],
+    "payment_terms": [],
+    "buyer": [
+      {
+        "value": "Tomas Novak",
+        "source_span": "\n\nTomas Novak",
+        "span_start": 144,
+        "span_end": 157,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f005",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "USD 2.05",
+        "source_span": "USD 2.05",
+        "span_start": 20,
+        "span_end": 28,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "2.05",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": true,
+        "contested": false
+      },
+      {
+        "value": "8,000 pcs",
+        "source_span": "8,000 pcs",
+        "span_start": 37,
+        "span_end": 46,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "8,000",
+        "unit": "pcs",
+        "role": "historical",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": true,
+        "contested": false
+      },
+      {
+        "value": "TS-330",
+        "source_span": "TS-330",
+        "span_start": 47,
+        "span_end": 53,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f003",
+        "customer_asserted": false,
+        "own_commitment": true,
+        "contested": false
+      },
+      {
+        "value": "USD 2.30",
+        "source_span": "USD 2.30",
+        "span_start": 91,
+        "span_end": 99,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "2.30",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Tomas Novak",
+        "source_span": "\n\nTomas Novak",
+        "span_start": 144,
+        "span_end": 157,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f005",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "amount": [
+        "f001",
+        "f004"
+      ],
+      "qty": [
+        "f002"
+      ],
+      "sku": [
+        "f003"
+      ],
+      "buyer_signature": [
+        "f005"
+      ]
+    },
+    "_product_names": [],
+    "_email": "Alex,\n\nWe agreed on USD 2.05 for the 8,000 pcs TS-330 order last month. Your invoice shows USD 2.30.\nPlease honour the agreed price and reissue.\n\nTomas Novak"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\n  \"intent\": \"quote\",\n  \"language\": \"en\",\n  \"urgency\": \"normal\"\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1189,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1277,
+          "total_tokens": 1302,
+          "completion_tokens": 25,
+          "prompt_tokens_details": {
+            "cached_tokens": 1216,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f005\"],\n  \"products\": [\"f003\", \"f002\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": [\"f001\"]\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 3165,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 704,
+          "total_tokens": 765,
+          "completion_tokens": 61,
+          "prompt_tokens_details": {
+            "cached_tokens": 544,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "尊敬的 Tomas Novak：\n\n已记录：产品 TS-330，您为询盘方。\n\n贵司提及目标价格 USD 2.05，我司暂未确认；贵司另提议价格 USD 2.30，我司将核实后回复。\n\n关于 incoterm、payment_terms、deadline，我司团队正在核实，稍后回复。\n\n感谢来函询盘，我司尽快处理。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 2550,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 926,
+          "total_tokens": 1046,
+          "completion_tokens": 120,
+          "prompt_tokens_details": {
+            "cached_tokens": 736,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "quote",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Tomas Novak",
+      "products": [
+        {
+          "sku": "TS-330",
+          "qty": null,
+          "desc": ""
+        }
+      ],
+      "incoterm": null,
+      "payment_terms": null,
+      "deadline": null,
+      "amounts": [
+        "USD 2.05",
+        "USD 2.30"
+      ],
+      "not_stated": [
+        "incoterm",
+        "payment_terms",
+        "deadline"
+      ],
+      "product_names": []
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "amounts",
+          "value": "USD 2.05",
+          "semantic_role": "COMMITMENT",
+          "stance": "customer_claimed_prior",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 2.05",
+          "span": [
+            20,
+            28
+          ],
+          "fact_type": "agreed_price_claimed",
+          "evidence_type": "amount",
+          "role_reason": "commit_cue+prior",
+          "number": "2.05"
+        },
+        {
+          "id": "f003",
+          "field": "products",
+          "value": "TS-330",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "TS-330",
+          "span": [
+            47,
+            53
+          ],
+          "fact_type": "product_code",
+          "evidence_type": "sku",
+          "role_reason": "non_negotiable_type"
+        },
+        {
+          "id": "f004",
+          "field": "amounts",
+          "value": "USD 2.30",
+          "semantic_role": "QUESTION",
+          "stance": "customer_claimed_prior",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 2.30",
+          "span": [
+            91,
+            99
+          ],
+          "fact_type": "price_to_confirm",
+          "evidence_type": "amount",
+          "role_reason": "cites_our_document",
+          "number": "2.30"
+        },
+        {
+          "id": "f005",
+          "field": "buyer",
+          "value": "Tomas Novak",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "\n\nTomas Novak",
+          "span": [
+            144,
+            157
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "尊敬的 Tomas Novak：\n\n已记录：产品 TS-330，您为询盘方。\n\n贵司提及目标价格 USD 2.05，我司暂未确认；贵司另提议价格 USD 2.30，我司将核实后回复。\n\n关于 incoterm、payment_terms、deadline，我司团队正在核实，稍后回复。\n\n感谢来函询盘，我司尽快处理。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "raw"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Tomas Novak",
+        "facts": [
+          {
+            "id": "f005",
+            "value": "Tomas Novak",
+            "type": "buyer_signature",
+            "source_span": "\n\nTomas Novak",
+            "status": "supported",
+            "span": [
+              144,
+              157
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": "TS-330",
+            "qty": null,
+            "_qty_fact": null
+          }
+        ],
+        "facts": [
+          {
+            "id": "f003",
+            "value": "TS-330",
+            "type": "sku",
+            "source_span": "TS-330",
+            "status": "supported",
+            "span": [
+              47,
+              53
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "USD 2.05",
+          "USD 2.30"
+        ],
+        "facts": [
+          {
+            "id": "f001",
+            "value": "USD 2.05",
+            "type": "amount",
+            "source_span": "USD 2.05",
+            "status": "supported",
+            "span": [
+              20,
+              28
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          },
+          {
+            "id": "f004",
+            "value": "USD 2.30",
+            "type": "amount",
+            "source_span": "USD 2.30",
+            "status": "supported",
+            "span": [
+              91,
+              99
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "quote",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f005\"],\n  \"products\": [\"f003\", \"f002\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": [\"f001\"]\n}",
+      "selection": {
+        "buyer": [
+          "f005"
+        ],
+        "products": [
+          "f003",
+          "f002"
+        ],
+        "incoterm": [],
+        "payment_terms": [],
+        "deadline": [],
+        "amounts": [
+          "f001"
+        ]
+      },
+      "draft": "尊敬的 Tomas Novak：\n\n已记录：产品 TS-330，您为询盘方。\n\n贵司提及目标价格 USD 2.05，我司暂未确认；贵司另提议价格 USD 2.30，我司将核实后回复。\n\n关于 incoterm、payment_terms、deadline，我司团队正在核实，稍后回复。\n\n感谢来函询盘，我司尽快处理。"
+    },
+    "meta": {
+      "mode": "llm",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1189,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1277,
+            "total_tokens": 1302,
+            "completion_tokens": 25,
+            "prompt_tokens_details": {
+              "cached_tokens": 1216,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 5
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 3165,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 704,
+            "total_tokens": 765,
+            "completion_tokens": 61,
+            "prompt_tokens_details": {
+              "cached_tokens": 544,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {
+            "products": [
+              "dropped_non_order_quantities:f002(historical)"
+            ]
+          },
+          "not_stated": [
+            "incoterm",
+            "payment_terms",
+            "deadline"
+          ]
+        },
+        "semantics": {
+          "typed": 4,
+          "order_act": false,
+          "roles": {
+            "FACT": 2,
+            "REQUEST": 0,
+            "TARGET": 0,
+            "QUESTION": 1,
+            "COMMITMENT": 1,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 2550,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 926,
+            "total_tokens": 1046,
+            "completion_tokens": 120,
+            "prompt_tokens_details": {
+              "cached_tokens": 736,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": true,
+          "issues": []
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "raw"
+        }
+      },
+      "retry_used": false
+    }
+  },
+  "checks": [
+    {
+      "name": "acc07_claims_agreed_price: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc07_claims_agreed_price: USD 2.05 as COMMITMENT",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc07_claims_agreed_price: order_act == False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc07_claims_agreed_price: no company commitment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc07_claims_agreed_price: draft avoids '我方确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc07_claims_agreed_price: draft avoids '我司确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc07_claims_agreed_price: draft avoids '已确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc07_claims_agreed_price: draft avoids '同意'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "latency_ms": 6907,
+  "usage": {
+    "prompt_tokens": 2907,
+    "completion_tokens": 206,
+    "total_tokens": 3113
+  }
+}

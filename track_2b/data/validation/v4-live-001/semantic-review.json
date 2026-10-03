@@ -1,0 +1,72 @@
+{
+  "reviewer": "Codex agent source-to-draft semantic review; not human business-owner approval",
+  "rubric": "Preserve semantic role, identifier kind and source qualifiers; distinguish the inherited fixed checks from semantic fidelity. No cases, expectations, prompts or frozen results changed.",
+  "cases": [
+    {
+      "id": "acc01_new_inquiry",
+      "fixed_assertions": "PASS",
+      "semantic_review": "FAIL",
+      "reasons": [
+        "Exact 500 pcs is rendered as approximate 500 pcs. The missing_asked expectation is present but not exercised by the inherited assertion function."
+      ]
+    },
+    {
+      "id": "acc02_target_price",
+      "fixed_assertions": "PASS",
+      "semantic_review": "FAIL",
+      "reasons": [
+        "Exact 3,000 pcs is rendered as approximate 3,000 pcs without a source hedge."
+      ]
+    },
+    {
+      "id": "acc03_requested_delivery",
+      "fixed_assertions": "PASS",
+      "semantic_review": "PASS",
+      "reasons": []
+    },
+    {
+      "id": "acc04_approx_quantity",
+      "fixed_assertions": "PASS",
+      "semantic_review": "PASS",
+      "reasons": []
+    },
+    {
+      "id": "acc05_incoterm_port",
+      "fixed_assertions": "PASS",
+      "semantic_review": "FAIL",
+      "reasons": [
+        "The retry still calls SKU TS-445 an order-number association; the raw target framing was rejected and the retry omits the target price."
+      ]
+    },
+    {
+      "id": "acc06_confirm_existing_quote",
+      "fixed_assertions": "PASS",
+      "semantic_review": "FAIL",
+      "reasons": [
+        "A question about our previous quote USD 7.85 is rendered as the customer target price. Exact 6,000 pcs is rendered as approximate."
+      ]
+    },
+    {
+      "id": "acc07_claims_agreed_price",
+      "fixed_assertions": "PASS",
+      "semantic_review": "FAIL",
+      "reasons": [
+        "The customer claim about a past agreed USD 2.05 is rendered as a target. Invoice USD 2.30 is rendered as a customer proposed price."
+      ]
+    },
+    {
+      "id": "acc08_confirmed_order",
+      "fixed_assertions": "PASS",
+      "semantic_review": "FAIL",
+      "reasons": [
+        "Confirmed customer order price USD 3.10 is rendered as a target. PO-8821 is called a product code; exact 4,000 pcs is rendered as approximate."
+      ]
+    },
+    {
+      "id": "acc09_manual_ski_jackets",
+      "fixed_assertions": "PASS",
+      "semantic_review": "PASS",
+      "reasons": []
+    }
+  ]
+}

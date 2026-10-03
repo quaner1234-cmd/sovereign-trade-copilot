@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Judgment Contract 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "scenario", "action", "owner", "reason", "evidence", "blocking_conditions", "needs_human_approval", "next_customer_action", "confidence"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "scenario": {"enum": ["inquiry", "payment", "sample_test"]},
+    "action": {"enum": ["INTERNAL_COSTING", "REQUEST_INFORMATION", "WAIT", "RECHECK", "REQUEST_CONFIRMATION", "CONTINUE_REVIEW", "PASS", "REWORK", "ESCALATE"]},
+    "owner": {"enum": ["sales", "costing", "finance", "technical", "business_owner"]},
+    "reason": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fact_id", "source_id", "field", "value", "quote", "span", "semantic_role", "stance", "status"],
+      "properties": {
+        "fact_id": {"type": "string"}, "source_id": {"type": "string"},
+        "field": {"type": "string"}, "value": {}, "quote": {"type": "string"},
+        "span": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}], "minItems": 2, "maxItems": 2},
+        "semantic_role": {"enum": ["FACT", "REQUEST", "TARGET", "QUESTION", "COMMITMENT", "UNKNOWN"]},
+        "stance": {"enum": ["customer", "customer_claimed_prior", "company", "lab", "unattributed"]},
+        "status": {"enum": ["supported", "unconfirmed", "not_stated"]}
+      }
+    }},
+    "blocking_conditions": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["field", "reason", "evidence_ids", "blocks_current_action", "scope"],
+      "properties": {
+        "field": {"type": "string"}, "reason": {"type": "string"},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "blocks_current_action": {"type": "boolean"}, "scope": {"type": "string"}
+      }
+    }},
+    "needs_human_approval": {"const": true},
+    "next_customer_action": {"type": "string"},
+    "confidence": {"enum": ["high", "medium", "low"]}
+  }
+}

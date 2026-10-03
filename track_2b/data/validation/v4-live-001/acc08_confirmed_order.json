@@ -1,0 +1,1005 @@
+{
+  "case_id": "acc08_confirmed_order",
+  "parser_candidates": {
+    "amounts": [
+      {
+        "value": "USD 3.10",
+        "source_span": "USD 3.10",
+        "span_start": 82,
+        "span_end": 90,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "3.10",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": true
+      }
+    ],
+    "quantities": [
+      {
+        "value": "4,000 pcs",
+        "source_span": "4,000 pcs",
+        "span_start": 49,
+        "span_end": 58,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "4,000",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": true,
+        "own_commitment": true,
+        "contested": false,
+        "_bound_to": "f003"
+      }
+    ],
+    "dates": [
+      {
+        "value": "Mar 1",
+        "source_span": "Mar 1",
+        "span_start": 120,
+        "span_end": 125,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": "before",
+        "deadline_hint": true,
+        "id": "f006",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [
+      {
+        "value": "PO-8821",
+        "source_span": "PO-8821",
+        "span_start": 7,
+        "span_end": 14,
+        "type": "doc_id",
+        "status": "supported",
+        "method": "parser:doc_id",
+        "role": "product_identifier_candidate",
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "TS-770",
+        "source_span": "TS-770",
+        "span_start": 59,
+        "span_end": 65,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": true,
+        "contested": false
+      }
+    ],
+    "incoterms": [
+      {
+        "value": "FOB",
+        "source_span": "FOB",
+        "span_start": 92,
+        "span_end": 95,
+        "type": "incoterm",
+        "status": "supported",
+        "method": "parser:incoterm",
+        "normalized": "FOB",
+        "place": "Ningbo",
+        "named_place": "Ningbo",
+        "negated": false,
+        "id": "f005",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "payment_terms": [
+      {
+        "value": "LC at sight",
+        "source_span": "LC at sight",
+        "span_start": 138,
+        "span_end": 149,
+        "type": "payment_terms",
+        "status": "supported",
+        "method": "parser:payment_terms",
+        "negated": false,
+        "id": "f007",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "buyer": [
+      {
+        "value": "Grace Tan",
+        "source_span": "Grace Tan",
+        "span_start": 158,
+        "span_end": 167,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f008",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "PO-8821",
+        "source_span": "PO-8821",
+        "span_start": 7,
+        "span_end": 14,
+        "type": "doc_id",
+        "status": "supported",
+        "method": "parser:doc_id",
+        "role": "product_identifier_candidate",
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "4,000 pcs",
+        "source_span": "4,000 pcs",
+        "span_start": 49,
+        "span_end": 58,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "4,000",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": true,
+        "own_commitment": true,
+        "contested": false,
+        "_bound_to": "f003"
+      },
+      {
+        "value": "TS-770",
+        "source_span": "TS-770",
+        "span_start": 59,
+        "span_end": 65,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f003",
+        "customer_asserted": true,
+        "own_commitment": true,
+        "contested": false
+      },
+      {
+        "value": "USD 3.10",
+        "source_span": "USD 3.10",
+        "span_start": 82,
+        "span_end": 90,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "3.10",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f004",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": true
+      },
+      {
+        "value": "FOB",
+        "source_span": "FOB",
+        "span_start": 92,
+        "span_end": 95,
+        "type": "incoterm",
+        "status": "supported",
+        "method": "parser:incoterm",
+        "normalized": "FOB",
+        "place": "Ningbo",
+        "named_place": "Ningbo",
+        "negated": false,
+        "id": "f005",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Mar 1",
+        "source_span": "Mar 1",
+        "span_start": 120,
+        "span_end": 125,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": "before",
+        "deadline_hint": true,
+        "id": "f006",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "LC at sight",
+        "source_span": "LC at sight",
+        "span_start": 138,
+        "span_end": 149,
+        "type": "payment_terms",
+        "status": "supported",
+        "method": "parser:payment_terms",
+        "negated": false,
+        "id": "f007",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Grace Tan",
+        "source_span": "Grace Tan",
+        "span_start": 158,
+        "span_end": 167,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f008",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "doc_id": [
+        "f001"
+      ],
+      "qty": [
+        "f002"
+      ],
+      "sku": [
+        "f003"
+      ],
+      "amount": [
+        "f004"
+      ],
+      "incoterm": [
+        "f005"
+      ],
+      "date": [
+        "f006"
+      ],
+      "payment_terms": [
+        "f007"
+      ],
+      "buyer_signature": [
+        "f008"
+      ]
+    },
+    "_product_names": [
+      {
+        "value": "down jackets",
+        "source_span": "down jackets",
+        "span_start": 66,
+        "span_end": 78,
+        "type": "product_name",
+        "status": "supported",
+        "method": "parser:product_name"
+      }
+    ],
+    "_email": "Alex,\n\nPO-8821 is confirmed. Please proceed with 4,000 pcs TS-770 down jackets at USD 3.10, FOB Ningbo, shipment before Mar 1.\nPayment by LC at sight.\n\nBest,\nGrace Tan"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\"intent\": \"quote\", \"language\": \"en\", \"urgency\": \"normal\"}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1122,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1284,
+          "total_tokens": 1304,
+          "completion_tokens": 20,
+          "prompt_tokens_details": {
+            "cached_tokens": 1216,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f008\"],\n  \"products\": [\"f003\", \"f002\"],\n  \"incoterm\": [\"f005\"],\n  \"payment_terms\": [\"f007\"],\n  \"deadline\": [\"f006\"],\n  \"amounts\": [\"f004\"]\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1916,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 766,
+          "total_tokens": 842,
+          "completion_tokens": 76,
+          "prompt_tokens_details": {
+            "cached_tokens": 544,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "已收到贵司来函，记录如下：\n产品代码 PO-8821、TS-770，产品为 down jackets，买方为 Grace Tan，付款条款为 LC at sight。\n贵司提及订单量约 4,000 pcs、目标价格 USD 3.10、术语 FOB（宁波）及交期 Mar 1 前，我司将核实相关信息后尽快回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 2489,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1030,
+          "total_tokens": 1146,
+          "completion_tokens": 116,
+          "prompt_tokens_details": {
+            "cached_tokens": 736,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "quote",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Grace Tan",
+      "products": [
+        {
+          "sku": "TS-770",
+          "qty": "4,000",
+          "desc": ""
+        },
+        {
+          "sku": "PO-8821",
+          "qty": "4,000",
+          "desc": ""
+        }
+      ],
+      "incoterm": "FOB",
+      "payment_terms": "LC at sight",
+      "deadline": "Mar 1",
+      "amounts": [
+        "USD 3.10"
+      ],
+      "not_stated": [],
+      "product_names": [
+        "down jackets"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "PO-8821",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "PO-8821",
+          "span": [
+            7,
+            14
+          ],
+          "fact_type": "product_code",
+          "evidence_type": "doc_id",
+          "role_reason": "non_negotiable_type"
+        },
+        {
+          "id": "f002",
+          "field": "products",
+          "value": "4,000 pcs",
+          "semantic_role": "COMMITMENT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "4,000 pcs",
+          "span": [
+            49,
+            58
+          ],
+          "fact_type": "committed_quantity",
+          "evidence_type": "qty",
+          "role_reason": "commit_cue",
+          "number": "4,000",
+          "unit": "pcs"
+        },
+        {
+          "id": "f003",
+          "field": "products",
+          "value": "TS-770",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "TS-770",
+          "span": [
+            59,
+            65
+          ],
+          "fact_type": "product_code",
+          "evidence_type": "sku",
+          "role_reason": "non_negotiable_type"
+        },
+        {
+          "id": "pn66",
+          "field": "products",
+          "value": "down jackets",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "down jackets",
+          "span": [
+            66,
+            78
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f004",
+          "field": "amounts",
+          "value": "USD 3.10",
+          "semantic_role": "COMMITMENT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 3.10",
+          "span": [
+            82,
+            90
+          ],
+          "fact_type": "agreed_price_claimed",
+          "evidence_type": "amount",
+          "role_reason": "commit_cue",
+          "number": "3.10"
+        },
+        {
+          "id": "f005",
+          "field": "incoterm",
+          "value": "FOB",
+          "semantic_role": "COMMITMENT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "FOB",
+          "span": [
+            92,
+            95
+          ],
+          "fact_type": "agreed_incoterm_claimed",
+          "evidence_type": "incoterm",
+          "role_reason": "commit_cue",
+          "named_place": "Ningbo"
+        },
+        {
+          "id": "f006",
+          "field": "deadline",
+          "value": "Mar 1",
+          "semantic_role": "COMMITMENT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "Mar 1",
+          "span": [
+            120,
+            125
+          ],
+          "fact_type": "committed_delivery",
+          "evidence_type": "date",
+          "role_reason": "commit_cue",
+          "relation": "before",
+          "deadline_hint": true
+        },
+        {
+          "id": "f007",
+          "field": "payment_terms",
+          "value": "LC at sight",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "LC at sight",
+          "span": [
+            138,
+            149
+          ],
+          "fact_type": "payment_terms",
+          "evidence_type": "payment_terms",
+          "role_reason": "no_cue"
+        },
+        {
+          "id": "f008",
+          "field": "buyer",
+          "value": "Grace Tan",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "Grace Tan",
+          "span": [
+            158,
+            167
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": true,
+      "company_commitments": []
+    },
+    "draft": "已收到贵司来函，记录如下：\n产品代码 PO-8821、TS-770，产品为 down jackets，买方为 Grace Tan，付款条款为 LC at sight。\n贵司提及订单量约 4,000 pcs、目标价格 USD 3.10、术语 FOB（宁波）及交期 Mar 1 前，我司将核实相关信息后尽快回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "raw"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Grace Tan",
+        "facts": [
+          {
+            "id": "f008",
+            "value": "Grace Tan",
+            "type": "buyer_signature",
+            "source_span": "Grace Tan",
+            "status": "supported",
+            "span": [
+              158,
+              167
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": "TS-770",
+            "qty": "4,000",
+            "_qty_fact": "f002"
+          },
+          {
+            "sku": "PO-8821",
+            "qty": "4,000",
+            "_qty_fact": "f002"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f003",
+            "value": "TS-770",
+            "type": "sku",
+            "source_span": "TS-770",
+            "status": "supported",
+            "span": [
+              59,
+              65
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          },
+          {
+            "id": "f002",
+            "value": "4,000 pcs",
+            "type": "qty",
+            "source_span": "4,000 pcs",
+            "status": "supported",
+            "span": [
+              49,
+              58
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          },
+          {
+            "id": "f001",
+            "value": "PO-8821",
+            "type": "doc_id",
+            "source_span": "PO-8821",
+            "status": "supported",
+            "span": [
+              7,
+              14
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "supported",
+        "value": "FOB",
+        "facts": [
+          {
+            "id": "f005",
+            "value": "FOB",
+            "type": "incoterm",
+            "source_span": "FOB",
+            "status": "supported",
+            "span": [
+              92,
+              95
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "supported",
+        "value": "LC at sight",
+        "facts": [
+          {
+            "id": "f007",
+            "value": "LC at sight",
+            "type": "payment_terms",
+            "source_span": "LC at sight",
+            "status": "supported",
+            "span": [
+              138,
+              149
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "supported",
+        "value": "Mar 1",
+        "facts": [
+          {
+            "id": "f006",
+            "value": "Mar 1",
+            "type": "date",
+            "source_span": "Mar 1",
+            "status": "supported",
+            "span": [
+              120,
+              125
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "USD 3.10"
+        ],
+        "facts": [
+          {
+            "id": "f004",
+            "value": "USD 3.10",
+            "type": "amount",
+            "source_span": "USD 3.10",
+            "status": "supported",
+            "span": [
+              82,
+              90
+            ],
+            "contested": true,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "quote",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f008\"],\n  \"products\": [\"f003\", \"f002\"],\n  \"incoterm\": [\"f005\"],\n  \"payment_terms\": [\"f007\"],\n  \"deadline\": [\"f006\"],\n  \"amounts\": [\"f004\"]\n}",
+      "selection": {
+        "buyer": [
+          "f008"
+        ],
+        "products": [
+          "f003",
+          "f002"
+        ],
+        "incoterm": [
+          "f005"
+        ],
+        "payment_terms": [
+          "f007"
+        ],
+        "deadline": [
+          "f006"
+        ],
+        "amounts": [
+          "f004"
+        ]
+      },
+      "draft": "已收到贵司来函，记录如下：\n产品代码 PO-8821、TS-770，产品为 down jackets，买方为 Grace Tan，付款条款为 LC at sight。\n贵司提及订单量约 4,000 pcs、目标价格 USD 3.10、术语 FOB（宁波）及交期 Mar 1 前，我司将核实相关信息后尽快回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1122,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1284,
+            "total_tokens": 1304,
+            "completion_tokens": 20,
+            "prompt_tokens_details": {
+              "cached_tokens": 1216,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 8
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1916,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 766,
+            "total_tokens": 842,
+            "completion_tokens": 76,
+            "prompt_tokens_details": {
+              "cached_tokens": 544,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": []
+        },
+        "semantics": {
+          "typed": 9,
+          "order_act": true,
+          "roles": {
+            "FACT": 5,
+            "REQUEST": 0,
+            "TARGET": 0,
+            "QUESTION": 0,
+            "COMMITMENT": 4,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 2489,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1030,
+            "total_tokens": 1146,
+            "completion_tokens": 116,
+            "prompt_tokens_details": {
+              "cached_tokens": 736,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": true,
+          "issues": []
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "raw"
+        }
+      },
+      "retry_used": false
+    }
+  },
+  "checks": [
+    {
+      "name": "acc08_confirmed_order: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: quantity 4,000",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: incoterm FOB",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: port Ningbo",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: order_act == True",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: no company commitment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: draft contains '订单'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: draft avoids '询盘'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc08_confirmed_order: draft avoids '我方确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "latency_ms": 5530,
+  "usage": {
+    "prompt_tokens": 3080,
+    "completion_tokens": 212,
+    "total_tokens": 3292
+  }
+}

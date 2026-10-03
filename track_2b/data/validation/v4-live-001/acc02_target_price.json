@@ -1,0 +1,708 @@
+{
+  "case_id": "acc02_target_price",
+  "parser_candidates": {
+    "amounts": [
+      {
+        "value": "USD 18.50/pc",
+        "source_span": "USD 18.50/pc",
+        "span_start": 64,
+        "span_end": 76,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "18.50",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "quantities": [
+      {
+        "value": "3,000 pcs",
+        "source_span": "3,000 pcs",
+        "span_start": 94,
+        "span_end": 103,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "3,000",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f003",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "dates": [],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [
+      {
+        "value": "TS-880",
+        "source_span": "TS-880",
+        "span_start": 21,
+        "span_end": 27,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "incoterms": [],
+    "payment_terms": [],
+    "buyer": [
+      {
+        "value": "Lukas Meier",
+        "source_span": "Lukas Meier",
+        "span_start": 139,
+        "span_end": 150,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f004",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "TS-880",
+        "source_span": "TS-880",
+        "span_start": 21,
+        "span_end": 27,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "USD 18.50/pc",
+        "source_span": "USD 18.50/pc",
+        "span_start": 64,
+        "span_end": 76,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "18.50",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "3,000 pcs",
+        "source_span": "3,000 pcs",
+        "span_start": 94,
+        "span_end": 103,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "3,000",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f003",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Lukas Meier",
+        "source_span": "Lukas Meier",
+        "span_start": 139,
+        "span_end": 150,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f004",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "sku": [
+        "f001"
+      ],
+      "amount": [
+        "f002"
+      ],
+      "qty": [
+        "f003"
+      ],
+      "buyer_signature": [
+        "f004"
+      ]
+    },
+    "_product_names": [
+      {
+        "value": "softshell jackets",
+        "source_span": "softshell jackets",
+        "span_start": 28,
+        "span_end": 45,
+        "type": "product_name",
+        "status": "supported",
+        "method": "parser:product_name"
+      }
+    ],
+    "_email": "Hello Alex,\n\nFor the TS-880 softshell jackets we are aiming for USD 18.50/pc. Volume would be 3,000 pcs.\nCan you work with that?\n\nRegards,\nLukas Meier"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\n  \"intent\": \"inquiry\",\n  \"language\": \"en\",\n  \"urgency\": \"normal\"\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1211,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1277,
+          "total_tokens": 1303,
+          "completion_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 1216,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f004\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": [\"f002\"]\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1708,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 692,
+          "total_tokens": 747,
+          "completion_tokens": 55,
+          "prompt_tokens_details": {
+            "cached_tokens": 544,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "已记录：产品 TS-880 softshell jackets，您方订单量约 3,000 pcs，联系人 Lukas Meier。  \n贵司目标价格 USD 18.50/pc，我司评估后回复。  \n关于 incoterm、payment_terms、deadline，我司将核实后尽快回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 2132,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 921,
+          "total_tokens": 1012,
+          "completion_tokens": 91,
+          "prompt_tokens_details": {
+            "cached_tokens": 704,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "inquiry",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Lukas Meier",
+      "products": [
+        {
+          "sku": "TS-880",
+          "qty": "3,000",
+          "desc": ""
+        }
+      ],
+      "incoterm": null,
+      "payment_terms": null,
+      "deadline": null,
+      "amounts": [
+        "USD 18.50/pc"
+      ],
+      "not_stated": [
+        "incoterm",
+        "payment_terms",
+        "deadline"
+      ],
+      "product_names": [
+        "softshell jackets"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "TS-880",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "TS-880",
+          "span": [
+            21,
+            27
+          ],
+          "fact_type": "product_code",
+          "evidence_type": "sku",
+          "role_reason": "non_negotiable_type"
+        },
+        {
+          "id": "pn28",
+          "field": "products",
+          "value": "softshell jackets",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "softshell jackets",
+          "span": [
+            28,
+            45
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f002",
+          "field": "amounts",
+          "value": "USD 18.50/pc",
+          "semantic_role": "TARGET",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 18.50/pc",
+          "span": [
+            64,
+            76
+          ],
+          "fact_type": "target_price",
+          "evidence_type": "amount",
+          "role_reason": "target_cue",
+          "number": "18.50"
+        },
+        {
+          "id": "f003",
+          "field": "products",
+          "value": "3,000 pcs",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "3,000 pcs",
+          "span": [
+            94,
+            103
+          ],
+          "fact_type": "stated_quantity",
+          "evidence_type": "qty",
+          "role_reason": "no_cue",
+          "number": "3,000",
+          "unit": "pcs"
+        },
+        {
+          "id": "f004",
+          "field": "buyer",
+          "value": "Lukas Meier",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "Lukas Meier",
+          "span": [
+            139,
+            150
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "已记录：产品 TS-880 softshell jackets，您方订单量约 3,000 pcs，联系人 Lukas Meier。  \n贵司目标价格 USD 18.50/pc，我司评估后回复。  \n关于 incoterm、payment_terms、deadline，我司将核实后尽快回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "raw"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Lukas Meier",
+        "facts": [
+          {
+            "id": "f004",
+            "value": "Lukas Meier",
+            "type": "buyer_signature",
+            "source_span": "Lukas Meier",
+            "status": "supported",
+            "span": [
+              139,
+              150
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": "TS-880",
+            "qty": "3,000",
+            "_qty_fact": "f003"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f001",
+            "value": "TS-880",
+            "type": "sku",
+            "source_span": "TS-880",
+            "status": "supported",
+            "span": [
+              21,
+              27
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          },
+          {
+            "id": "f003",
+            "value": "3,000 pcs",
+            "type": "qty",
+            "source_span": "3,000 pcs",
+            "status": "supported",
+            "span": [
+              94,
+              103
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "USD 18.50/pc"
+        ],
+        "facts": [
+          {
+            "id": "f002",
+            "value": "USD 18.50/pc",
+            "type": "amount",
+            "source_span": "USD 18.50/pc",
+            "status": "supported",
+            "span": [
+              64,
+              76
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "inquiry",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f004\"],\n  \"products\": [\"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [],\n  \"amounts\": [\"f002\"]\n}",
+      "selection": {
+        "buyer": [
+          "f004"
+        ],
+        "products": [
+          "f001"
+        ],
+        "incoterm": [],
+        "payment_terms": [],
+        "deadline": [],
+        "amounts": [
+          "f002"
+        ]
+      },
+      "draft": "已记录：产品 TS-880 softshell jackets，您方订单量约 3,000 pcs，联系人 Lukas Meier。  \n贵司目标价格 USD 18.50/pc，我司评估后回复。  \n关于 incoterm、payment_terms、deadline，我司将核实后尽快回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1211,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1277,
+            "total_tokens": 1303,
+            "completion_tokens": 26,
+            "prompt_tokens_details": {
+              "cached_tokens": 1216,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 4
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1708,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 692,
+            "total_tokens": 747,
+            "completion_tokens": 55,
+            "prompt_tokens_details": {
+              "cached_tokens": 544,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": [
+            "incoterm",
+            "payment_terms",
+            "deadline"
+          ]
+        },
+        "semantics": {
+          "typed": 5,
+          "order_act": false,
+          "roles": {
+            "FACT": 4,
+            "REQUEST": 0,
+            "TARGET": 1,
+            "QUESTION": 0,
+            "COMMITMENT": 0,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 2132,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 921,
+            "total_tokens": 1012,
+            "completion_tokens": 91,
+            "prompt_tokens_details": {
+              "cached_tokens": 704,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": true,
+          "issues": []
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "raw"
+        }
+      },
+      "retry_used": false
+    }
+  },
+  "checks": [
+    {
+      "name": "acc02_target_price: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc02_target_price: USD 18.50 as TARGET",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc02_target_price: quantity 3,000",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc02_target_price: order_act == False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc02_target_price: draft contains '目标'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc02_target_price: draft avoids '我方确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc02_target_price: draft avoids '已确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc02_target_price: draft avoids '报价为'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "latency_ms": 5053,
+  "usage": {
+    "prompt_tokens": 2890,
+    "completion_tokens": 172,
+    "total_tokens": 3062
+  }
+}

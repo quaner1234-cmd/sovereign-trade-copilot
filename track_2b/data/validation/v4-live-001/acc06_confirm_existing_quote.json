@@ -1,0 +1,822 @@
+{
+  "case_id": "acc06_confirm_existing_quote",
+  "parser_candidates": {
+    "amounts": [
+      {
+        "value": "USD 7.85",
+        "source_span": "USD 7.85",
+        "span_start": 55,
+        "span_end": 63,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "7.85",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f003",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      }
+    ],
+    "quantities": [
+      {
+        "value": "6,000 pcs",
+        "source_span": "6,000 pcs",
+        "span_start": 21,
+        "span_end": 30,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "6,000",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false,
+        "_bound_to": "f002"
+      }
+    ],
+    "dates": [
+      {
+        "value": "Nov 3",
+        "source_span": "Nov 3",
+        "span_start": 67,
+        "span_end": 72,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": null,
+        "deadline_hint": false,
+        "id": "f004",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      },
+      {
+        "value": "December",
+        "source_span": "December",
+        "span_start": 100,
+        "span_end": 108,
+        "type": "date_bare_month",
+        "status": "supported",
+        "method": "parser:date_bare_month",
+        "month": "December",
+        "relation": null,
+        "qualified": false,
+        "id": "f005",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "durations": [],
+    "relative_time": [],
+    "ratios": [],
+    "identifiers": [
+      {
+        "value": "RS-204",
+        "source_span": "RS-204",
+        "span_start": 31,
+        "span_end": 37,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "incoterms": [],
+    "payment_terms": [],
+    "buyer": [
+      {
+        "value": "Karim Haddad",
+        "source_span": "\nKarim Haddad",
+        "span_start": 135,
+        "span_end": 148,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f006",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_facts": [
+      {
+        "value": "6,000 pcs",
+        "source_span": "6,000 pcs",
+        "span_start": 21,
+        "span_end": 30,
+        "type": "qty",
+        "status": "supported",
+        "method": "parser:qty",
+        "number": "6,000",
+        "unit": "pcs",
+        "role": "primary",
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f001",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false,
+        "_bound_to": "f002"
+      },
+      {
+        "value": "RS-204",
+        "source_span": "RS-204",
+        "span_start": 31,
+        "span_end": 37,
+        "type": "sku",
+        "status": "supported",
+        "method": "parser:sku",
+        "id": "f002",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "USD 7.85",
+        "source_span": "USD 7.85",
+        "span_start": 55,
+        "span_end": 63,
+        "type": "amount",
+        "status": "supported",
+        "method": "parser:amount",
+        "currency": "USD",
+        "number": "7.85",
+        "weak": false,
+        "qualifier": {
+          "kind": null,
+          "raw": null,
+          "approx": false
+        },
+        "negated": false,
+        "id": "f003",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      },
+      {
+        "value": "Nov 3",
+        "source_span": "Nov 3",
+        "span_start": 67,
+        "span_end": 72,
+        "type": "date",
+        "status": "supported",
+        "method": "parser:date",
+        "relation": null,
+        "deadline_hint": false,
+        "id": "f004",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": true
+      },
+      {
+        "value": "December",
+        "source_span": "December",
+        "span_start": 100,
+        "span_end": 108,
+        "type": "date_bare_month",
+        "status": "supported",
+        "method": "parser:date_bare_month",
+        "month": "December",
+        "relation": null,
+        "qualified": false,
+        "id": "f005",
+        "customer_asserted": false,
+        "own_commitment": false,
+        "contested": false
+      },
+      {
+        "value": "Karim Haddad",
+        "source_span": "\nKarim Haddad",
+        "span_start": 135,
+        "span_end": 148,
+        "type": "buyer_signature",
+        "status": "supported",
+        "method": "parser:buyer_signature",
+        "id": "f006",
+        "customer_asserted": true,
+        "own_commitment": false,
+        "contested": false
+      }
+    ],
+    "_index": {
+      "qty": [
+        "f001"
+      ],
+      "sku": [
+        "f002"
+      ],
+      "amount": [
+        "f003"
+      ],
+      "date": [
+        "f004"
+      ],
+      "date_bare_month": [
+        "f005"
+      ],
+      "buyer_signature": [
+        "f006"
+      ]
+    },
+    "_product_names": [
+      {
+        "value": "sleeping bags",
+        "source_span": "sleeping bags",
+        "span_start": 38,
+        "span_end": 51,
+        "type": "product_name",
+        "status": "supported",
+        "method": "parser:product_name"
+      }
+    ],
+    "_email": "Hi Alex,\n\nYou quoted 6,000 pcs RS-204 sleeping bags at USD 7.85 on Nov 3. Is that still valid for a December shipment?\n\nPlease confirm.\nKarim Haddad"
+  },
+  "apertus_calls": [
+    {
+      "stage": "classify",
+      "text": "{\n  \"intent\": \"inquiry\",\n  \"language\": \"en\",\n  \"urgency\": \"normal\"\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1213,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 1273,
+          "total_tokens": 1299,
+          "completion_tokens": 26,
+          "prompt_tokens_details": {
+            "cached_tokens": 1216,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 160,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "select",
+      "text": "{\n  \"buyer\": [\"f006\"],\n  \"products\": [\"f002\", \"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [\"f005\"],\n  \"amounts\": [\"f003\"]\n}",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 1787,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 716,
+          "total_tokens": 782,
+          "completion_tokens": 66,
+          "prompt_tokens_details": {
+            "cached_tokens": 544,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 700,
+        "temperature": 0.0
+      }
+    },
+    {
+      "stage": "reply",
+      "text": "已记录：产品为 sleeping bags，型号 RS-204，贵司需求数量约 6,000 pcs，联系人为 Karim Haddad。  \n关于贵司所述目标价格 USD 7.85、交期 December 以及 incoterm、payment_terms，我司将尽快核实后回复。",
+      "meta": {
+        "mode": "llm",
+        "latency_ms": 2044,
+        "transport_attempts": 1,
+        "model": "swiss-ai/Apertus-v1.5-70B",
+        "usage": {
+          "prompt_tokens": 948,
+          "total_tokens": 1033,
+          "completion_tokens": 85,
+          "prompt_tokens_details": {
+            "cached_tokens": 736,
+            "multimodal_tokens": null
+          }
+        },
+        "finish_reason": "stop"
+      },
+      "settings": {
+        "max_tokens": 260,
+        "temperature": 0.2
+      }
+    }
+  ],
+  "result": {
+    "classification": {
+      "intent": "inquiry",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Karim Haddad",
+      "products": [
+        {
+          "sku": "RS-204",
+          "qty": "6,000",
+          "desc": ""
+        }
+      ],
+      "incoterm": null,
+      "payment_terms": null,
+      "deadline": "December",
+      "amounts": [
+        "USD 7.85"
+      ],
+      "not_stated": [
+        "incoterm",
+        "payment_terms"
+      ],
+      "product_names": [
+        "sleeping bags"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "6,000 pcs",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "6,000 pcs",
+          "span": [
+            21,
+            30
+          ],
+          "fact_type": "stated_quantity",
+          "evidence_type": "qty",
+          "role_reason": "no_cue",
+          "number": "6,000",
+          "unit": "pcs"
+        },
+        {
+          "id": "f002",
+          "field": "products",
+          "value": "RS-204",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "RS-204",
+          "span": [
+            31,
+            37
+          ],
+          "fact_type": "product_code",
+          "evidence_type": "sku",
+          "role_reason": "non_negotiable_type"
+        },
+        {
+          "id": "pn38",
+          "field": "products",
+          "value": "sleeping bags",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "sleeping bags",
+          "span": [
+            38,
+            51
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f003",
+          "field": "amounts",
+          "value": "USD 7.85",
+          "semantic_role": "QUESTION",
+          "stance": "customer_claimed_prior",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 7.85",
+          "span": [
+            55,
+            63
+          ],
+          "fact_type": "price_to_confirm",
+          "evidence_type": "amount",
+          "role_reason": "cites_our_document",
+          "number": "7.85"
+        },
+        {
+          "id": "f005",
+          "field": "deadline",
+          "value": "December",
+          "semantic_role": "QUESTION",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "December",
+          "span": [
+            100,
+            108
+          ],
+          "fact_type": "delivery_to_confirm",
+          "evidence_type": "date_bare_month",
+          "role_reason": "question_cue",
+          "deadline_hint": false
+        },
+        {
+          "id": "f006",
+          "field": "buyer",
+          "value": "Karim Haddad",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "\nKarim Haddad",
+          "span": [
+            135,
+            148
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "已记录：产品为 sleeping bags，型号 RS-204，贵司需求数量约 6,000 pcs，联系人为 Karim Haddad。  \n关于贵司所述目标价格 USD 7.85、交期 December 以及 incoterm、payment_terms，我司将尽快核实后回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "raw"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Karim Haddad",
+        "facts": [
+          {
+            "id": "f006",
+            "value": "Karim Haddad",
+            "type": "buyer_signature",
+            "source_span": "\nKarim Haddad",
+            "status": "supported",
+            "span": [
+              135,
+              148
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": "RS-204",
+            "qty": "6,000",
+            "_qty_fact": "f001"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f002",
+            "value": "RS-204",
+            "type": "sku",
+            "source_span": "RS-204",
+            "status": "supported",
+            "span": [
+              31,
+              37
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          },
+          {
+            "id": "f001",
+            "value": "6,000 pcs",
+            "type": "qty",
+            "source_span": "6,000 pcs",
+            "status": "supported",
+            "span": [
+              21,
+              30
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "inferred",
+        "value": "December",
+        "facts": [
+          {
+            "id": "f005",
+            "value": "December",
+            "type": "date_bare_month",
+            "source_span": "December",
+            "status": "supported",
+            "span": [
+              100,
+              108
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "USD 7.85"
+        ],
+        "facts": [
+          {
+            "id": "f003",
+            "value": "USD 7.85",
+            "type": "amount",
+            "source_span": "USD 7.85",
+            "status": "supported",
+            "span": [
+              55,
+              63
+            ],
+            "contested": true,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "classification": {
+        "intent": "inquiry",
+        "language": "en",
+        "urgency": "normal"
+      },
+      "selection_raw_text": "{\n  \"buyer\": [\"f006\"],\n  \"products\": [\"f002\", \"f001\"],\n  \"incoterm\": [],\n  \"payment_terms\": [],\n  \"deadline\": [\"f005\"],\n  \"amounts\": [\"f003\"]\n}",
+      "selection": {
+        "buyer": [
+          "f006"
+        ],
+        "products": [
+          "f002",
+          "f001"
+        ],
+        "incoterm": [],
+        "payment_terms": [],
+        "deadline": [
+          "f005"
+        ],
+        "amounts": [
+          "f003"
+        ]
+      },
+      "draft": "已记录：产品为 sleeping bags，型号 RS-204，贵司需求数量约 6,000 pcs，联系人为 Karim Haddad。  \n关于贵司所述目标价格 USD 7.85、交期 December 以及 incoterm、payment_terms，我司将尽快核实后回复。"
+    },
+    "meta": {
+      "mode": "llm",
+      "stages": {
+        "classify": {
+          "mode": "llm",
+          "latency_ms": 1213,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 1273,
+            "total_tokens": 1299,
+            "completion_tokens": 26,
+            "prompt_tokens_details": {
+              "cached_tokens": 1216,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "parse": {
+          "candidates": 6
+        },
+        "select": {
+          "mode": "llm",
+          "latency_ms": 1787,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 716,
+            "total_tokens": 782,
+            "completion_tokens": 66,
+            "prompt_tokens_details": {
+              "cached_tokens": 544,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "attempts": 1,
+          "json_ok": true
+        },
+        "evidence": {
+          "rejected": {},
+          "not_stated": [
+            "incoterm",
+            "payment_terms"
+          ]
+        },
+        "semantics": {
+          "typed": 6,
+          "order_act": false,
+          "roles": {
+            "FACT": 4,
+            "REQUEST": 0,
+            "TARGET": 0,
+            "QUESTION": 2,
+            "COMMITMENT": 0,
+            "UNKNOWN": 0
+          },
+          "company_commitments": 0
+        },
+        "reply": {
+          "mode": "llm",
+          "latency_ms": 2044,
+          "transport_attempts": 1,
+          "model": "swiss-ai/Apertus-v1.5-70B",
+          "usage": {
+            "prompt_tokens": 948,
+            "total_tokens": 1033,
+            "completion_tokens": 85,
+            "prompt_tokens_details": {
+              "cached_tokens": 736,
+              "multimodal_tokens": null
+            }
+          },
+          "finish_reason": "stop",
+          "ok": true
+        }
+      },
+      "raw_model": {},
+      "guards": {
+        "raw": {
+          "passed": true,
+          "issues": []
+        },
+        "final": {
+          "passed": true,
+          "issues": [],
+          "via": "raw"
+        }
+      },
+      "retry_used": false
+    }
+  },
+  "checks": [
+    {
+      "name": "acc06_confirm_existing_quote: draft passes the guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: USD 7.85 as QUESTION",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: no TARGET role",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: no COMMITMENT role",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: order_act == False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: draft avoids '我方确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: draft avoids '我司确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: draft avoids '已确认'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "acc06_confirm_existing_quote: draft avoids '订单'",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "real transport for every model call",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "final status matches independent full guard",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "latency_ms": 5047,
+  "usage": {
+    "prompt_tokens": 2937,
+    "completion_tokens": 177,
+    "total_tokens": 3114
+  }
+}

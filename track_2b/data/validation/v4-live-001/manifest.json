@@ -1,0 +1,31 @@
+{
+  "base_commit": "c42088d5f979a1aa8cb921e064618e103e28f77d",
+  "started_at": "2026-10-03T00:36:02.380955+00:00",
+  "source_hashes": {
+    "acceptance.py": "578fa0fa1756d3ea520879e69f7aeaeb86761f83bcd4cef9e66f9f5d7673a591",
+    "acceptance_live.py": "f3cb5e254a9e5b537f85f572062c30e58c163c6370b294eb8ef572ec0d612f15",
+    "audit_parser_ceiling.py": "d0a8c2c704722adbbacf45cbafcf765d95fa929810a4204aaae5e0d67b9a2a0b",
+    "bench.py": "2e884f121e3519edea4f5516f877d24d0f625f987b66734f5cabbcc5e597d78c",
+    "bench_v3.py": "2295b2ea8f4da8a3fa336ba587ad8ccc9841965030e9b43fbaeaf2a654f5b1ca",
+    "fact_parsers.py": "38f52667407fc8378a39492737923c542f80d672d533b9c86a71fb8cfab87e29",
+    "fact_store.py": "5be876c81eb42e10b17de6cbabe0244463581c048eab3e22e9ce70616be3dcab",
+    "llm_client.py": "74dc70943ab21b5336e3b66842f5393d0f4aabe08466c18decf9cf9b37eb6e49",
+    "pipeline.py": "33c61bcef501eef932ddbb85e03a9e323b50c69068cf964d61c3865c998d5ef3",
+    "pipeline_v3.py": "8b2f4b35879ca29c8a0241c895ad9048345ec817c91d5fcf708c91a19c3769a2",
+    "selftest.py": "4247f209ea4089a7c286e619b619e73403667de3202d23cd6985fe984e055c18",
+    "selftest_safety.py": "1c214709a7d6a9977cc46702dc99457e8f6695079c840a0b06e0afe19bab24c9",
+    "selftest_v3.py": "7d29b520acad5f2d17377a0a01b30fce2e2e3901f30f027a1d85bfed27c6798c",
+    "semantics.py": "31e2beaa54eb65faf87491dcd5f63c004c2cc487f7c9358011d0b1a571aa0368",
+    "server.py": "d4b3cda84b043617504fe96d50aafda4b3c09e080521da868bbc89427abd29a0",
+    "snapshot_extraction.py": "03efe6d155145d36b19f94e1b1dfeb02434a79a245c7b5f9f9f50697c454bb02",
+    "validators.py": "a36935cdc372f7dca5534256710a9ca22380727b718b5b0a19f0d3ae058eb6d9",
+    "prompts\\v1.json": "e07770c54da0de59394ecad40ced476462cde85fd8f04afd64eee8b6f7c3e31d",
+    "prompts\\v2.json": "5a7e707709257686cc381532a7bdfe0feb9a0cd4fea3ce74056d6beafe9f9307",
+    "prompts\\v3.json": "fba5e5850cdc74cc086ecebcf80707d45336b50f17eda89d65732cc7ae958d27"
+  },
+  "case_hash": "2a6b71842368976239829785cdfad220eea6b005a612af0fb9298f0fcefc8690",
+  "model_requested": "swiss-ai/Apertus-v1.5-70B",
+  "cases": 9,
+  "runs_per_case": 1,
+  "note": "Working source hashes identify the fallback-safety fix; base commit alone does not."
+}

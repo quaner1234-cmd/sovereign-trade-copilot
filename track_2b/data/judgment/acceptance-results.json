@@ -1,0 +1,1935 @@
+{
+  "tests_run": 34,
+  "passed": true,
+  "cases_hash": "1ab31a1928ee99445e194a8be2639b4ef06df401e4d3354bf52d3dc8ec12ee53",
+  "cases": [
+    {
+      "id": "inquiry_conflict",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "inquiry",
+        "action": "ESCALATE",
+        "owner": "business_owner",
+        "reason": "已验证来源之间存在冲突；先由业务负责人解决，不据此放行。",
+        "evidence": [
+          {
+            "fact_id": "buyer:f001",
+            "source_id": "buyer",
+            "field": "quantity",
+            "value": 500.0,
+            "quote": "500 pcs",
+            "span": [
+              20,
+              27
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:f001:qualifier",
+            "source_id": "buyer",
+            "field": "quantity_qualifier",
+            "value": "approx",
+            "quote": "Please quote around 500 pcs of canvas totes",
+            "span": [
+              0,
+              43
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:pn31",
+            "source_id": "buyer",
+            "field": "product",
+            "value": "canvas totes",
+            "quote": "canvas totes",
+            "span": [
+              31,
+              43
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f002",
+            "source_id": "buyer",
+            "field": "target_price",
+            "value": "USD 3.20",
+            "quote": "USD 3.20",
+            "span": [
+              65,
+              73
+            ],
+            "semantic_role": "TARGET",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "spec:specification",
+            "source_id": "spec",
+            "field": "specification",
+            "value": "Cotton canvas 280 gsm, 38 x 42 cm, one colour",
+            "quote": "\"specification\":\"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"",
+            "span": [
+              21,
+              84
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "new_qty:quantity",
+            "source_id": "new_qty",
+            "field": "quantity",
+            "value": 800,
+            "quote": "\"quantity\":800",
+            "span": [
+              21,
+              35
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "quantity",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [
+              "buyer:f001",
+              "new_qty:quantity"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "quantity",
+            "reason": "同一对象存在不同值；保留来源并由人工解决冲突。",
+            "evidence_ids": [
+              "buyer:f001",
+              "new_qty:quantity"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "target_price",
+            "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+            "evidence_ids": [
+              "buyer:f002"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "price_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          },
+          {
+            "field": "delivery_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "需要时由业务负责人提出有来源的澄清问题。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "inquiry_conflict",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "inquiry",
+        "action": "ESCALATE",
+        "owner": "business_owner",
+        "reason": "已验证来源之间存在冲突；先由业务负责人解决，不据此放行。",
+        "evidence": [
+          {
+            "fact_id": "buyer:pn34",
+            "source_id": "buyer",
+            "field": "product",
+            "value": "canvas totes",
+            "quote": "canvas totes",
+            "span": [
+              34,
+              46
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f001",
+            "source_id": "buyer",
+            "field": "quantity",
+            "value": 500.0,
+            "quote": "500 pcs",
+            "span": [
+              54,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f001:qualifier",
+            "source_id": "buyer",
+            "field": "quantity_qualifier",
+            "value": "approx",
+            "quote": "stimate for canvas totes, about 500 pcs? Target cost US",
+            "span": [
+              22,
+              77
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f002",
+            "source_id": "buyer",
+            "field": "target_price",
+            "value": "USD 3.20",
+            "quote": "USD 3.20",
+            "span": [
+              75,
+              83
+            ],
+            "semantic_role": "TARGET",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "spec:specification",
+            "source_id": "spec",
+            "field": "specification",
+            "value": "Cotton canvas 280 gsm, 38 x 42 cm, one colour",
+            "quote": "\"specification\": \"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"",
+            "span": [
+              4,
+              68
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "new_qty:quantity",
+            "source_id": "new_qty",
+            "field": "quantity",
+            "value": 800,
+            "quote": "\"quantity\": 800",
+            "span": [
+              4,
+              19
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "quantity",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [
+              "buyer:f001",
+              "new_qty:quantity"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "quantity",
+            "reason": "同一对象存在不同值；保留来源并由人工解决冲突。",
+            "evidence_ids": [
+              "buyer:f001",
+              "new_qty:quantity"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "target_price",
+            "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+            "evidence_ids": [
+              "buyer:f002"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "price_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          },
+          {
+            "field": "delivery_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "需要时由业务负责人提出有来源的澄清问题。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "inquiry_missing",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "inquiry",
+        "action": "REQUEST_INFORMATION",
+        "owner": "sales",
+        "reason": "内部核价所需的产品、数量或规格尚不完整；先补齐相应信息。",
+        "evidence": [
+          {
+            "fact_id": "buyer:f001",
+            "source_id": "buyer",
+            "field": "quantity",
+            "value": 500.0,
+            "quote": "500 pcs",
+            "span": [
+              20,
+              27
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:f001:qualifier",
+            "source_id": "buyer",
+            "field": "quantity_qualifier",
+            "value": "approx",
+            "quote": "Please quote around 500 pcs of canvas totes",
+            "span": [
+              0,
+              43
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:pn31",
+            "source_id": "buyer",
+            "field": "product",
+            "value": "canvas totes",
+            "quote": "canvas totes",
+            "span": [
+              31,
+              43
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f002",
+            "source_id": "buyer",
+            "field": "target_price",
+            "value": "USD 3.20",
+            "quote": "USD 3.20",
+            "span": [
+              65,
+              73
+            ],
+            "semantic_role": "TARGET",
+            "stance": "customer",
+            "status": "unconfirmed"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "specification",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "target_price",
+            "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+            "evidence_ids": [
+              "buyer:f002"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "price_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          },
+          {
+            "field": "delivery_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "仅补充判断卡列出的缺失信息；已提供的内容不重复询问。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "inquiry_missing",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "inquiry",
+        "action": "REQUEST_INFORMATION",
+        "owner": "sales",
+        "reason": "内部核价所需的产品、数量或规格尚不完整；先补齐相应信息。",
+        "evidence": [
+          {
+            "fact_id": "buyer:pn34",
+            "source_id": "buyer",
+            "field": "product",
+            "value": "canvas totes",
+            "quote": "canvas totes",
+            "span": [
+              34,
+              46
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f001",
+            "source_id": "buyer",
+            "field": "quantity",
+            "value": 500.0,
+            "quote": "500 pcs",
+            "span": [
+              54,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f001:qualifier",
+            "source_id": "buyer",
+            "field": "quantity_qualifier",
+            "value": "approx",
+            "quote": "stimate for canvas totes, about 500 pcs? Target cost US",
+            "span": [
+              22,
+              77
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f002",
+            "source_id": "buyer",
+            "field": "target_price",
+            "value": "USD 3.20",
+            "quote": "USD 3.20",
+            "span": [
+              75,
+              83
+            ],
+            "semantic_role": "TARGET",
+            "stance": "customer",
+            "status": "unconfirmed"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "specification",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "target_price",
+            "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+            "evidence_ids": [
+              "buyer:f002"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "price_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          },
+          {
+            "field": "delivery_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "仅补充判断卡列出的缺失信息；已提供的内容不重复询问。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "inquiry_normal",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "inquiry",
+        "action": "INTERNAL_COSTING",
+        "owner": "costing",
+        "reason": "产品、数量和规格已有来源，可进行初步内部核价；客户要求不构成我方承诺。",
+        "evidence": [
+          {
+            "fact_id": "buyer:f001",
+            "source_id": "buyer",
+            "field": "quantity",
+            "value": 500.0,
+            "quote": "500 pcs",
+            "span": [
+              20,
+              27
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:f001:qualifier",
+            "source_id": "buyer",
+            "field": "quantity_qualifier",
+            "value": "approx",
+            "quote": "Please quote around 500 pcs of canvas totes",
+            "span": [
+              0,
+              43
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:pn31",
+            "source_id": "buyer",
+            "field": "product",
+            "value": "canvas totes",
+            "quote": "canvas totes",
+            "span": [
+              31,
+              43
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f002",
+            "source_id": "buyer",
+            "field": "target_price",
+            "value": "USD 3.20",
+            "quote": "USD 3.20",
+            "span": [
+              65,
+              73
+            ],
+            "semantic_role": "TARGET",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "spec:specification",
+            "source_id": "spec",
+            "field": "specification",
+            "value": "Cotton canvas 280 gsm, 38 x 42 cm, one colour",
+            "quote": "\"specification\":\"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"",
+            "span": [
+              21,
+              84
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "target_price",
+            "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+            "evidence_ids": [
+              "buyer:f002"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "price_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          },
+          {
+            "field": "delivery_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "当前先由我方内部核价；商业条件确认后再由业务员回复。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "id": "inquiry_normal",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "inquiry",
+        "action": "INTERNAL_COSTING",
+        "owner": "costing",
+        "reason": "产品、数量和规格已有来源，可进行初步内部核价；客户要求不构成我方承诺。",
+        "evidence": [
+          {
+            "fact_id": "buyer:pn34",
+            "source_id": "buyer",
+            "field": "product",
+            "value": "canvas totes",
+            "quote": "canvas totes",
+            "span": [
+              34,
+              46
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f001",
+            "source_id": "buyer",
+            "field": "quantity",
+            "value": 500.0,
+            "quote": "500 pcs",
+            "span": [
+              54,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f001:qualifier",
+            "source_id": "buyer",
+            "field": "quantity_qualifier",
+            "value": "approx",
+            "quote": "stimate for canvas totes, about 500 pcs? Target cost US",
+            "span": [
+              22,
+              77
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f002",
+            "source_id": "buyer",
+            "field": "target_price",
+            "value": "USD 3.20",
+            "quote": "USD 3.20",
+            "span": [
+              75,
+              83
+            ],
+            "semantic_role": "TARGET",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "spec:specification",
+            "source_id": "spec",
+            "field": "specification",
+            "value": "Cotton canvas 280 gsm, 38 x 42 cm, one colour",
+            "quote": "\"specification\": \"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"",
+            "span": [
+              4,
+              68
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "target_price",
+            "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+            "evidence_ids": [
+              "buyer:f002"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "price_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          },
+          {
+            "field": "delivery_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "当前先由我方内部核价；商业条件确认后再由业务员回复。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "id": "payment_boundary",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "payment",
+        "action": "RECHECK",
+        "owner": "finance",
+        "reason": "约定付款节点已过去；先核查到账状态。",
+        "evidence": [
+          {
+            "fact_id": "finance:payment_status",
+            "source_id": "finance",
+            "field": "payment_status",
+            "value": "pending",
+            "quote": "\"payment_status\":\"pending\"",
+            "span": [
+              23,
+              49
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_due",
+            "source_id": "finance",
+            "field": "payment_due",
+            "value": "2026-10-05",
+            "quote": "\"payment_due\":\"2026-10-05\"",
+            "span": [
+              50,
+              76
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_checked_at",
+            "source_id": "finance",
+            "field": "payment_checked_at",
+            "value": "2026-10-04",
+            "quote": "\"payment_checked_at\":\"2026-10-04\"",
+            "span": [
+              77,
+              110
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:pi_sent",
+            "source_id": "finance",
+            "field": "pi_sent",
+            "value": true,
+            "quote": "\"pi_sent\":true",
+            "span": [
+              111,
+              125
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "payment_status",
+            "reason": "约定付款节点已过去；先核查到账状态。",
+            "evidence_ids": [
+              "finance:payment_status"
+            ],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "财务复查后，由业务员决定是否联系客户确认。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "id": "payment_boundary",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "payment",
+        "action": "RECHECK",
+        "owner": "finance",
+        "reason": "约定付款节点已过去；先核查到账状态。",
+        "evidence": [
+          {
+            "fact_id": "finance:payment_checked_at",
+            "source_id": "finance",
+            "field": "payment_checked_at",
+            "value": "2026-10-04",
+            "quote": "\"payment_checked_at\": \"2026-10-04\"",
+            "span": [
+              4,
+              38
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_due",
+            "source_id": "finance",
+            "field": "payment_due",
+            "value": "2026-10-05",
+            "quote": "\"payment_due\": \"2026-10-05\"",
+            "span": [
+              42,
+              69
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_status",
+            "source_id": "finance",
+            "field": "payment_status",
+            "value": "pending",
+            "quote": "\"payment_status\": \"pending\"",
+            "span": [
+              73,
+              100
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:pi_sent",
+            "source_id": "finance",
+            "field": "pi_sent",
+            "value": true,
+            "quote": "\"pi_sent\": true",
+            "span": [
+              104,
+              119
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "payment_status",
+            "reason": "约定付款节点已过去；先核查到账状态。",
+            "evidence_ids": [
+              "finance:payment_status"
+            ],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "财务复查后，由业务员决定是否联系客户确认。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "id": "payment_missing",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "payment",
+        "action": "REQUEST_CONFIRMATION",
+        "owner": "finance",
+        "reason": "付款状态或适用节点不足以决定下一步；先核实相应记录。",
+        "evidence": [
+          {
+            "fact_id": "terms:payment_due",
+            "source_id": "terms",
+            "field": "payment_due",
+            "value": "2026-10-05",
+            "quote": "\"payment_due\":\"2026-10-05\"",
+            "span": [
+              23,
+              49
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "terms:pi_sent",
+            "source_id": "terms",
+            "field": "pi_sent",
+            "value": true,
+            "quote": "\"pi_sent\":true",
+            "span": [
+              50,
+              64
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "payment_status",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          },
+          {
+            "field": "payment_status",
+            "reason": "付款状态或适用节点不足以决定下一步；先核实相应记录。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          },
+          {
+            "field": "payment_due",
+            "reason": "付款状态或适用节点不足以决定下一步；先核实相应记录。",
+            "evidence_ids": [
+              "terms:payment_due"
+            ],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "先由我方核实状态；需要时再询问客户。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "payment_missing",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "payment",
+        "action": "REQUEST_CONFIRMATION",
+        "owner": "finance",
+        "reason": "付款状态或适用节点不足以决定下一步；先核实相应记录。",
+        "evidence": [
+          {
+            "fact_id": "terms:payment_due",
+            "source_id": "terms",
+            "field": "payment_due",
+            "value": "2026-10-05",
+            "quote": "\"payment_due\": \"2026-10-05\"",
+            "span": [
+              4,
+              31
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "terms:pi_sent",
+            "source_id": "terms",
+            "field": "pi_sent",
+            "value": true,
+            "quote": "\"pi_sent\": true",
+            "span": [
+              35,
+              50
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "payment_status",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          },
+          {
+            "field": "payment_status",
+            "reason": "付款状态或适用节点不足以决定下一步；先核实相应记录。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          },
+          {
+            "field": "payment_due",
+            "reason": "付款状态或适用节点不足以决定下一步；先核实相应记录。",
+            "evidence_ids": [
+              "terms:payment_due"
+            ],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "先由我方核实状态；需要时再询问客户。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "payment_normal",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "payment",
+        "action": "WAIT",
+        "owner": "sales",
+        "reason": "约定付款节点尚未过去；当前等待，节点过去后复查。",
+        "evidence": [
+          {
+            "fact_id": "finance:payment_status",
+            "source_id": "finance",
+            "field": "payment_status",
+            "value": "pending",
+            "quote": "\"payment_status\":\"pending\"",
+            "span": [
+              23,
+              49
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_due",
+            "source_id": "finance",
+            "field": "payment_due",
+            "value": "2026-10-05",
+            "quote": "\"payment_due\":\"2026-10-05\"",
+            "span": [
+              50,
+              76
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_checked_at",
+            "source_id": "finance",
+            "field": "payment_checked_at",
+            "value": "2026-10-04",
+            "quote": "\"payment_checked_at\":\"2026-10-04\"",
+            "span": [
+              77,
+              110
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:pi_sent",
+            "source_id": "finance",
+            "field": "pi_sent",
+            "value": true,
+            "quote": "\"pi_sent\":true",
+            "span": [
+              111,
+              125
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "payment_status",
+            "reason": "约定付款节点尚未过去；当前等待，节点过去后复查。",
+            "evidence_ids": [
+              "finance:payment_status"
+            ],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "客户按约定节点安排付款；以我方到账核查为后续审核依据。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "id": "payment_normal",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "payment",
+        "action": "WAIT",
+        "owner": "sales",
+        "reason": "约定付款节点尚未过去；当前等待，节点过去后复查。",
+        "evidence": [
+          {
+            "fact_id": "finance:payment_checked_at",
+            "source_id": "finance",
+            "field": "payment_checked_at",
+            "value": "2026-10-04",
+            "quote": "\"payment_checked_at\": \"2026-10-04\"",
+            "span": [
+              4,
+              38
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_due",
+            "source_id": "finance",
+            "field": "payment_due",
+            "value": "2026-10-05",
+            "quote": "\"payment_due\": \"2026-10-05\"",
+            "span": [
+              42,
+              69
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_status",
+            "source_id": "finance",
+            "field": "payment_status",
+            "value": "pending",
+            "quote": "\"payment_status\": \"pending\"",
+            "span": [
+              73,
+              100
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:pi_sent",
+            "source_id": "finance",
+            "field": "pi_sent",
+            "value": true,
+            "quote": "\"pi_sent\": true",
+            "span": [
+              104,
+              119
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "payment_status",
+            "reason": "约定付款节点尚未过去；当前等待，节点过去后复查。",
+            "evidence_ids": [
+              "finance:payment_status"
+            ],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "客户按约定节点安排付款；以我方到账核查为后续审核依据。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "id": "sample_conflict",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "sample_test",
+        "action": "ESCALATE",
+        "owner": "business_owner",
+        "reason": "已验证来源之间存在冲突；先由业务负责人解决，不据此放行。",
+        "evidence": [
+          {
+            "fact_id": "lab:metric",
+            "source_id": "lab",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:unit",
+            "source_id": "lab",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:test_value",
+            "source_id": "lab",
+            "field": "test_value",
+            "value": 2,
+            "quote": "\"test_value\":2",
+            "span": [
+              62,
+              76
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:metric",
+            "source_id": "approved_limit",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:unit",
+            "source_id": "approved_limit",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_min",
+            "source_id": "approved_limit",
+            "field": "test_min",
+            "value": 0,
+            "quote": "\"test_min\":0",
+            "span": [
+              62,
+              74
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_max",
+            "source_id": "approved_limit",
+            "field": "test_max",
+            "value": 3,
+            "quote": "\"test_max\":3",
+            "span": [
+              75,
+              87
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "other_limit:metric",
+            "source_id": "other_limit",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "other_limit:unit",
+            "source_id": "other_limit",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "other_limit:test_max",
+            "source_id": "other_limit",
+            "field": "test_max",
+            "value": 5,
+            "quote": "\"test_max\":5",
+            "span": [
+              62,
+              74
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "test_max",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [
+              "approved_limit:test_max",
+              "other_limit:test_max"
+            ],
+            "blocks_current_action": false,
+            "scope": "sample_release"
+          },
+          {
+            "field": "test_max",
+            "reason": "同一对象存在不同值；保留来源并由人工解决冲突。",
+            "evidence_ids": [
+              "approved_limit:test_max",
+              "other_limit:test_max"
+            ],
+            "blocks_current_action": false,
+            "scope": "sample_release"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "需要时由业务负责人提出有来源的澄清问题。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "sample_conflict",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "sample_test",
+        "action": "ESCALATE",
+        "owner": "business_owner",
+        "reason": "已验证来源之间存在冲突；先由业务负责人解决，不据此放行。",
+        "evidence": [
+          {
+            "fact_id": "lab:metric",
+            "source_id": "lab",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\": \"shrinkage\"",
+            "span": [
+              4,
+              25
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:test_value",
+            "source_id": "lab",
+            "field": "test_value",
+            "value": 2,
+            "quote": "\"test_value\": 2",
+            "span": [
+              56,
+              71
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:unit",
+            "source_id": "lab",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\": \"percent\"",
+            "span": [
+              75,
+              92
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:metric",
+            "source_id": "approved_limit",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\": \"shrinkage\"",
+            "span": [
+              4,
+              25
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_max",
+            "source_id": "approved_limit",
+            "field": "test_max",
+            "value": 3,
+            "quote": "\"test_max\": 3",
+            "span": [
+              56,
+              69
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_min",
+            "source_id": "approved_limit",
+            "field": "test_min",
+            "value": 0,
+            "quote": "\"test_min\": 0",
+            "span": [
+              73,
+              86
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:unit",
+            "source_id": "approved_limit",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\": \"percent\"",
+            "span": [
+              90,
+              107
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "other_limit:metric",
+            "source_id": "other_limit",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\": \"shrinkage\"",
+            "span": [
+              4,
+              25
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "other_limit:test_max",
+            "source_id": "other_limit",
+            "field": "test_max",
+            "value": 5,
+            "quote": "\"test_max\": 5",
+            "span": [
+              56,
+              69
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "other_limit:unit",
+            "source_id": "other_limit",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\": \"percent\"",
+            "span": [
+              73,
+              90
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "test_max",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [
+              "approved_limit:test_max",
+              "other_limit:test_max"
+            ],
+            "blocks_current_action": false,
+            "scope": "sample_release"
+          },
+          {
+            "field": "test_max",
+            "reason": "同一对象存在不同值；保留来源并由人工解决冲突。",
+            "evidence_ids": [
+              "approved_limit:test_max",
+              "other_limit:test_max"
+            ],
+            "blocks_current_action": false,
+            "scope": "sample_release"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "需要时由业务负责人提出有来源的澄清问题。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "sample_missing",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "sample_test",
+        "action": "REQUEST_CONFIRMATION",
+        "owner": "technical",
+        "reason": "测试数值、批准范围、指标或单位缺少可验证来源；先补齐。",
+        "evidence": [
+          {
+            "fact_id": "lab:metric",
+            "source_id": "lab",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:unit",
+            "source_id": "lab",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:test_value",
+            "source_id": "lab",
+            "field": "test_value",
+            "value": 2,
+            "quote": "\"test_value\":2",
+            "span": [
+              62,
+              76
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "test_max",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "sample_release"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "优先向我方技术或实验室核实；客户要求不替代批准限值。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "sample_missing",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "sample_test",
+        "action": "REQUEST_CONFIRMATION",
+        "owner": "technical",
+        "reason": "测试数值、批准范围、指标或单位缺少可验证来源；先补齐。",
+        "evidence": [
+          {
+            "fact_id": "lab:metric",
+            "source_id": "lab",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\": \"shrinkage\"",
+            "span": [
+              4,
+              25
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:test_value",
+            "source_id": "lab",
+            "field": "test_value",
+            "value": 2,
+            "quote": "\"test_value\": 2",
+            "span": [
+              56,
+              71
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:unit",
+            "source_id": "lab",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\": \"percent\"",
+            "span": [
+              75,
+              92
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "test_max",
+            "reason": "该项缺失或没有可用于当前判断的已验证来源。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "sample_release"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "优先向我方技术或实验室核实；客户要求不替代批准限值。",
+        "confidence": "low"
+      }
+    },
+    {
+      "id": "sample_normal",
+      "variant": "original",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "sample_test",
+        "action": "PASS",
+        "owner": "technical",
+        "reason": "该单项测试值位于已提供的批准范围内；仅供人工审核，不代表整件样品或生产已获批准。",
+        "evidence": [
+          {
+            "fact_id": "lab:metric",
+            "source_id": "lab",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:unit",
+            "source_id": "lab",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:test_value",
+            "source_id": "lab",
+            "field": "test_value",
+            "value": 2,
+            "quote": "\"test_value\":2",
+            "span": [
+              62,
+              76
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:metric",
+            "source_id": "approved_limit",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:unit",
+            "source_id": "approved_limit",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_min",
+            "source_id": "approved_limit",
+            "field": "test_min",
+            "value": 0,
+            "quote": "\"test_min\":0",
+            "span": [
+              62,
+              74
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_max",
+            "source_id": "approved_limit",
+            "field": "test_max",
+            "value": 3,
+            "quote": "\"test_max\":3",
+            "span": [
+              75,
+              87
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [],
+        "needs_human_approval": true,
+        "next_customer_action": "如需客户认可，由业务员在人工审核后提交该单项结果。",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "sample_normal",
+      "variant": "equivalent_wording",
+      "status": "PASS",
+      "judgment": {
+        "schema_version": "1.0",
+        "scenario": "sample_test",
+        "action": "PASS",
+        "owner": "technical",
+        "reason": "该单项测试值位于已提供的批准范围内；仅供人工审核，不代表整件样品或生产已获批准。",
+        "evidence": [
+          {
+            "fact_id": "lab:metric",
+            "source_id": "lab",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\": \"shrinkage\"",
+            "span": [
+              4,
+              25
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:test_value",
+            "source_id": "lab",
+            "field": "test_value",
+            "value": 2,
+            "quote": "\"test_value\": 2",
+            "span": [
+              56,
+              71
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:unit",
+            "source_id": "lab",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\": \"percent\"",
+            "span": [
+              75,
+              92
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:metric",
+            "source_id": "approved_limit",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\": \"shrinkage\"",
+            "span": [
+              4,
+              25
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_max",
+            "source_id": "approved_limit",
+            "field": "test_max",
+            "value": 3,
+            "quote": "\"test_max\": 3",
+            "span": [
+              56,
+              69
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_min",
+            "source_id": "approved_limit",
+            "field": "test_min",
+            "value": 0,
+            "quote": "\"test_min\": 0",
+            "span": [
+              73,
+              86
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:unit",
+            "source_id": "approved_limit",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\": \"percent\"",
+            "span": [
+              90,
+              107
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [],
+        "needs_human_approval": true,
+        "next_customer_action": "如需客户认可，由业务员在人工审核后提交该单项结果。",
+        "confidence": "high"
+      }
+    }
+  ]
+}

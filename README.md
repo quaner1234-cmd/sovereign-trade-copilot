@@ -1,8 +1,8 @@
 # Sovereign Trade Copilot
 
 An evidence-first garment trade email prototype for Hack Apertus Track 2B.
-The default v3 pipeline selects exact parser candidate IDs, keeps per-fact
-source spans, and checks reply drafts before presenting them for human review.
+The default v4 pipeline selects exact parser candidate IDs, keeps per-fact
+source spans and business roles, and checks reply drafts for human review.
 It does not send customer emails or make commercial commitments automatically.
 
 The project root is `track_2b/`. It uses Python's standard library and the
@@ -14,7 +14,9 @@ make run
 ```
 
 The service listens on port 8000: `GET /health`, `POST /process` with an `email`
-string. Set `LLM_NAME`, `LLM_BASE_URL`, and `LLM_API_KEY` in the runtime
+string. `POST /judgment` returns source-backed advice for three narrow workflows;
+see the [Judgment Contract](track_2b/docs/JUDGMENT-CONTRACT.md). Set
+`LLM_NAME`, `LLM_BASE_URL`, and `LLM_API_KEY` in the runtime
 environment for real inference. With no endpoint it runs a deterministic
 offline demonstration, which does not use Apertus or measure its quality.
 Never place an actual API key in a tracked file.

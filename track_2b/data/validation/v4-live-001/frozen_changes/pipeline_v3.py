@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Track 2B pipeline v4 — v3 evidence core plus business semantics.
+"""Track 2B pipeline v3 — evidence-gated, LLM-as-selector.
 
 Stages (ITERATE decision, section 2):
   1. Apertus semantic extraction   -> classification + intent
@@ -25,7 +25,6 @@ from validators import load_json_strict
 PROMPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts", "v3.json")
 PROMPTS = json.load(open(PROMPT_PATH, encoding="utf-8"))
 FIELDS = PROMPTS["FIELDS"]
-VERSION = "v4"  # Filenames remain compatible with the existing evidence benchmark.
 
 # ---------------------------------------------------------------- guard config
 
@@ -593,12 +592,12 @@ def guard_reply(draft, store, email, parsed=None, typed=None):
 # ------------------------------------------------------------------- pipeline
 
 def process(email, debug=False):
-    """Run the v4 pipeline. Returns a result dict containing BOTH
+    """Run the v3 pipeline. Returns a result dict containing BOTH
     raw_model (what the LLM literally produced) and final_system (what ships)."""
     if llm_client.demo_mode():
         return _demo(email)
 
-    meta = {"mode": "llm", "pipeline": VERSION, "stages": {}, "raw_model": {}, "guards": {}}
+    meta = {"mode": "llm", "stages": {}, "raw_model": {}, "guards": {}}
     raw = {}
 
     # ---- stage 1: semantic classification ---------------------------
@@ -793,7 +792,7 @@ def _demo(email):
         "facts": store.audit(),
         "raw_model": {"note": "demo mode: deterministic parser + evidence layer only, no LLM",
                       "fallback_attempts": attempts},
-        "meta": {"mode": "demo", "pipeline": VERSION, "stages": {"parse": {"candidates": len(parsed["_facts"])}},
+        "meta": {"mode": "demo", "stages": {"parse": {"candidates": len(parsed["_facts"])}},
                  "retry_used": False},
     }
 

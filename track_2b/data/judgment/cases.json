@@ -1,0 +1,216 @@
+{
+  "schema_version": "1.0",
+  "description": "Synthetic development acceptance cases, not blind human evaluation. Expected actions frozen before running the implementation.",
+  "cases": [
+    {
+      "id": "inquiry_normal",
+      "input": {
+        "scenario": "inquiry",
+        "subject": "INQ-101",
+        "sources": [
+          {
+            "id": "buyer",
+            "party": "customer",
+            "format": "email",
+            "text": "Please quote around 500 pcs of canvas totes. Our target price is USD 3.20. Best, Maya Rao"
+          },
+          {
+            "id": "spec",
+            "party": "customer",
+            "format": "fact_card",
+            "text": "{\"subject\":\"INQ-101\",\"specification\":\"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"}"
+          }
+        ]
+      },
+      "expected": {
+        "action": "INTERNAL_COSTING",
+        "owner": "costing"
+      }
+    },
+    {
+      "id": "inquiry_missing",
+      "input": {
+        "scenario": "inquiry",
+        "subject": "INQ-101",
+        "sources": [
+          {
+            "id": "buyer",
+            "party": "customer",
+            "format": "email",
+            "text": "Please quote around 500 pcs of canvas totes. Our target price is USD 3.20. Best, Maya Rao"
+          }
+        ]
+      },
+      "expected": {
+        "action": "REQUEST_INFORMATION",
+        "owner": "sales"
+      }
+    },
+    {
+      "id": "inquiry_conflict",
+      "input": {
+        "scenario": "inquiry",
+        "subject": "INQ-101",
+        "sources": [
+          {
+            "id": "buyer",
+            "party": "customer",
+            "format": "email",
+            "text": "Please quote around 500 pcs of canvas totes. Our target price is USD 3.20. Best, Maya Rao"
+          },
+          {
+            "id": "spec",
+            "party": "customer",
+            "format": "fact_card",
+            "text": "{\"subject\":\"INQ-101\",\"specification\":\"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"}"
+          },
+          {
+            "id": "new_qty",
+            "party": "customer",
+            "format": "fact_card",
+            "text": "{\"subject\":\"INQ-101\",\"quantity\":800}"
+          }
+        ]
+      },
+      "expected": {
+        "action": "ESCALATE",
+        "owner": "business_owner"
+      }
+    },
+    {
+      "id": "payment_normal",
+      "input": {
+        "scenario": "payment",
+        "subject": "ORDER-201",
+        "sources": [
+          {
+            "id": "finance",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"ORDER-201\",\"payment_status\":\"pending\",\"payment_due\":\"2026-10-05\",\"payment_checked_at\":\"2026-10-04\",\"pi_sent\":true}"
+          }
+        ],
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "WAIT",
+        "owner": "sales"
+      }
+    },
+    {
+      "id": "payment_missing",
+      "input": {
+        "scenario": "payment",
+        "subject": "ORDER-201",
+        "sources": [
+          {
+            "id": "terms",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"ORDER-201\",\"payment_due\":\"2026-10-05\",\"pi_sent\":true}"
+          }
+        ],
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "REQUEST_CONFIRMATION",
+        "owner": "finance"
+      }
+    },
+    {
+      "id": "payment_boundary",
+      "input": {
+        "scenario": "payment",
+        "subject": "ORDER-201",
+        "sources": [
+          {
+            "id": "finance",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"ORDER-201\",\"payment_status\":\"pending\",\"payment_due\":\"2026-10-05\",\"payment_checked_at\":\"2026-10-04\",\"pi_sent\":true}"
+          }
+        ],
+        "as_of": "2026-10-06"
+      },
+      "expected": {
+        "action": "RECHECK",
+        "owner": "finance"
+      }
+    },
+    {
+      "id": "sample_normal",
+      "input": {
+        "scenario": "sample_test",
+        "subject": "SAMPLE-301",
+        "sources": [
+          {
+            "id": "lab",
+            "party": "lab",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_value\":2}"
+          },
+          {
+            "id": "approved_limit",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_min\":0,\"test_max\":3}"
+          }
+        ]
+      },
+      "expected": {
+        "action": "PASS",
+        "owner": "technical"
+      }
+    },
+    {
+      "id": "sample_missing",
+      "input": {
+        "scenario": "sample_test",
+        "subject": "SAMPLE-301",
+        "sources": [
+          {
+            "id": "lab",
+            "party": "lab",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_value\":2}"
+          }
+        ]
+      },
+      "expected": {
+        "action": "REQUEST_CONFIRMATION",
+        "owner": "technical"
+      }
+    },
+    {
+      "id": "sample_conflict",
+      "input": {
+        "scenario": "sample_test",
+        "subject": "SAMPLE-301",
+        "sources": [
+          {
+            "id": "lab",
+            "party": "lab",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_value\":2}"
+          },
+          {
+            "id": "approved_limit",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_min\":0,\"test_max\":3}"
+          },
+          {
+            "id": "other_limit",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_max\":5}"
+          }
+        ]
+      },
+      "expected": {
+        "action": "ESCALATE",
+        "owner": "business_owner"
+      }
+    }
+  ]
+}

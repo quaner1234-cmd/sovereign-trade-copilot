@@ -1,0 +1,698 @@
+{
+  "mode": "demo",
+  "health": {
+    "status": "ok",
+    "mode": "demo",
+    "pipeline": "v4",
+    "model": "(demo)"
+  },
+  "email": "Please quote about 420 pcs of canvas totes. Our target price is USD 12.50 FOB Shanghai. We request delivery before Nov 15. Best, Jamie Rowan",
+  "process": {
+    "classification": {
+      "intent": "other",
+      "language": "en",
+      "urgency": "normal"
+    },
+    "extraction": {
+      "buyer": "Jamie Rowan",
+      "products": [
+        {
+          "sku": null,
+          "qty": "420",
+          "desc": ""
+        }
+      ],
+      "incoterm": "FOB",
+      "payment_terms": null,
+      "deadline": "Nov 15",
+      "amounts": [
+        "USD 12.50"
+      ],
+      "not_stated": [
+        "payment_terms"
+      ],
+      "product_names": [
+        "canvas totes"
+      ]
+    },
+    "semantics": {
+      "typed_facts": [
+        {
+          "id": "f001",
+          "field": "products",
+          "value": "420 pcs",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": "approx",
+            "raw": "about",
+            "approx": true
+          },
+          "status": "unconfirmed",
+          "source_span": "420 pcs",
+          "span": [
+            19,
+            26
+          ],
+          "fact_type": "requested_quantity",
+          "evidence_type": "qty",
+          "role_reason": "request_cue",
+          "number": "420",
+          "unit": "pcs"
+        },
+        {
+          "id": "pn30",
+          "field": "products",
+          "value": "canvas totes",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "canvas totes",
+          "span": [
+            30,
+            42
+          ],
+          "fact_type": "product",
+          "evidence_type": "product_name",
+          "raw_field": "products",
+          "role_reason": "named_merchandise"
+        },
+        {
+          "id": "f002",
+          "field": "amounts",
+          "value": "USD 12.50",
+          "semantic_role": "TARGET",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "USD 12.50",
+          "span": [
+            64,
+            73
+          ],
+          "fact_type": "target_price",
+          "evidence_type": "amount",
+          "role_reason": "target_cue",
+          "number": "12.50"
+        },
+        {
+          "id": "f003",
+          "field": "incoterm",
+          "value": "FOB",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "FOB",
+          "span": [
+            74,
+            77
+          ],
+          "fact_type": "incoterm",
+          "evidence_type": "incoterm",
+          "role_reason": "no_cue",
+          "named_place": "Shanghai"
+        },
+        {
+          "id": "f004",
+          "field": "deadline",
+          "value": "Nov 15",
+          "semantic_role": "REQUEST",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "unconfirmed",
+          "source_span": "Nov 15",
+          "span": [
+            115,
+            121
+          ],
+          "fact_type": "requested_delivery",
+          "evidence_type": "date",
+          "role_reason": "request_cue",
+          "relation": "before",
+          "deadline_hint": true
+        },
+        {
+          "id": "f005",
+          "field": "buyer",
+          "value": "Jamie Rowan",
+          "semantic_role": "FACT",
+          "stance": "customer",
+          "qualifier": {
+            "kind": null,
+            "raw": null,
+            "approx": false
+          },
+          "status": "supported",
+          "source_span": "Jamie Rowan",
+          "span": [
+            129,
+            140
+          ],
+          "fact_type": "buyer",
+          "evidence_type": "buyer_signature",
+          "role_reason": "non_negotiable_type"
+        }
+      ],
+      "order_act": false,
+      "company_commitments": []
+    },
+    "draft": "您好，感谢来函询盘。已记录：产品 canvas totes；贸易术语 FOB Shanghai。贵司目标价格 USD 12.50（贵司目标，我司评估后回复）。贵司要求 约 420 pcs（贵司要求，我司评估后回复）。贵司要求交期 Nov 15前（贵司要求，我司评估后回复）。烦请补充：付款条款、产品规格（面料 / 克重 / 尺码 / 颜色），以便我司准确报价。具体可行方案我司核实后回复。",
+    "validation": {
+      "extraction": {
+        "ok": true,
+        "issues": []
+      },
+      "draft": {
+        "ok": true,
+        "issues": []
+      },
+      "claims": {
+        "ok": true,
+        "issues": []
+      },
+      "guard": {
+        "passed": true,
+        "issues": [],
+        "via": "demo"
+      }
+    },
+    "facts": {
+      "buyer": {
+        "status": "supported",
+        "value": "Jamie Rowan",
+        "facts": [
+          {
+            "id": "f005",
+            "value": "Jamie Rowan",
+            "type": "buyer_signature",
+            "source_span": "Jamie Rowan",
+            "status": "supported",
+            "span": [
+              129,
+              140
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "products": {
+        "status": "supported",
+        "value": [
+          {
+            "sku": null,
+            "qty": "420",
+            "_qty_fact": "f001"
+          }
+        ],
+        "facts": [
+          {
+            "id": "f001",
+            "value": "420 pcs",
+            "type": "qty",
+            "source_span": "420 pcs",
+            "status": "supported",
+            "span": [
+              19,
+              26
+            ],
+            "contested": false,
+            "customer_asserted": true,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "incoterm": {
+        "status": "supported",
+        "value": "FOB",
+        "facts": [
+          {
+            "id": "f003",
+            "value": "FOB",
+            "type": "incoterm",
+            "source_span": "FOB",
+            "status": "supported",
+            "span": [
+              74,
+              77
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "payment_terms": {
+        "status": "not_stated",
+        "value": null,
+        "facts": [],
+        "rejected": []
+      },
+      "deadline": {
+        "status": "supported",
+        "value": "Nov 15",
+        "facts": [
+          {
+            "id": "f004",
+            "value": "Nov 15",
+            "type": "date",
+            "source_span": "Nov 15",
+            "status": "supported",
+            "span": [
+              115,
+              121
+            ],
+            "contested": false,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      },
+      "amounts": {
+        "status": "supported",
+        "value": [
+          "USD 12.50"
+        ],
+        "facts": [
+          {
+            "id": "f002",
+            "value": "USD 12.50",
+            "type": "amount",
+            "source_span": "USD 12.50",
+            "status": "supported",
+            "span": [
+              64,
+              73
+            ],
+            "contested": true,
+            "customer_asserted": false,
+            "negated": false
+          }
+        ],
+        "rejected": []
+      }
+    },
+    "raw_model": {
+      "note": "demo mode: deterministic parser + evidence layer only, no LLM",
+      "fallback_attempts": [
+        {
+          "template": "role_aware",
+          "draft": "您好，感谢来函询盘。已记录：产品 canvas totes；贸易术语 FOB Shanghai。贵司目标价格 USD 12.50（贵司目标，我司评估后回复）。贵司要求 约 420 pcs（贵司要求，我司评估后回复）。贵司要求交期 Nov 15前（贵司要求，我司评估后回复）。烦请补充：付款条款、产品规格（面料 / 克重 / 尺码 / 颜色），以便我司准确报价。具体可行方案我司核实后回复。",
+          "passed": true,
+          "issues": []
+        }
+      ]
+    },
+    "meta": {
+      "mode": "demo",
+      "pipeline": "v4",
+      "stages": {
+        "parse": {
+          "candidates": 5
+        }
+      },
+      "retry_used": false
+    }
+  },
+  "judgments": [
+    {
+      "case_id": "inquiry_normal",
+      "input": {
+        "scenario": "inquiry",
+        "subject": "INQ-101",
+        "sources": [
+          {
+            "id": "buyer",
+            "party": "customer",
+            "format": "email",
+            "text": "Please quote around 500 pcs of canvas totes. Our target price is USD 3.20. Best, Maya Rao"
+          },
+          {
+            "id": "spec",
+            "party": "customer",
+            "format": "fact_card",
+            "text": "{\"subject\":\"INQ-101\",\"specification\":\"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"}"
+          }
+        ]
+      },
+      "output": {
+        "schema_version": "1.0",
+        "scenario": "inquiry",
+        "action": "INTERNAL_COSTING",
+        "owner": "costing",
+        "reason": "产品、数量和规格已有来源，可进行初步内部核价；客户要求不构成我方承诺。",
+        "evidence": [
+          {
+            "fact_id": "buyer:f001",
+            "source_id": "buyer",
+            "field": "quantity",
+            "value": 500.0,
+            "quote": "500 pcs",
+            "span": [
+              20,
+              27
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:f001:qualifier",
+            "source_id": "buyer",
+            "field": "quantity_qualifier",
+            "value": "approx",
+            "quote": "Please quote around 500 pcs of canvas totes",
+            "span": [
+              0,
+              43
+            ],
+            "semantic_role": "REQUEST",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "buyer:pn31",
+            "source_id": "buyer",
+            "field": "product",
+            "value": "canvas totes",
+            "quote": "canvas totes",
+            "span": [
+              31,
+              43
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          },
+          {
+            "fact_id": "buyer:f002",
+            "source_id": "buyer",
+            "field": "target_price",
+            "value": "USD 3.20",
+            "quote": "USD 3.20",
+            "span": [
+              65,
+              73
+            ],
+            "semantic_role": "TARGET",
+            "stance": "customer",
+            "status": "unconfirmed"
+          },
+          {
+            "fact_id": "spec:specification",
+            "source_id": "spec",
+            "field": "specification",
+            "value": "Cotton canvas 280 gsm, 38 x 42 cm, one colour",
+            "quote": "\"specification\":\"Cotton canvas 280 gsm, 38 x 42 cm, one colour\"",
+            "span": [
+              21,
+              84
+            ],
+            "semantic_role": "FACT",
+            "stance": "customer",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "target_price",
+            "reason": "该来源主张未获我方确认，或测量缺少自身单位/指标。",
+            "evidence_ids": [
+              "buyer:f002"
+            ],
+            "blocks_current_action": false,
+            "scope": "internal_costing"
+          },
+          {
+            "field": "price_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          },
+          {
+            "field": "delivery_approved",
+            "reason": "商业确认仍需有授权来源和人工批准。",
+            "evidence_ids": [],
+            "blocks_current_action": false,
+            "scope": "commercial_commitment"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "当前先由我方内部核价；商业条件确认后再由业务员回复。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "case_id": "payment_normal",
+      "input": {
+        "scenario": "payment",
+        "subject": "ORDER-201",
+        "sources": [
+          {
+            "id": "finance",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"ORDER-201\",\"payment_status\":\"pending\",\"payment_due\":\"2026-10-05\",\"payment_checked_at\":\"2026-10-04\",\"pi_sent\":true}"
+          }
+        ],
+        "as_of": "2026-10-04"
+      },
+      "output": {
+        "schema_version": "1.0",
+        "scenario": "payment",
+        "action": "WAIT",
+        "owner": "sales",
+        "reason": "约定付款节点尚未过去；当前等待，节点过去后复查。",
+        "evidence": [
+          {
+            "fact_id": "finance:payment_status",
+            "source_id": "finance",
+            "field": "payment_status",
+            "value": "pending",
+            "quote": "\"payment_status\":\"pending\"",
+            "span": [
+              23,
+              49
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_due",
+            "source_id": "finance",
+            "field": "payment_due",
+            "value": "2026-10-05",
+            "quote": "\"payment_due\":\"2026-10-05\"",
+            "span": [
+              50,
+              76
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:payment_checked_at",
+            "source_id": "finance",
+            "field": "payment_checked_at",
+            "value": "2026-10-04",
+            "quote": "\"payment_checked_at\":\"2026-10-04\"",
+            "span": [
+              77,
+              110
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "finance:pi_sent",
+            "source_id": "finance",
+            "field": "pi_sent",
+            "value": true,
+            "quote": "\"pi_sent\":true",
+            "span": [
+              111,
+              125
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [
+          {
+            "field": "payment_status",
+            "reason": "约定付款节点尚未过去；当前等待，节点过去后复查。",
+            "evidence_ids": [
+              "finance:payment_status"
+            ],
+            "blocks_current_action": false,
+            "scope": "payment_gate"
+          }
+        ],
+        "needs_human_approval": true,
+        "next_customer_action": "客户按约定节点安排付款；以我方到账核查为后续审核依据。",
+        "confidence": "medium"
+      }
+    },
+    {
+      "case_id": "sample_normal",
+      "input": {
+        "scenario": "sample_test",
+        "subject": "SAMPLE-301",
+        "sources": [
+          {
+            "id": "lab",
+            "party": "lab",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_value\":2}"
+          },
+          {
+            "id": "approved_limit",
+            "party": "company",
+            "format": "fact_card",
+            "text": "{\"subject\":\"SAMPLE-301\",\"metric\":\"shrinkage\",\"unit\":\"percent\",\"test_min\":0,\"test_max\":3}"
+          }
+        ]
+      },
+      "output": {
+        "schema_version": "1.0",
+        "scenario": "sample_test",
+        "action": "PASS",
+        "owner": "technical",
+        "reason": "该单项测试值位于已提供的批准范围内；仅供人工审核，不代表整件样品或生产已获批准。",
+        "evidence": [
+          {
+            "fact_id": "lab:metric",
+            "source_id": "lab",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:unit",
+            "source_id": "lab",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "lab:test_value",
+            "source_id": "lab",
+            "field": "test_value",
+            "value": 2,
+            "quote": "\"test_value\":2",
+            "span": [
+              62,
+              76
+            ],
+            "semantic_role": "FACT",
+            "stance": "lab",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:metric",
+            "source_id": "approved_limit",
+            "field": "metric",
+            "value": "shrinkage",
+            "quote": "\"metric\":\"shrinkage\"",
+            "span": [
+              24,
+              44
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:unit",
+            "source_id": "approved_limit",
+            "field": "unit",
+            "value": "percent",
+            "quote": "\"unit\":\"percent\"",
+            "span": [
+              45,
+              61
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_min",
+            "source_id": "approved_limit",
+            "field": "test_min",
+            "value": 0,
+            "quote": "\"test_min\":0",
+            "span": [
+              62,
+              74
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          },
+          {
+            "fact_id": "approved_limit:test_max",
+            "source_id": "approved_limit",
+            "field": "test_max",
+            "value": 3,
+            "quote": "\"test_max\":3",
+            "span": [
+              75,
+              87
+            ],
+            "semantic_role": "FACT",
+            "stance": "company",
+            "status": "supported"
+          }
+        ],
+        "blocking_conditions": [],
+        "needs_human_approval": true,
+        "next_customer_action": "如需客户认可，由业务员在人工审核后提交该单项结果。",
+        "confidence": "high"
+      }
+    }
+  ],
+  "status": "PASS"
+}

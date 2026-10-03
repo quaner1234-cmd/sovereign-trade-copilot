@@ -1,0 +1,33 @@
+{
+  "common_rules": [{"when": [["eq", {"field":"conflict"}, true]], "action":"ESCALATE", "owner":"business_owner", "reason":"已验证来源之间存在冲突；先由业务负责人解决，不据此放行。", "next_customer_action":"需要时由业务负责人提出有来源的澄清问题。"}],
+  "inquiry": {
+    "required":["product","quantity","specification"], "scope":"internal_costing", "approvals":["price_approved","delivery_approved"],
+    "rules":[{"when":[], "action":"INTERNAL_COSTING", "owner":"costing", "reason":"产品、数量和规格已有来源，可进行初步内部核价；客户要求不构成我方承诺。", "next_customer_action":"当前先由我方内部核价；商业条件确认后再由业务员回复。"}],
+    "default":{"action":"REQUEST_INFORMATION", "owner":"sales", "reason":"内部核价所需的产品、数量或规格尚不完整；先补齐相应信息。", "next_customer_action":"仅补充判断卡列出的缺失信息；已提供的内容不重复询问。"}
+  },
+  "payment": {
+    "required":["payment_status","as_of"], "scope":"payment_gate",
+    "rules":[
+      {"when":[["eq",{"field":"payment_status"},"failed"]], "action":"ESCALATE","owner":"finance","reason":"已验证付款状态异常；由财务处理后再评估下一步。","next_customer_action":"由财务与业务员核实异常原因，不自动要求再次付款。","unmet":["payment_status"]},
+      {"when":[["missing",{"field":"pi_sent"}]], "action":"REQUEST_CONFIRMATION","owner":"sales","reason":"我方 PI 发送状态缺少来源；先由业务员核实，不据此催付。","next_customer_action":"先等待我方核实或提供正确 PI。","unmet":["pi_sent"]},
+      {"when":[["eq",{"field":"pi_sent"},false]], "action":"REQUEST_CONFIRMATION","owner":"sales","reason":"我方 PI 尚未发送；先由业务员核实并准备待人工批准的文件。","next_customer_action":"先等待我方提供正确 PI，不据此催客户付款。","unmet":["pi_sent"]},
+      {"when":[["gt",{"field":"payment_checked_at"},{"field":"as_of"}]],"action":"RECHECK","owner":"finance","reason":"核查记录日期晚于当前判断日期；先由财务核实适用记录。","next_customer_action":"先等待我方核实，不据此催付或放行。","unmet":["payment_checked_at"]},
+      {"when":[["eq",{"field":"customer_payment_claim"},true],["ne",{"field":"payment_status"},"received"]],"action":"RECHECK","owner":"finance","reason":"客户报告付款，但我方到账记录未确认；先由财务复查。","next_customer_action":"财务复查后，由业务员决定是否索取付款凭据。","unmet":["payment_status"]},
+      {"when":[["eq",{"field":"payment_status"},"received"],["eq",{"field":"payment_checked_at"},{"field":"as_of"}]],"action":"CONTINUE_REVIEW","owner":"sales","reason":"我方同日已核实到账且 PI 已发送，可进入下一步人工审核；不自动启动生产。","next_customer_action":"当前无需客户新增动作；后续动作由业务员人工审核。"},
+      {"when":[["eq",{"field":"payment_status"},"received"]],"action":"RECHECK","owner":"finance","reason":"到账记录缺少同日核查依据，或核查日期不适用；先复查。","next_customer_action":"先等待我方财务复查，不自动催付。","unmet":["payment_checked_at"]},
+      {"when":[["eq",{"field":"payment_status"},"pending"],["le",{"field":"as_of"},{"field":"payment_due"}]],"action":"WAIT","owner":"sales","reason":"约定付款节点尚未过去；当前等待，节点过去后复查。","next_customer_action":"客户按约定节点安排付款；以我方到账核查为后续审核依据。","unmet":["payment_status"]},
+      {"when":[["eq",{"field":"payment_status"},"pending"],["gt",{"field":"as_of"},{"field":"payment_due"}]],"action":"RECHECK","owner":"finance","reason":"约定付款节点已过去；先核查到账状态。","next_customer_action":"财务复查后，由业务员决定是否联系客户确认。","unmet":["payment_status"]}
+    ],
+    "default":{"action":"REQUEST_CONFIRMATION","owner":"finance","reason":"付款状态或适用节点不足以决定下一步；先核实相应记录。","next_customer_action":"先由我方核实状态；需要时再询问客户。","unmet":["payment_status","payment_due"]}
+  },
+  "sample_test": {
+    "required":["test_value","test_max","metric","unit"],"scope":"sample_release",
+    "rules":[
+      {"when":[["gt",{"field":"test_min"},{"field":"test_max"}]],"action":"ESCALATE","owner":"business_owner","reason":"批准范围上下限矛盾；先由负责人解决，不判定样品合格。","next_customer_action":"由负责人核实正确的批准范围。","unmet":["test_min","test_max"]},
+      {"when":[["gt",{"field":"test_value"},{"field":"test_max"}]],"action":"REWORK","owner":"technical","reason":"同一指标和单位下，测试值超过批准上限；先整改并重新验证。","next_customer_action":"先由技术团队处理性能问题；整改结果经人工审核后回复。","unmet":["test_value"]},
+      {"when":[["lt",{"field":"test_value"},{"field":"test_min"}]],"action":"REWORK","owner":"technical","reason":"同一指标和单位下，测试值低于批准下限；先整改并重新验证。","next_customer_action":"先由技术团队处理性能问题；整改结果经人工审核后回复。","unmet":["test_value"]},
+      {"when":[],"action":"PASS","owner":"technical","reason":"该单项测试值位于已提供的批准范围内；仅供人工审核，不代表整件样品或生产已获批准。","next_customer_action":"如需客户认可，由业务员在人工审核后提交该单项结果。"}
+    ],
+    "default":{"action":"REQUEST_CONFIRMATION","owner":"technical","reason":"测试数值、批准范围、指标或单位缺少可验证来源；先补齐。","next_customer_action":"优先向我方技术或实验室核实；客户要求不替代批准限值。"}
+  }
+}

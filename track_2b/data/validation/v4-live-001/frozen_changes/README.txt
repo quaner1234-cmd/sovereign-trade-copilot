@@ -1,0 +1,3 @@
+Restore these five files over base commit c42088d to reproduce the evaluated working source. Other source and prompt hashes are in manifest.json. Runtime credentials are not included.
+
+manifest.json preserves the original Windows working-byte hashes captured during evaluation. Git may change CRLF/LF line endings on another checkout. source-hashes-lf.json records portable SHA-256 hashes after decoding UTF-8 and replacing CRLF with LF; use it to verify the restored text across platforms. It was derived from these five unchanged snapshots and the other source/prompt blobs at the base commit. Original case expectations, model responses and the evaluation manifest remain unchanged.

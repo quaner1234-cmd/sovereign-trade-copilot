@@ -1,0 +1,163 @@
+{
+  "cases": [
+    {
+      "id": "acc01_new_inquiry",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 5449,
+      "usage": {
+        "prompt_tokens": 2745,
+        "completion_tokens": 128,
+        "total_tokens": 2873
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc02_target_price",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 5053,
+      "usage": {
+        "prompt_tokens": 2890,
+        "completion_tokens": 172,
+        "total_tokens": 3062
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc03_requested_delivery",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 4686,
+      "usage": {
+        "prompt_tokens": 2798,
+        "completion_tokens": 148,
+        "total_tokens": 2946
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc04_approx_quantity",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 4550,
+      "usage": {
+        "prompt_tokens": 2773,
+        "completion_tokens": 136,
+        "total_tokens": 2909
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc05_incoterm_port",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": false,
+        "issues": [
+          "contested_value_echoed:f004",
+          "target_stated_as_our_price:f004"
+        ]
+      },
+      "final_via": "retry",
+      "latency_ms": 7037,
+      "usage": {
+        "prompt_tokens": 4063,
+        "completion_tokens": 253,
+        "total_tokens": 4316
+      },
+      "model_calls": 4
+    },
+    {
+      "id": "acc06_confirm_existing_quote",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 5047,
+      "usage": {
+        "prompt_tokens": 2937,
+        "completion_tokens": 177,
+        "total_tokens": 3114
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc07_claims_agreed_price",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 6907,
+      "usage": {
+        "prompt_tokens": 2907,
+        "completion_tokens": 206,
+        "total_tokens": 3113
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc08_confirmed_order",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 5530,
+      "usage": {
+        "prompt_tokens": 3080,
+        "completion_tokens": 212,
+        "total_tokens": 3292
+      },
+      "model_calls": 3
+    },
+    {
+      "id": "acc09_manual_ski_jackets",
+      "status": "PASS",
+      "failures": [],
+      "raw_guard": {
+        "passed": true,
+        "issues": []
+      },
+      "final_via": "raw",
+      "latency_ms": 6554,
+      "usage": {
+        "prompt_tokens": 2948,
+        "completion_tokens": 180,
+        "total_tokens": 3128
+      },
+      "model_calls": 3
+    }
+  ],
+  "frozen_sources_unchanged": true,
+  "passed": 9,
+  "finished_at": "2026-10-03T00:36:53.232120+00:00"
+}

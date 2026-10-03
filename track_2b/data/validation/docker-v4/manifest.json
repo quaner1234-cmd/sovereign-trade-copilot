@@ -1,0 +1,80 @@
+{
+  "recorded_at": "2026-10-03T01:49:26.726607+00:00",
+  "status": "PASS",
+  "clean_base_clone_commit": "c42088d5f979a1aa8cb921e064618e103e28f77d",
+  "tested_git_index_tree": "9b17f50f3a1a2d0c3849ee84c1fc338ff009859c",
+  "checkout_method": "Base commit: clean local Git clone. Candidate: git archive of staged Git tree, only indexed files.",
+  "command": "cd track_2b; make run",
+  "docker_desktop_version": "4.93.0",
+  "docker_engine_version": "29.8.1",
+  "gnu_make_version": "3.81",
+  "wsl_version": "3.0.1",
+  "image_id_demo": "sha256:488053361171f881df0694b5474361354da03e18cc7a1e08b311dd7033a9fdfc",
+  "image_id_live": "sha256:bf54b6458a28f26fca4855403729c67187f247a3a3e06efae4038a962abe0d45",
+  "http_checks": {
+    "demo": [
+      "GET /health",
+      "POST /process",
+      "POST /judgment: all three normal scenarios"
+    ],
+    "live": [
+      "GET /health",
+      "POST /process: returned Apertus 70B model IDs and usage for every stage",
+      "POST /judgment: all three normal scenarios"
+    ]
+  },
+  "container_test_results": {
+    "judgment": {
+      "tests": 34,
+      "status": "PASS"
+    },
+    "safety": {
+      "tests": 6,
+      "status": "PASS"
+    },
+    "http": {
+      "tests": 3,
+      "status": "PASS"
+    }
+  },
+  "credentials": {
+    "runtime_only_env_injection": true,
+    "image_metadata_key_absent": true,
+    "image_history_key_absent": true,
+    "containers_removed_after_checks": true,
+    "env_values_recorded": false
+  },
+  "source_hash_normalization": "UTF-8 decoded text with CRLF to LF, SHA-256",
+  "source_hashes": {
+    "track_2b/src/acceptance.py": "578fa0fa1756d3ea520879e69f7aeaeb86761f83bcd4cef9e66f9f5d7673a591",
+    "track_2b/src/acceptance_live.py": "f3cb5e254a9e5b537f85f572062c30e58c163c6370b294eb8ef572ec0d612f15",
+    "track_2b/src/audit_parser_ceiling.py": "d0a8c2c704722adbbacf45cbafcf765d95fa929810a4204aaae5e0d67b9a2a0b",
+    "track_2b/src/bench.py": "2e884f121e3519edea4f5516f877d24d0f625f987b66734f5cabbcc5e597d78c",
+    "track_2b/src/bench_v3.py": "2295b2ea8f4da8a3fa336ba587ad8ccc9841965030e9b43fbaeaf2a654f5b1ca",
+    "track_2b/src/business_facts.py": "a6c6ee8ef9067b6b739061c9832bb3258010361892680268beba4e78296113e5",
+    "track_2b/src/fact_parsers.py": "38f52667407fc8378a39492737923c542f80d672d533b9c86a71fb8cfab87e29",
+    "track_2b/src/fact_store.py": "5be876c81eb42e10b17de6cbabe0244463581c048eab3e22e9ce70616be3dcab",
+    "track_2b/src/judgment.py": "6349c0586e2141a58a513347ca2f09055984ab0270743d5c75f90678b1e03d89",
+    "track_2b/src/llm_client.py": "00d1bbb505e8c455fa86ec9364070a91e1b92c9a2ebd4015c3710930364591e1",
+    "track_2b/src/pipeline.py": "33c61bcef501eef932ddbb85e03a9e323b50c69068cf964d61c3865c998d5ef3",
+    "track_2b/src/pipeline_v3.py": "142c4f0e7dbd482af23254d3136c7f1e60c8350b282440a5cf4bef87084f9f0e",
+    "track_2b/src/selftest.py": "4247f209ea4089a7c286e619b619e73403667de3202d23cd6985fe984e055c18",
+    "track_2b/src/selftest_http.py": "dd237834fe5c4aa2ffc63376130a2f3eae27b004c45ee3d2d5661ce551e8530a",
+    "track_2b/src/selftest_judgment.py": "365b25a6a7c3e468b37ce66647f3dfc7a44032c00aa17a668cbe601e7d46d1c3",
+    "track_2b/src/selftest_safety.py": "ac04197cb0abc1ae46e935922431e2adb11d2df08cd675eaf9975fa44194a3a2",
+    "track_2b/src/selftest_v3.py": "7d29b520acad5f2d17377a0a01b30fce2e2e3901f30f027a1d85bfed27c6798c",
+    "track_2b/src/semantics.py": "31e2beaa54eb65faf87491dcd5f63c004c2cc487f7c9358011d0b1a571aa0368",
+    "track_2b/src/server.py": "e068d5f3ab6069282f03fc890cf67514260f2714f08c425036ea97fed5d34965",
+    "track_2b/src/snapshot_extraction.py": "03efe6d155145d36b19f94e1b1dfeb02434a79a245c7b5f9f9f50697c454bb02",
+    "track_2b/src/validators.py": "a36935cdc372f7dca5534256710a9ca22380727b718b5b0a19f0d3ae058eb6d9",
+    "track_2b/src/prompts/v1.json": "e07770c54da0de59394ecad40ced476462cde85fd8f04afd64eee8b6f7c3e31d",
+    "track_2b/src/prompts/v2.json": "5a7e707709257686cc381532a7bdfe0feb9a0cd4fea3ce74056d6beafe9f9307",
+    "track_2b/src/prompts/v3.json": "fba5e5850cdc74cc086ecebcf80707d45336b50f17eda89d65732cc7ae958d27",
+    "track_2b/src/judgment_policies.json": "c9850c192590259610b26ffa58673e249e9c4060ca0b3cf8c586fbcd55ddbc68",
+    "track_2b/Dockerfile": "62ca178f1c4bb6ab6dab2cf4f870cdfb1030371ad064d3510952d381b21178fa",
+    "track_2b/Makefile": "9b78e944a93f083a59d6e6f02a491574e8629efbd0b2684a81708168664aab30",
+    "track_2b/docs/judgment.schema.json": "534c66ec44a880b5dc01230c774867ec8339424900fa710b0d960478a71b8924",
+    "track_2b/data/judgment/cases.json": "1ab31a1928ee99445e194a8be2639b4ef06df401e4d3354bf52d3dc8ec12ee53"
+  },
+  "note": "One extra synthetic HTTP smoke input, separate from the nine frozen live cases. HTTP/guard PASS proves runtime and implemented guard behavior, not business correctness or deployment. Later documentation/evidence changes do not alter this historical tested-tree record."
+}
