@@ -160,7 +160,7 @@ def _scoped_authority(claim, confirmed, understanding):
             (not lines and c["scope_spec"].get("global") is True)]
 
 
-def validate_draft(draft, understanding, registry, values):
+def validate_draft(draft, understanding, registry, values, *, semantic_checked=False):
     """Validate a proposed draft without creating a reply or changing evidence."""
     if not isinstance(draft, str) or not draft.strip():
         return {"passed": False, "issues": ["empty_draft"], "checked": [],
@@ -292,12 +292,13 @@ def validate_draft(draft, understanding, registry, values):
             # Negation applies to its own clause only, not an earlier promise.
             cleaned = re.sub(r"\bno\s+podemos\b|(?:我司|我们|本公司)(?:不能|不支持|无法)", "", claim, flags=re.I)
             scope_claim = cleaned if PRODUCT_RE.search(cleaned) else product_prefix + " " + cleaned
-            if POSITIVE_COMPANY_RE.search(cleaned) and not _confirmation_covers(cleaned, _scoped_authority(scope_claim, confirmed, understanding)):
+            verification = re.search(r"\b(?:check|verify|confirm|review|assess)\b.{0,45}\b(?:whether|if|ability|options|possibility)\b", cleaned, re.I)
+            if not semantic_checked and POSITIVE_COMPANY_RE.search(cleaned) and not verification and not _confirmation_covers(cleaned, _scoped_authority(scope_claim, confirmed, understanding)):
                 issues.append("unsupported_company_capability")
     unread = [s for s in registry.get("sources", []) if s.get("kind") == "attachment" and s.get("status") != "read"]
-    if unread and re.search(r"(?:not|haven't|hasn't)\s+(?:provided|sent|supplied)|(?:missing|no)\s+(?:drawing|tech\s*pack|attachment|specification)|未提供|没有提供|未给|no\s+(?:has|ha)\s+(?:enviado|proporcionado)", draft, re.I):
+    if not semantic_checked and unread and re.search(r"(?:not|haven't|hasn't)\s+(?:provided|sent|supplied)|(?:missing|no)\s+(?:drawing|tech\s*pack|attachment|specification)|未提供|没有提供|未给|no\s+(?:has|ha)\s+(?:enviado|proporcionado)", draft, re.I):
         issues.append("coverage_gap_stated_as_not_provided")
-    if re.search(r"\battached\b|已附上|adjunt[oa]", draft, re.I):
+    if not semantic_checked and re.search(r"\b(?:we\s+(?:have\s+)?attached|(?:please\s+)?find\s+attached|I\s+(?:have\s+)?attached)\b|已附上|adjunt[oa]", draft, re.I):
         attached = [s for s in registry.get("sources", []) if s.get("party") == "company" and s.get("metadata", {}).get("actually_attached") is True]
         if not attached:
             issues.append("unsupported_attachment_claim")

@@ -1,4 +1,4 @@
-"""Choose one reversible inquiry advance from validated lines and scoped values.
+"""Choose a primary inquiry advance and bounded conditional internal work.
 
 This layer does not compose replies, infer company authority from customer text,
 or execute commercial actions. Unknowns remain visible without becoming an
@@ -7,6 +7,7 @@ automatic customer questionnaire.
 
 import json
 import re
+from .understand import FUTURE_RE
 
 
 _PRODUCT_FAMILIES = {
@@ -113,8 +114,13 @@ def _quantity_bounds(line):
 
 
 def _purpose(line):
-    return {"evaluation_sample": "sample", "bulk_interest": "bulk"}.get(
+    return {"evaluation_sample": "sample"}.get(
         line.get("quantity_purpose"), line.get("quantity_purpose", "unknown"))
+
+
+def _current_context(sources):
+    return " ".join(clause for clause in re.split(r"(?<=[.!?。！？])\s*|\n", _read_text(sources))
+                    if not FUTURE_RE.search(clause))
 
 
 def _line_context(sources, lines):
@@ -176,7 +182,7 @@ def _question(language, field, product=""):
 
 
 def judge(understanding, registry, values, research):
-    """Return assessment and a single preferred advance, preserving Unknown."""
+    """Preserve source precedence and allow conditional, reversible parallel work."""
     sources = _sources(registry)
     values = _value_list(values)
     research = research or {}
@@ -187,8 +193,9 @@ def judge(understanding, registry, values, research):
     evidence_ids = _evidence_ids(lines, asks)
     text = _read_text(sources)
     ask_text = " ".join(str(ask.get("text", "")) for ask in asks)
-    cue_text = " ".join(str(cue.get("text", "")) for line in lines for cue in line.get("spec_cues", []))
-    operative_text = " ".join([ask_text, cue_text, _line_context(sources, lines)]).lower()
+    cue_text = " ".join(str(cue.get("text", "")) for line in lines for cue in line.get("spec_cues", [])
+                        if cue.get("polarity", "positive") == "positive")
+    operative_text = " ".join([ask_text, cue_text, _line_context(sources, lines), _current_context(sources)]).lower()
     language = understanding.get("customer_language", "en")
     primary = lines[0] if lines else {"id": None, "product_ref": "", "spec_cues": []}
     checks = []
@@ -199,6 +206,10 @@ def judge(understanding, registry, values, research):
                   "Company capability, sourcing rights, stock, prices, performance and dates require scoped company confirmation and human approval."]
 
     def check(field, task, owner, trigger="Before a firm commercial commitment", blocks=False):
+        if blocks:
+            existing = next((item for item in checks if item["field"] == field), None)
+            if existing:
+                existing.update(task=task, trigger=trigger, blocks_this_step=True)
         if not any(item["field"] == field for item in checks):
             checks.append({"field": field, "task": task, "owner": owner, "status": "pending", "blocks_this_step": blocks, "trigger": trigger})
 
@@ -217,7 +228,7 @@ def judge(understanding, registry, values, research):
             return
         if field == "customization":
             source_map = {source.get("id"): source for source in sources}
-            customer_cues = [cue for cue in line.get("spec_cues", []) if source_map.get(cue.get("source_id"), {}).get("party") == "customer"
+            customer_cues = [cue for cue in line.get("spec_cues", []) if cue.get("polarity", "positive") == "positive" and source_map.get(cue.get("source_id"), {}).get("party") == "customer"
                              and cue.get("kind") in {"construction", "drawing"}]
             if customer_cues or re.search(r"\b(?:unchanged|same model|sin cambios|no\s+logo\s+changes|without\s+changes|(?:want|need|request|busco|necesito).{0,40}(?:custom\w*|personaliz\w*))\b", text, re.I):
                 return
@@ -278,8 +289,12 @@ def judge(understanding, registry, values, research):
         candidate = quantity_candidates.get(line.get("selected_quantity_candidate_id"), {})
         return candidate.get("status") not in {"rejected", "system_reported"} and candidate.get("semantic_stance") not in {"negated", "prohibited_action"}
 
-    bulk_lines = [line for line in lines if _purpose(line) in {"bulk", "quote_tier", "unknown"} and _quantity_bounds(line) and plan_quantity(line)]
+    bulk_lines = [line for line in lines if _purpose(line) in {"bulk", "bulk_interest", "quote_tier", "unknown"} and _quantity_bounds(line) and plan_quantity(line)]
     licensed = bool(re.search(r"\b(licensed|licensing|genuine|traceability|authori[sz]ed|branded.material|supplier account)\b", operative_text))
+    unread_working = [source for source in sources if source.get("status") in {"referenced_unread", "unavailable"}
+                      and (source.get("kind") == "attachment" and source.get("party") == "customer"
+                           or source.get("kind") == "referenced_url")]
+    parallel = []
     moq_conflict = False
     moq_unit_unknown = False
     below_moq = []
@@ -317,6 +332,16 @@ def judge(understanding, registry, values, research):
         action, owner, reason, next_state = "OUT_OF_SCOPE", "business_owner", "This source concerns a committed order or a later operational stage, outside new-inquiry judgment.", "Human routing to the existing project owner"
         uncertainty = ("Appropriate existing-project owner and authorised next step", "C", "business_owner", "Which operational workflow may handle the request")
         barrier = ("business_owner", "A new-inquiry contract cannot authorise execution of an existing commercial commitment.")
+    elif unread_working:
+        action, owner = "INTERNAL_VERIFICATION", "sales+technical"
+        reason = "Inspect the existing referenced working material before deciding its content-dependent feasibility, quantity route or MOQ alignment."
+        next_state = "Source-reviewed facts or an explicit recovery need, before the dependent commercial decision"
+        uncertainty = ("Contents of the existing unread working source", "B", "source review", "Which facts and technical route are already provided")
+        barrier = ("sales+technical", "The referenced material is unread; its contents cannot be assumed or sent back as missing customer information.")
+        for source in unread_working:
+            check("source:" + source["id"], "Review the existing referenced working source before its dependent decision.",
+                  "sales+technical", "Before any source-dependent alignment or customer re-ask", True)
+        questions = []
     elif quantity_conflict or quantity_rejected:
         action, owner, reason, next_state = "INTERNAL_VERIFICATION", "sales", "A same-line quantity conflict or rejected selected candidate must be resolved before using a quantity basis; distinct products remain distinct lines.", "One admitted quantity purpose and basis for the relevant line"
         uncertainty = ("Applicable source-backed quantity basis for this line", "B", "read source/thread first; customer only if unresolved", "Which quantity may support the next costing decision")
@@ -336,6 +361,14 @@ def judge(understanding, registry, values, research):
         barrier = ("purchasing", "Sourcing rights, traceability and supply evidence have not been verified internally.")
         check("licensed_sourcing", "Verify the named material/supplier route, rights and documented provenance; label alternatives separately.", "purchasing")
         check("stock_and_certification", "Verify actual availability and applicable certificates before any claim.", "purchasing+technical")
+        if bulk_lines:
+            parallel.append({"id": "parallel-costing", "action": "INTERNAL_COSTING", "owner": "sales+technical",
+                "reason": "The admitted product and indicative quantity support reversible costing while the material/technical route is being verified.",
+                "next_state": "A conditional rough cost basis for internal review, never a released quotation",
+                "conditions": ["Material and technical route remain subject to feasibility confirmation.",
+                               "Assumptions must be revised if verification changes the route; no firm quote is authorised."],
+                "evidence_ids": _evidence_ids(bulk_lines), "reversible": True,
+                "external_commitment": False, "execution_authorized": False})
         if not any(cue.get("kind") in {"material_reference", "material_brand", "supplier_reference"} for line in lines for cue in line.get("spec_cues", [])):
             question("material_reference", primary, "A preferred material reference narrows the supplier route to verify.")
     elif outside:
@@ -347,7 +380,7 @@ def judge(understanding, registry, values, research):
             question("product_reference", primary, "A reference for one current item supports a concrete fit decision.")
     elif prototype_lines:
         primary = prototype_lines[0]
-        has_brief = bool(primary.get("spec_cues")) or _asset_status(sources, primary, ["drawing", "dimension", "tech pack"]) == "read"
+        has_brief = any(cue.get("polarity", "positive") == "positive" for cue in primary.get("spec_cues", [])) or _asset_status(sources, primary, ["drawing", "dimension", "tech pack"]) == "read"
         action = "INTERNAL_COSTING" if has_brief else "INTERNAL_VERIFICATION"
         owner, reason, next_state = "technical+sample_coordinator", "A prototype is a development unit. Review its existing working brief and preliminary development costs without applying bulk MOQ.", "A scoped prototype method, development cost basis and approval point"
         uncertainty = ("Prototype construction route and development cost basis", "C", "technical+sample_coordinator", "Which pattern/sample method and budget to propose")
@@ -381,7 +414,7 @@ def judge(understanding, registry, values, research):
         barrier = ("sales+management", "A below-MOQ production exception has not been approved.")
         check("below_moq_exception", "Assess the below-MOQ option without treating it as approved or inventing a price.", "sales+management", "Before a below-MOQ quote")
         check("colour_material_minimum", "Verify colour and material minimums separately from per-style MOQ.", "purchasing+technical")
-        check("priority_design_review", "Inspect the customer's existing priority design/reference rather than restarting a full specification questionnaire.", "technical")
+        check("priority_design_review", "Review the stated priority item; verify reference availability before relying on any design source.", "technical")
         if not flexible_known:
             question("quantity_flexibility", primary, "Quantity flexibility determines standard production versus exception assessment.")
     elif below_general_moq:
@@ -436,6 +469,15 @@ def judge(understanding, registry, values, research):
                "value_candidate_ids": list(dict.fromkeys(used_value_ids)),
                "internal_checks": checks, "customer_questions": questions, "working_assumptions": assumptions,
                "commitment_boundaries": boundaries, "needs_human_approval": True}
+    advance["primary_advance"] = {"id": "primary", "action": action, "owner": owner, "reason": reason,
+        "next_state": next_state, "evidence_ids": evidence_ids, "reversible": True,
+        "external_commitment": False, "execution_authorized": False,
+        "source_preconditions": [{"source_id": source["id"], "state": source["status"]} for source in unread_working],
+        "task": ("Review the already referenced working source before its dependent decisions." if unread_working and action != "OUT_OF_SCOPE"
+                 else "Verify material/technical feasibility and the actual sourcing route." if licensed and action == "INTERNAL_VERIFICATION"
+                 else "Use the approved quantity/reference/route answers to review the current item's costing or development route." if action == "REQUEST_INFORMATION"
+                 else next_state)}
+    advance["parallel_reversible_advances"] = parallel
     if action == "INTERNAL_COSTING":
         advance["costing_scope"] = "development" if prototype_lines else "rough"
     return {"assessment": assessment, "advance": advance}

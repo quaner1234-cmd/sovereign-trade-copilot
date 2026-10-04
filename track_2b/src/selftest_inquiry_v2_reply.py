@@ -67,11 +67,24 @@ def company_moq(contract):
         questions=[{"text": qtext, "question_id": contract["permitted_questions"][0]["id"]}])
 
 def chat_sequence(*proposals):
+    from inquiry_v2.reply_semantics import CHECKS, PROMPT
     calls = []
+    audit_calls = []
     def chat(messages, **kwargs):
+        if messages[0]["content"] == PROMPT:
+            audit_calls.append({"messages": copy.deepcopy(messages), "kwargs": copy.deepcopy(kwargs)})
+            data = json.loads(messages[-1]["content"])
+            # Protocol plumbing only. This fake verdict is not evidence of
+            # natural-language quality; deterministic safety gates still run.
+            audit = {"checks": {key: True for key in CHECKS}, "issues": [],
+                     "speech_acts": [{"text": data["draft"], "kind": "internal_action"}]}
+            return json.dumps(audit, ensure_ascii=False), {"mode": "test_semantic_stub", "latency_ms": 1}
         calls.append({"messages": copy.deepcopy(messages), "kwargs": copy.deepcopy(kwargs)})
         value = proposals[min(len(calls) - 1, len(proposals) - 1)]
         return (None if value is None else json.dumps(value, ensure_ascii=False)), {"mode": "test_stub", "latency_ms": 1}
+    chat.audit_calls = audit_calls
+    # Preserve existing generation-attempt assertions; audit calls are separate
+    # observable calls and do not consume a generation proposal sequence.
     return chat, calls
 
 class FirstReplyAcceptanceTests(unittest.TestCase):

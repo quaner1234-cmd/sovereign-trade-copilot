@@ -21,6 +21,19 @@ def validate_output(result, registry=None):
     for field in ("action", "owner", "reason", "next_state"):
         if not isinstance(advance.get(field), str) or not advance[field].strip():
             raise ValueError("advance requires " + field)
+    primary = advance.get("primary_advance")
+    parallel = advance.get("parallel_reversible_advances", [])
+    if not isinstance(primary, dict) or primary.get("action") != advance["action"]:
+        raise ValueError("primary advance must equal the advisory action projection")
+    if not isinstance(parallel, list) or len(parallel) > 2:
+        raise ValueError("parallel reversible work must remain bounded")
+    for item in [primary] + parallel:
+        if (not isinstance(item, dict) or item.get("action") not in ACTIONS or item.get("reversible") is not True
+                or item.get("external_commitment") is not False or item.get("execution_authorized") is not False):
+            raise ValueError("advance never grants an execution or commercial commitment")
+    if any(item["action"] not in {"INTERNAL_COSTING", "INTERNAL_VERIFICATION", "ASSESS_COMPANY_FIT"}
+           or not item.get("conditions") for item in parallel):
+        raise ValueError("parallel work requires explicit conditions and a reversible internal action")
     questions = advance.get("customer_questions", [])
     if not isinstance(questions, list) or len(questions) > 3 or any(not isinstance(q, dict) or not q.get("changes_decision") or not q.get("no_re_ask_basis") for q in questions):
         raise ValueError("customer questions require decision relevance and a maximum of three")
@@ -61,6 +74,13 @@ def validate_output(result, registry=None):
             evidence_ids.add(item.get("id"))
         if not set(advance.get("evidence_ids", [])) <= evidence_ids:
             raise ValueError("advance cites unknown evidence")
+        for item in [primary] + parallel:
+            if not set(item.get("evidence_ids", [])) <= evidence_ids:
+                raise ValueError("primary/parallel advance cites unknown evidence")
+            for dependency in item.get("source_preconditions", []):
+                if (dependency.get("source_id") not in sources
+                        or sources[dependency["source_id"]]["status"] != dependency.get("state")):
+                    raise ValueError("advance source precondition requires the actual coverage state")
         candidate_ids = {c["id"] for c in result["values"] if c["status"] not in {"rejected", "unknown"}}
         if not set(advance.get("value_candidate_ids", [])) <= candidate_ids:
             raise ValueError("advance cites a rejected or unknown value")

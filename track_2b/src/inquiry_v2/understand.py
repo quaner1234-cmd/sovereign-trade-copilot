@@ -35,6 +35,14 @@ SPEC_RE = re.compile(
 FUTURE_RE = re.compile(r"\b(?:in\s+(?:the\s+)?future|later|eventually|next\s+year|future\s+(?:range|collection))\b|未来|以后", re.I)
 DATE_RE = re.compile(r"(?<![\w-])(?:\d{4}-\d{2}-\d{2}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2})(?!\d)", re.I)
 AMOUNT_RE = re.compile(r"(?<![A-Za-z0-9_])(?:(?:USD|EUR|GBP)\s*|[$€£]\s*)(\d[\d,]*(?:\.\d+)?)(?![A-Za-z0-9_-]|[.,]\d)", re.I)
+COMMERCIAL_TOPICS = {
+    "moq": r"\bMOQ\b|\bminimum\b|mínim[oa]|起订量",
+    "price": r"\bpric(?:e|ing)|\bquote|\bcost|precio|cotiz|价格|报价|费用",
+    "lead_time": r"lead\s*time|production\s*time|delivery\s*time|plazo|交期",
+    "payment": r"payment|L\s*/\s*C|T\s*/\s*T|PayPal|pago|付款|支付",
+    "shipping": r"shipping|transit|transport|flete|envío|运输|海运",
+    "sample_cost": r"sample.*cost|cost.*sample|development.*cost|样品费|开发费",
+}
 
 
 def canonical_product(text):
@@ -109,11 +117,19 @@ def _proposal_span(source, proposal):
 
 
 def _sentence_bounds(text, start, end):
-    left = max(text.rfind(".", 0, start), text.rfind("?", 0, start),
-               text.rfind("!", 0, start), text.rfind("\n", 0, start)) + 1
-    stops = [text.find(c, end) for c in ".?!\n"]
+    left = max(text.rfind(c, 0, start) for c in ".?!。！？\n") + 1
+    stops = [text.find(c, end) for c in ".?!。！？\n"]
     stops = [i for i in stops if i >= 0]
     return left, min(stops) + 1 if stops else len(text)
+
+
+def _cue_polarity(context, relative_start, relative_end):
+    """Retain negation and missing-assertion state for any specification cue."""
+    prefix, suffix = context[:relative_start], context[relative_end:]
+    negative = bool(re.search(r"\b(?:no|not|without|never)\b[^,;.!?]{0,45}$|未|没有|无", prefix, re.I))
+    if negative and re.search(r"\b(?:stated|specified|provided|known|mentioned)\b|说明|注明|提供", suffix, re.I):
+        return "unspecified"
+    return "negative" if negative else "positive"
 
 
 def _purpose(text, start, end, source, value=None):
@@ -334,13 +350,27 @@ def understand(registry, proposals=None):
                 kind = "construction" if re.search(r"layer|panels?|hood|seam|front|back", m.group(), re.I) else "material"
                 if re.search(r"drawing", m.group(), re.I):
                     kind = "drawing"
+                left, right = _sentence_bounds(body, *m.span())
                 line["spec_cues"].append({"text": m.group(), "kind": kind, "source_id": source["id"],
-                                         "span": list(m.span()), "evidence_id": eid})
+                                         "span": list(m.span()), "evidence_id": eid,
+                                         "context_quote": body[left:right], "context_span": [left, right],
+                                         "polarity": _cue_polarity(body[left:right], m.start()-left, m.end()-left)})
         if source.get("kind") in {"customer_email", "thread_message"}:
             for m in re.finditer(r"[^.!?。！？\n]+[?？]|(?:Please|Can\s+you|Could\s+you)[^.!?。！？\n]+[.!。！]?", body, re.I):
                 if m.group().strip():
                     result["customer_asks"].append({"id": "Q"+str(len(result["customer_asks"])+1),
                         "text": m.group().strip(), "source_id": source["id"], "span": list(m.span()), "disposition": "unresolved"})
+            # A commercial request can be a list/headline, not a punctuated
+            # question. Numeric declarative terms are not new questions.
+            for m in re.finditer(r"[^\n]+", body):
+                clause = m.group().strip()
+                topics = [key for key, pattern in COMMERCIAL_TOPICS.items() if re.search(pattern, clause, re.I)]
+                if (topics and not re.search(r"\d|\b(?:is|are|was|were|confirmed|agreed)\b", clause, re.I)
+                        and not FUTURE_RE.search(clause)
+                        and not any(q["source_id"] == source["id"] and clause in q["text"] for q in result["customer_asks"])):
+                    result["customer_asks"].append({"id": "Q"+str(len(result["customer_asks"])+1),
+                        "text": clause, "source_id": source["id"], "span": list(m.span()), "topics": topics,
+                        "disposition": "unresolved", "basis": "commercial_request_list"})
 
     for line in result["lines"]:
         cs = [c for c in result["candidates"] if c["id"] in line["quantity_candidate_ids"]]
@@ -362,6 +392,19 @@ def understand(registry, proposals=None):
             result["issues"].append("line_quantity_conflict:" + line["id"])
 
     if proposals is not None:
+        for ask in proposals.get("customer_asks", []) if isinstance(proposals, dict) else []:
+            if not isinstance(ask, dict):
+                continue
+            source = by_id.get(ask.get("source_id"))
+            if not source or source.get("kind") not in {"customer_email", "thread_message"}:
+                continue
+            span, error, _ = _proposal_span(source, ask)
+            if error or FUTURE_RE.search(source["text"][span[0]:span[1]]):
+                continue
+            quote = source["text"][span[0]:span[1]]
+            if not any(q["source_id"] == source["id"] and quote in q["text"] for q in result["customer_asks"]):
+                result["customer_asks"].append({"id": "Q"+str(len(result["customer_asks"])+1), "text": quote,
+                    "source_id": source["id"], "span": span, "disposition": "unresolved", "basis": "source_exact_model_request"})
         proposal_list = proposals.get("candidates", []) if isinstance(proposals, dict) else proposals
         for p in proposal_list if isinstance(proposal_list, list) else []:
             if not isinstance(p, dict):
