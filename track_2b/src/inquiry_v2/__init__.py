@@ -7,9 +7,10 @@ from .understand import understand
 from .judgment_v2 import judge
 from .guard_v2 import validate_draft
 from .research_gate import plan
+from .context_runtime import load_context
 
 
-def analyze(payload):
+def analyze(payload, *, context_store=None):
     registry = build(payload)
     if type(payload.get("use_model", False)) is not bool:
         raise ValueError("use_model must be boolean")
@@ -22,15 +23,16 @@ def analyze(payload):
         proposals, model = propose(registry)
     understanding = understand(registry, proposals)
     store = ValueStore(registry).extend(understanding["candidates"])
-    context = payload.get("company_context") or {}
-    store.extend(context.get("candidates", []))
-    understanding["candidates"] = deepcopy(store.candidates[:len(understanding["candidates"])])
+    understanding["candidates"] = deepcopy(store.candidates)
     admitted = {c["id"]: c for c in store.candidates if c["status"] not in {"unknown", "rejected"}}
     # Judgment must never consume a rejected quantity via an unvalidated line.
     for line in understanding["lines"]:
         if line.get("selected_quantity_candidate_id") not in admitted:
             line["quantity"] = None
             line["quantity_purpose"] = "unknown"
+    context, context_info, private_view = load_context(payload, registry, understanding, context_store)
+    store.sources = {source["id"]: source for source in registry["sources"]}
+    store.extend(context)
     research = plan(registry, payload.get("research"))
     judgment = judge(understanding, registry, store.candidates, research)
     draft = payload.get("candidate_draft")
@@ -39,8 +41,10 @@ def analyze(payload):
     guard = validate_draft(draft, understanding, registry, store.candidates) if draft is not None else {
         "passed": None, "status": "not_run", "issues": [], "reason": "No draft composed in P0-P2."}
     selections = []
-    for key, scope in sorted({(c["key"], c["scope"]) for c in store.candidates if c["key"] != "quantity"}):
+    persisted_ids = {c["id"] for c in (private_view or {}).get("candidates", [])}
+    for key, scope in sorted({(c["key"], c["scope"]) for c in store.candidates if c["key"] != "quantity" and c["id"] not in persisted_ids}):
         selections.append({"key": key, "scope": scope, **store.select(key, scope)})
+    selections.extend((private_view or {}).get("selections", []))
     return validate_output({
         "schema_version": SCHEMA_VERSION, "understanding": understanding,
         "assessment": judgment["assessment"], "values": store.candidates,
@@ -48,5 +52,5 @@ def analyze(payload):
         "reply": {"language": understanding["customer_language"], "draft": None, "status": "not_composed"},
         "trust": {"coverage": registry["coverage"], "evidence": understanding["evidence"],
                   "guard": guard, "value_issues": store.issues, "model": model,
-                  "research": research, "needs_human_approval": True},
+                  "research": research, "company_context": context_info, "needs_human_approval": True},
     }, registry)

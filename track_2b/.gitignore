@@ -25,3 +25,11 @@ build/
 .DS_Store
 .idea/
 .vscode/
+
+# Private Company Context is kept outside the checkout
+_private/
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*

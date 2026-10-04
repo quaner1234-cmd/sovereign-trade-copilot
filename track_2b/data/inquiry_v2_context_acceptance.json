@@ -1,0 +1,68 @@
+{
+  "schema_version": "inquiry-v2-context-acceptance-1",
+  "frozen_before_implementation": true,
+  "privacy": "Synthetic facts only; persistence files are created in an external temporary directory.",
+  "examples": {
+    "reference": {
+      "id": "reference-moq",
+      "key": "moq.style",
+      "value": 240,
+      "unit": "pcs/style",
+      "status": "public_reference",
+      "text": "The public reference MOQ is 240 pieces per style.",
+      "quote": "240 pieces per style"
+    },
+    "working": {
+      "id": "working-moq",
+      "key": "moq.style",
+      "value": 240,
+      "unit": "pcs/style",
+      "status": "working_value",
+      "text": "For internal review, use a working MOQ of 240 pieces per style.",
+      "quote": "240 pieces per style"
+    },
+    "company": {
+      "id": "company-moq",
+      "key": "moq.style",
+      "value": 300,
+      "unit": "pcs/style",
+      "status": "company_confirmed",
+      "text": "Our approved MOQ is 300 pieces per style.",
+      "quote": "300 pieces per style"
+    },
+    "edit_statement": "MOQ 改 300，正常交期 100 天",
+    "next_inquiry": "Please assess 250 work vests with taped seams."
+  },
+  "scopes": {
+    "global": {"global": true},
+    "category": {"product_categories": ["work vest"]},
+    "other_category": {"product_categories": ["rain cape"]},
+    "market": {"product_categories": ["work vest"], "markets": ["EU"]},
+    "quantity": {"product_categories": ["work vest"], "quantity_range": {"min": 200, "max": 600}},
+    "conditional": {"product_categories": ["work vest"], "conditions": ["standard fabric"]},
+    "project": {"project_id": "synthetic-project-alpha", "product_categories": ["work vest"]}
+  },
+  "acceptance": [
+    {"id": "A1", "pattern": "public reference never self-promotes", "expect": "public_reference retained; no company_confirmed candidate without authorization"},
+    {"id": "A2", "pattern": "explicit confirmation supports later inquiries", "expect": "same-category inquiry and reopened store can reuse newly confirmed value"},
+    {"id": "A3", "pattern": "edit retains complete provenance", "expect": "original candidate unchanged; new confirmed candidate preferred; explicit supersession retained"},
+    {"id": "A4", "pattern": "scoped exception does not become default", "expect": "project/category/market/quantity/conditions restriction applies only where fully satisfied"},
+    {"id": "A5", "pattern": "customer statement is not company authorization", "expect": "customer claim cannot be persisted/promoted as company truth"},
+    {"id": "A6", "pattern": "conflicting company facts require adjudication", "expect": "independent conflicting same-scope confirmed candidates remain unresolved"},
+    {"id": "A7", "pattern": "persistence is optional", "expect": "missing/deleted context leaves working zero-context inquiry judgment"}
+  ],
+  "regressions": [
+    {"id": "R1", "pattern": "self-declared metadata cannot grant authority"},
+    {"id": "R2", "pattern": "trusted company source requires explicit authorized import"},
+    {"id": "R3", "pattern": "project edit does not supersede global source"},
+    {"id": "R4", "pattern": "scope quantity endpoints are inclusive and unknown quantity is not a match"},
+    {"id": "R5", "pattern": "missing market/category/conditions cannot inherit restricted fact"},
+    {"id": "R6", "pattern": "different units or applicability conditions cannot silently merge equal numbers"},
+    {"id": "R7", "pattern": "invalid multi-edit is atomic"},
+    {"id": "R8", "pattern": "unrecognized natural-language input requires review without guessing"},
+    {"id": "R9", "pattern": "relative or repository-contained persistence paths are rejected"},
+    {"id": "R10", "pattern": "original source, candidate and resolution survive restart"},
+    {"id": "R11", "pattern": "private context claim cannot pass reply gate outside applicable scope"},
+    {"id": "R12", "pattern": "unresolved company claim cannot pass reply gate"}
+  ]
+}

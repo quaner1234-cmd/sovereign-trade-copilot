@@ -54,7 +54,7 @@ def _number(token):
     return int(v) if v.is_integer() else v
 
 
-def _proposal_value_present(value, quote):
+def _proposal_value_present(value, quote, key=None):
     """The proposed subspan itself must prove the entire value, not one digit."""
     for m in QTY_RE.finditer(quote):
         a = _number(m.group("first"))
@@ -62,11 +62,44 @@ def _proposal_value_present(value, quote):
         if value == ({"min": a, "max": b} if b is not None else a):
             return True
     if isinstance(value, dict):
-        return all(_proposal_value_present(v, quote) for v in value.values())
+        return all(_proposal_value_present(v, quote, key) for v in value.values())
     if isinstance(value, (int, float)) and not isinstance(value, bool):
         matches = re.findall(rf"(?<![\w.-]){NUM}(?![\w.-])", quote, re.I)
         return any(_number(token) == value for token in matches)
+    if key == "payment_terms":
+        return any(re.sub(r"\s+", "", m.group()).upper() == value
+                   for m in PAYMENT_RE.finditer(quote))
+    if key == "product":
+        return isinstance(value, str) and value in quote
     return str(value).strip().casefold() == quote.strip().casefold()
+
+
+def _proposal_span(source, proposal):
+    """Align an exact quote, never a fuzzy/case-normalized model paraphrase.
+
+    Correct offsets can disambiguate a repeated quote. Wrong or missing offsets
+    can be replaced only by a unique literal occurrence in that named source.
+    """
+    text = source.get("text", "")
+    provenance = proposal.get("provenance", {})
+    provenance = provenance if isinstance(provenance, dict) else {}
+    span = proposal.get("span", provenance.get("span"))
+    quote = proposal.get("quote")
+    valid_span = (isinstance(span, list) and len(span) == 2 and
+                  all(type(x) is int for x in span) and
+                  0 <= span[0] < span[1] <= len(text))
+    if quote is not None and (not isinstance(quote, str) or not quote):
+        return None, "proposal_invalid_quote", None
+    if valid_span and (quote is None or text[span[0]:span[1]] == quote):
+        return span, None, "model_span_exact"
+    if quote is None:
+        return None, "proposal_invalid_source_span", None
+    first = text.find(quote)
+    if first < 0:
+        return None, "proposal_quote_not_in_source", None
+    if text.find(quote, first + 1) >= 0:
+        return None, "proposal_ambiguous_quote", None
+    return [first, first + len(quote)], None, "unique_exact_quote"
 
 
 def _sentence_bounds(text, start, end):
@@ -149,7 +182,7 @@ def _stage(text):
 def understand(registry, proposals=None):
     """Return admitted typed facts from read sources, retaining every candidate.
 
-    Optional proposals have ``key,value,source_id,span``. Quantity/payment/product
+    Optional proposals have ``key,value,source_id,quote`` and optional ``span``. Quantity/payment/product
     proposals must agree with a context-typed deterministic candidate; all other
     keys are rejected rather than accepting arbitrary source substrings as facts.
     """
@@ -163,7 +196,8 @@ def understand(registry, proposals=None):
     result = {"stage": _stage(text), "customer_language": _language(text),
               "decision_frame": "Identify the smallest useful next decision for this inquiry.",
               "lines": [], "customer_asks": [], "candidates": [], "evidence": [], "issues": [],
-              "mode": "deterministic_typed_fallback", "model_proposals_used": False}
+              "mode": "deterministic_typed_fallback", "model_proposals_used": False,
+              "proposal_diagnostics": []}
 
     def evidence(source, start, end, claim, scope):
         ev = {"id": "E" + str(len(result["evidence"])+1), "source_id": source["id"],
@@ -327,29 +361,55 @@ def understand(registry, proposals=None):
             if not isinstance(p, dict):
                 result["issues"].append("proposal_invalid_shape")
                 continue
-            source = by_id.get(p.get("source_id"))
-            span = p.get("span", p.get("provenance", {}).get("span"))
-            if source is None or not isinstance(span, list) or len(span) != 2 or any(type(x) is not int for x in span):
+            source_id = p.get("source_id")
+            source = by_id.get(source_id) if isinstance(source_id, str) else None
+            if source is None:
                 result["issues"].append("proposal_invalid_source_span")
+                continue
+            span, span_issue, alignment = _proposal_span(source, p)
+            diagnostic = {"source_id": source["id"], "key": p.get("key"),
+                          "model_span": p.get("span"), "resolved_span": span,
+                          "alignment": alignment, "admitted": False}
+            result["proposal_diagnostics"].append(diagnostic)
+            if span_issue:
+                diagnostic["issue"] = span_issue
+                result["issues"].append(span_issue)
                 continue
             start, end = span
-            if not (0 <= start < end <= len(source.get("text", ""))):
-                result["issues"].append("proposal_invalid_source_span")
+            key, value = p.get("key"), p.get("value")
+            if not isinstance(key, str) or key not in {"quantity", "product", "payment_terms"}:
+                diagnostic["issue"] = "proposal_type_context_rejected:" + str(key)
+                result["issues"].append(diagnostic["issue"])
+                continue
+            valid_value = (key == "quantity" and (
+                isinstance(value, (int, float)) and not isinstance(value, bool) or
+                isinstance(value, dict) and set(value) == {"min", "max"} and
+                all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in value.values())))
+            valid_value = valid_value or key in {"product", "payment_terms"} and isinstance(value, str) and bool(value.strip())
+            if not valid_value:
+                issue = "proposal_invalid_value_type:" + str(key)
+                diagnostic["issue"] = issue
+                result["issues"].append(issue)
                 continue
             quote = source["text"][start:end]
-            if p.get("quote", quote) != quote:
-                result["issues"].append("proposal_span_mismatch")
-                continue
-            if not _proposal_value_present(p.get("value"), quote):
-                result["issues"].append("proposal_value_not_proven_by_span")
+            if not _proposal_value_present(value, quote, key):
+                diagnostic["issue"] = "proposal_value_not_proven_by_span"
+                result["issues"].append(diagnostic["issue"])
                 continue
             found = next((c for c in result["candidates"] if c["source_id"] == source["id"] and
-                          c["key"] == p.get("key") and c["value"] == p.get("value") and
-                          c["provenance"]["span"][0] <= start < end <= c["provenance"]["span"][1]), None)
+                          c["status"] != "rejected" and c["key"] == key and c["value"] == value and
+                          (c["provenance"]["span"][0] <= start < end <= c["provenance"]["span"][1] or
+                           start <= c["provenance"]["span"][0] < c["provenance"]["span"][1] <= end)), None)
             if found is None:
-                result["issues"].append("proposal_type_context_rejected:" + str(p.get("key")))
+                diagnostic["issue"] = "proposal_type_context_rejected:" + str(key)
+                result["issues"].append(diagnostic["issue"])
             else:
                 found["provenance"]["model_proposed"] = True
+                found["provenance"]["model_alignment"] = {"method": alignment,
+                    "model_span": p.get("span"), "quote_span": span,
+                    "typed_proof_span": found["provenance"]["span"]}
+                diagnostic["admitted"] = True
+                diagnostic["typed_proof_span"] = found["provenance"]["span"]
                 result["model_proposals_used"] = True
     if result["stage"] != "out_of_scope" and any(l["stage"] == "current" and l["spec_cues"] and l["quantity"] is not None and
             l["quantity_purpose"] not in {"evaluation_sample", "bulk_interest", "quote_tier"} for l in result["lines"]):

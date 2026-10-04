@@ -47,6 +47,15 @@ def _value_list(values):
 
 
 def _scope_applies(candidate, line=None):
+    if not candidate.get("active", True) or not candidate.get("applicable", True):
+        return False
+    if "scope_spec" in candidate:
+        if not candidate.get("preferred", True) and candidate.get("resolution") != "unresolved":
+            return False
+        allowed = candidate.get("preferred_line_ids", candidate.get("applicable_line_ids", []))
+        if candidate.get("resolution") == "unresolved":
+            allowed = candidate.get("applicable_line_ids", [])
+        return line is None or line.get("id") in allowed or candidate["scope_spec"].get("global") and not allowed
     scope = str(candidate.get("scope", "")).lower()
     if scope in {"company.default", "company.global", "company.all", "company.all_styles", "bulk.per_style", "all styles", "all", "default"}:
         return True
@@ -72,6 +81,8 @@ def _confirmed(values, key, line=None):
 
 
 def _conflicts(candidates):
+    if any(c.get("resolution") == "unresolved" for c in candidates):
+        return True
     groups = {}
     for candidate in candidates:
         identity = {"value": candidate.get("value"), "unit": candidate.get("unit"), "conditions": candidate.get("conditions") or []}

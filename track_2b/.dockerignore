@@ -1,0 +1,14 @@
+.git
+**/.env
+**/.env.*
+**/_private
+**/__pycache__
+**/*.pyc
+**/*.db
+**/*.db-*
+**/*.sqlite
+**/*.sqlite3
+**/*.sqlite3-*
+**/*.log
+**/*.err
+experiments/records

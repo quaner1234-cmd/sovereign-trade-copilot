@@ -31,3 +31,11 @@ build/
 *.log
 *.err
 *.tmp
+
+# Private Company Context and evaluation storage
+_private/
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*

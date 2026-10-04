@@ -87,7 +87,7 @@ class ValueStore:
         if c["status"] == "working_value" and (not source or source["party"] != "company"):
             reasons.append("working_value_owner_invalid")
         if reasons:
-            c["requested_status"] = c["status"]
+            c.setdefault("requested_status", c["status"])
             c["status"] = "rejected"
             c["rejection_reasons"] = reasons
             self.issues.extend(reason + ":" + cid for reason in reasons)
@@ -102,7 +102,8 @@ class ValueStore:
     def select(self, key, scope):
         rank = {"company_confirmed": 5, "customer_stated": 4, "working_value": 3,
                 "system_reported": 2, "public_reference": 1}
-        pool = [c for c in self.candidates if c["key"] == key and c["scope"] == scope and c["status"] in rank]
+        pool = [c for c in self.candidates if c["key"] == key and c["scope"] == scope and c["status"] in rank
+                and c.get("active", True) and c.get("applicable", True)]
         if not pool:
             return {"candidate_id": None, "status": "unknown", "issues": []}
         best = max(rank[c["status"]] for c in pool)

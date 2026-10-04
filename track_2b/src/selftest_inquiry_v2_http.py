@@ -5,6 +5,8 @@ os.environ['LLM_BASE_URL'] = ''
 os.environ['LLM_API_KEY'] = ''
 os.environ['PIPELINE_VERSION'] = 'v4'
 import threading
+import tempfile
+from pathlib import Path
 import unittest
 import urllib.error
 import urllib.request
@@ -16,6 +18,11 @@ from selftest_inquiry_v2 import fictional_context
 class InquiryHTTPTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.context_directory = tempfile.TemporaryDirectory(prefix='synthetic-inquiry-http-context-')
+        cls.context_environment = {key: os.environ.get(key) for key in
+                                   ('COMPANY_CONTEXT_DB', 'COMPANY_CONTEXT_TOKEN', 'COMPANY_CONTEXT_ACTOR')}
+        os.environ.update(COMPANY_CONTEXT_DB=str(Path(cls.context_directory.name) / 'context.sqlite3'),
+                          COMPANY_CONTEXT_TOKEN='synthetic-http-test-token', COMPANY_CONTEXT_ACTOR='Synthetic test operator')
         cls.http = HTTPServer(('127.0.0.1', 0), server.Handler)
         cls.thread = threading.Thread(target=cls.http.serve_forever, daemon=True)
         cls.thread.start()
@@ -27,10 +34,17 @@ class InquiryHTTPTests(unittest.TestCase):
         cls.http.shutdown()
         cls.http.server_close()
         cls.thread.join()
+        for key, value in cls.context_environment.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        cls.context_directory.cleanup()
 
     def post(self, body):
         req = urllib.request.Request(self.url + '/v2/inquiry', data=json.dumps(body).encode(),
-                                     headers={'Content-Type': 'application/json'})
+                                     headers={'Content-Type': 'application/json',
+                                              'Authorization': 'Bearer synthetic-http-test-token'})
         return json.load(self.opener.open(req, timeout=5))
 
     def test_cold_start_and_scoped_context(self):

@@ -14,11 +14,11 @@ NUMBER_RE = re.compile(r"(?<![\w.-])\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\w.-])|(?<![
 IDENTIFIER_RE = re.compile(r"\b[A-Z]{1,8}[-_]\d[\w-]*\b", re.I)
 POSITIVE_COMPANY_RE = re.compile(
     r"\b(?:we\s+(?:can|will|support|provide|offer|guarantee|confirm|have|manufacture|produce|make|sew)|"
-    r"our\s+(?:(?:standard|bulk|production|factory)\s+){0,3}(?:MOQ|minimum|stock|certificates?|price|quote|payment\s+terms|delivery\s+date)\s+(?:is|are|has)|"
+    r"our\s+(?:(?:standard|normal|sample|bulk|production|factory)\s+){0,3}(?:MOQ|minimum|stock|certificates?|price|quote|payment\s+terms|delivery\s+date|lead\s*time|delivery\s*time)\s+(?:is|are|has)|"
     r"(?:podemos|ofrecemos|garantizamos|confirmamos|tenemos|fabricamos)|"
     r"nuestro\s+(?:MOQ|mínimo|stock)\s+es)\b|"
     r"(?:我司|我们|本公司)(?:支持|可以|可提供|提供|保证|已确认|有库存|能够|生产|制造)|"
-    r"(?:我司|我们|本公司).{0,12}(?:起订量|MOQ).{0,6}(?:是|为)", re.I)
+    r"(?:我司|我们|本公司).{0,12}(?:起订量|MOQ|交期).{0,6}(?:是|为)", re.I)
 NEGATIVE_COMPANY_RE = re.compile(r"\b(?:we\s+(?:cannot|can't|do\s+not|don't)|cannot\s+confirm|not\s+confirmed|"
                                   r"no\s+podemos|necesitamos\s+verificar)\b|不能|尚未确认|需核实|需要核实", re.I)
 HEDGE_RE = re.compile(r"\b(?:about|around|roughly|approximately|approx\.?)\b|约|大约|aproximadamente", re.I)
@@ -93,6 +93,11 @@ def _confirmation_covers(sentence, confirmed):
         key = str(c.get("key", ""))
         vals = _raw_values(c.get("value"))
         textual = " ".join(str(v) for v in vals).lower()
+        source_claim = str(c.get("_authority_quote", c.get("provenance", {}).get("quote", textual)))
+        # Confirmation of a negative or pending company fact is not authority
+        # for an affirmative customer promise merely mentioning the same token.
+        if re.search(r"\b(?:unknown|unavailable|pending|(?:do|does)\s+not|don't|doesn't|cannot|can't|no\s+podemos|not\s+(?:confirmed|available|authorized|supported)|requires?\s+(?:human\s+)?(?:approval|verification|checking))\b|未确认|不支持|不能|需.{0,5}(?:核实|批准)|未知", source_claim, re.I):
+            continue
         if terms and ("payment" in key or key.startswith("capability.payment")):
             if all(t in re.sub(r"\s+", "", textual).upper() for t in terms):
                 return True
@@ -102,10 +107,21 @@ def _confirmation_covers(sentence, confirmed):
             continue
         if re.search(r"\bMOQ\b|minimum|起订量|mínimo", sentence, re.I):
             if "moq" in key.lower() and numbers and all(n in vals for n in numbers):
-                scope = str(c.get("scope", "")).lower()
+                scope = " ".join([str(c.get("scope", "")), str(c.get("key", "")), str(c.get("unit", ""))]).lower()
                 if re.search(r"per\s+colou?r|每色", sentence, re.I) and not re.search(r"colou?r|per_colour|per_color", scope):
                     continue
                 if re.search(r"per\s+(?:style|item)|每款", sentence, re.I) and not re.search(r"style|item", scope):
+                    continue
+                return True
+            continue
+        if re.search(r"lead\s*time|delivery\s*time|交期", sentence, re.I):
+            if key.startswith("lead_time.") and numbers and all(n in vals for n in numbers) and c.get("unit") == "days":
+                if ".sample" in key and not re.search(r"sample|样品", sentence, re.I):
+                    continue
+                if ".normal" in key and not re.search(r"normal|standard|正常|常规", sentence, re.I):
+                    continue
+                conditions = c.get("conditions", [])
+                if any(condition != "normal_conditions" and str(condition).casefold() not in sentence.casefold() for condition in conditions):
                     continue
                 return True
             continue
@@ -115,9 +131,6 @@ def _confirmation_covers(sentence, confirmed):
                 return True
             continue
         if key.startswith("capability.") or key == "capability":
-            source_claim = str(c.get("provenance", {}).get("quote", textual))
-            if re.search(r"\b(?:unknown|unavailable|pending|not\s+(?:confirmed|available|authorized)|requires?\s+(?:human\s+)?(?:approval|verification|checking))\b|未确认|需.{0,5}(?:核实|批准)|未知", source_claim, re.I):
-                continue
             if re.search(r"review|assessment|evaluate", key, re.I):
                 if re.search(r"review|assess|evaluate|check", sentence, re.I) and not re.search(r"stock|certif|traceab|authoriz|guarantee|库存|认证|保证", sentence, re.I):
                     return True
@@ -132,6 +145,19 @@ def _confirmation_covers(sentence, confirmed):
                         continue
                 return True
     return False
+
+
+def _scoped_authority(claim, confirmed, understanding):
+    """A rule usable for one line never licenses a promise for every line."""
+    lines = [line for line in understanding.get("lines", []) if line.get("stage") == "current"]
+    products = [canonical_product(m.group()) for m in PRODUCT_RE.finditer(claim)]
+    targets = {line["id"] for line in lines if not products or any(
+        _product_supported(product, {line["product_ref"]}) for product in products)}
+    if products and any(not any(_product_supported(product, {line["product_ref"]}) for line in lines) for product in products):
+        return [c for c in confirmed if "scope_spec" not in c]
+    return [c for c in confirmed if "scope_spec" not in c or
+            (targets and targets.issubset(set(c.get("preferred_line_ids", c.get("applicable_line_ids", []))))) or
+            (not lines and c["scope_spec"].get("global") is True)]
 
 
 def validate_draft(draft, understanding, registry, values):
@@ -149,12 +175,14 @@ def validate_draft(draft, understanding, registry, values):
     keyed.update({c.get("id"): c for c in (values or []) if isinstance(c, dict)})
     candidates = list(keyed.values())
     active = {"customer_stated", "system_reported", "public_reference", "working_value", "company_confirmed"}
-    admitted = [c for c in candidates if _status(c) in active and _source_valid(c, by_id)]
+    admitted = [c for c in candidates if _status(c) in active and _source_valid(c, by_id)
+                and c.get("active", True) and c.get("applicable", True)
+                and (c.get("preferred", True) or c.get("resolution") == "unresolved")]
     issues = []
     for c in candidates:
-        if _status(c) in active and not _source_valid(c, by_id):
+        if _status(c) in active and c.get("active", True) and c.get("applicable", True) and not _source_valid(c, by_id):
             issues.append("invalid_value_provenance:" + str(c.get("id", "unknown") if isinstance(c, dict) else "unknown"))
-    confirmed = [c for c in admitted if _status(c) == "company_confirmed" and
+    confirmed = [c for c in admitted if _status(c) == "company_confirmed" and c.get("resolution") != "unresolved" and
                  by_id[c["source_id"]].get("kind") in {"company_context", "operator_input"} and
                  by_id[c["source_id"]].get("party") == "company"]
     grouped = {}
@@ -166,6 +194,15 @@ def validate_draft(draft, understanding, registry, values):
     # A retained conflicting confirmation is evidence of a dispute, not current
     # authority to silently select whichever value appears in the draft.
     confirmed = [c for c in confirmed if (c.get("key"), c.get("scope")) not in conflicts]
+    bounded_confirmed = []
+    for candidate in confirmed:
+        source = by_id[candidate["source_id"]]["text"]
+        start, end = candidate["provenance"]["span"]
+        left = max(source.rfind(mark, 0, start) for mark in ".!?。！？\n") + 1
+        ends = [source.find(mark, end) for mark in ".!?。！？\n"]
+        right = min((position for position in ends if position >= 0), default=len(source))
+        bounded_confirmed.append({**candidate, "_authority_quote": source[left:right]})
+    confirmed = bounded_confirmed
     allowed_products = {canonical_product(str(c.get("value"))) for c in admitted if c.get("key") == "product"}
     for c in admitted:
         if str(c.get("key", "")) == "capability.products":
@@ -247,10 +284,15 @@ def validate_draft(draft, understanding, registry, values):
                 issues.append("interest_stated_as_order")
 
     for sentence in _sentences(draft):
+        # A leading "For <product>," qualifies following clauses. Preserve it
+        # for scope binding while keeping separate promises/negations local.
+        prefix = re.match(r"^(?:for|regarding|对于|针对)\s*([^,，;；]+)[,，]", sentence, re.I)
+        product_prefix = prefix.group(1) if prefix and PRODUCT_RE.search(prefix.group(1)) else ""
         for claim in re.split(r"[,;，；]|\bbut\b|\bpero\b", sentence, flags=re.I):
             # Negation applies to its own clause only, not an earlier promise.
             cleaned = re.sub(r"\bno\s+podemos\b|(?:我司|我们|本公司)(?:不能|不支持|无法)", "", claim, flags=re.I)
-            if POSITIVE_COMPANY_RE.search(cleaned) and not _confirmation_covers(cleaned, confirmed):
+            scope_claim = cleaned if PRODUCT_RE.search(cleaned) else product_prefix + " " + cleaned
+            if POSITIVE_COMPANY_RE.search(cleaned) and not _confirmation_covers(cleaned, _scoped_authority(scope_claim, confirmed, understanding)):
                 issues.append("unsupported_company_capability")
     unread = [s for s in registry.get("sources", []) if s.get("kind") == "attachment" and s.get("status") != "read"]
     if unread and re.search(r"(?:not|haven't|hasn't)\s+(?:provided|sent|supplied)|(?:missing|no)\s+(?:drawing|tech\s*pack|attachment|specification)|未提供|没有提供|未给|no\s+(?:has|ha)\s+(?:enviado|proporcionado)", draft, re.I):

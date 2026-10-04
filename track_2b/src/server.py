@@ -7,6 +7,8 @@ POST /process {"email": "..."} -> classification + extraction + draft + validati
                  plus, on v4, the validated fact store with per-fact provenance.
 POST /judgment -> source-backed next-action advice; human approval required.
 POST /v2/inquiry -> P0-P2 source coverage, typed lines and reversible inquiry judgment.
+GET /v2/company-context -> authenticated private ledger; no public profile.
+POST /v2/company-context/{record,confirm,edit} -> authenticated private changes.
 PIPELINE_VERSION defaults to v4; v3 is a compatibility alias for v4.
 """
 import json, os
@@ -14,6 +16,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import llm_client
 import judgment
 import inquiry_v2
+from inquiry_v2.context_service import PrivateContextAccess, PrivateContextError
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 UI_PATH = os.path.join(HERE, "ui", "index.html")
@@ -34,6 +37,7 @@ class Handler(BaseHTTPRequestHandler):
         b = json.dumps(obj, ensure_ascii=False).encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(b)
 
@@ -64,12 +68,18 @@ class Handler(BaseHTTPRequestHandler):
             except (OSError, ValueError):
                 return self._send(500, {"error": "sample fixtures unavailable"})
             self._send(200, {"samples": data.get("samples", [])})
+        elif self.path == "/v2/company-context":
+            try:
+                self._send(200, PrivateContextAccess().view(self.headers))
+            except PrivateContextError as error:
+                self._send(error.status, {"error": str(error)})
         else:
             self._send(404, {"error": "not found",
                              "hint": "GET /ui, GET /health, GET /samples, POST /process or POST /judgment"})
 
     def do_POST(self):
-        if self.path not in ("/process", "/judgment", "/v2/inquiry"):
+        private_actions = {"/v2/company-context/" + action: action for action in ("record", "confirm", "edit")}
+        if self.path not in ("/process", "/judgment", "/v2/inquiry") and self.path not in private_actions:
             return self._send(404, {"error": "not found"})
         try:
             n = int(self.headers.get("Content-Length", 0))
@@ -82,9 +92,14 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(400, {"error": "JSON object required"})
         if self.path == "/v2/inquiry":
             try:
-                return self._send(200, inquiry_v2.analyze(body))
-            except ValueError as e:
-                return self._send(400, {"error": str(e)})
+                return self._send(200, PrivateContextAccess().inquiry(body, self.headers))
+            except PrivateContextError as error:
+                return self._send(error.status, {"error": str(error)})
+        if self.path in private_actions:
+            try:
+                return self._send(200, PrivateContextAccess().mutate(private_actions[self.path], body, self.headers))
+            except PrivateContextError as error:
+                return self._send(error.status, {"error": str(error)})
         if self.path == "/judgment":
             try:
                 return self._send(200, judgment.judge(body))

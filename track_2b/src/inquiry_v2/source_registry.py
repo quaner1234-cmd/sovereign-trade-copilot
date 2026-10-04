@@ -88,7 +88,11 @@ def build(payload):
     for index, item in enumerate(context.get("sources", [])):
         if not isinstance(item, dict) or item.get("status", "read") not in {"read", "referenced_unread", "unavailable"}:
             raise ValueError("invalid company source status")
-        add(item, "company_context", "company", item.get("status", "read"), "company-" + str(index))
+        kind = item.get("kind", "company_context")
+        expected_party = "public" if kind in {"public_source", "referenced_url"} else "company"
+        if kind not in {"company_context", "operator_input", "public_source", "referenced_url"} or item.get("party", expected_party) != expected_party:
+            raise ValueError("context source kind cannot upgrade customer or public authority")
+        add(item, kind, expected_party, item.get("status", "read"), "company-" + str(index))
     research = payload.get("research") or {}
     if not isinstance(research, dict):
         raise ValueError("research object required")
