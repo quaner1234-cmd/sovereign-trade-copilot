@@ -12,3 +12,4 @@
 **/*.log
 **/*.err
 experiments/records
+**/.firecrawl

@@ -40,7 +40,8 @@ class PrivateContextAccess:
     def inquiry(self, body, headers):
         from . import analyze
         authorized = self.authenticated(headers)
-        if not authorized and any(name in body for name in ("company_context", "request_context")):
+        if not authorized and (any(name in body for name in ("company_context", "request_context")) or
+                               isinstance(body.get("research"), dict) and body["research"].get("identity_verification") is not None):
             raise PrivateContextError(403, "operator authorization required for company context")
         try:
             return analyze(body, context_store=self._store(headers) if authorized else None)

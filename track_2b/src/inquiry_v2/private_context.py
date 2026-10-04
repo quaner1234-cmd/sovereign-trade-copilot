@@ -8,6 +8,7 @@ import uuid
 
 from .scope import normalize_scope, scope_matches, scope_token, specificity
 from .value_store import ValueStore
+from .research_evidence import current
 
 SCHEMA_VERSION = "private-company-context-1"
 _RANK = {"company_confirmed": 5, "working_value": 3, "public_reference": 1}
@@ -350,9 +351,10 @@ def project_context(history, request_context=None):
         raise ValueError("request_context lines require identified objects")
     for candidate in result["candidates"]:
         spec = candidate.get("scope_spec")
+        candidate["expired"] = candidate.get("status") in {"public_reference", "working_value"} and not current(candidate)
         candidate["active"] = candidate["id"] not in inactive
         candidate["applicable_line_ids"] = [line["id"] for line in lines if spec and scope_matches(spec, {**context, **line})]
-        candidate["applicable"] = bool(spec and (candidate["applicable_line_ids"] if lines else scope_matches(spec, context)))
+        candidate["applicable"] = bool(not candidate["expired"] and spec and (candidate["applicable_line_ids"] if lines else scope_matches(spec, context)))
         candidate["preferred"] = False
         candidate["preferred_line_ids"] = []
     result["schema_version"] = SCHEMA_VERSION

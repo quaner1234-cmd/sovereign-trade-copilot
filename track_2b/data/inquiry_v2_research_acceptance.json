@@ -1,0 +1,33 @@
+{
+  "schema_version": "inquiry-v2-research-acceptance-1",
+  "frozen_before_implementation": true,
+  "privacy": "Synthetic inputs/evidence; original seven bodies and expectations unchanged.",
+  "representative_gate": [
+    {"base": "S01", "required": ["moq", "sample_cost"], "blocked": ["shipping"]},
+    {"base": "S02", "required": ["material"]},
+    {"base": "S03", "required": ["price"]},
+    {"base": "S04", "required": ["sample_cost"], "forbidden": ["moq"]},
+    {"base": "S05", "required": []},
+    {"base": "S06", "required": ["moq", "price"], "forbidden": ["shipping"]},
+    {"base": "S07", "required": ["price"]}
+  ],
+  "acceptance": [
+    {"id": "A1", "expect": "Sufficient scoped Company Context prevents network calls"},
+    {"id": "A2", "expect": "Independent comparable MOQ 100/300/500 permits observed working value 300"},
+    {"id": "A3", "expect": "Wide distributions recommend observed values without means or invented midpoints"},
+    {"id": "A4", "expect": "Same-policy conflicting evidence unresolved, low confidence, no silent mean"},
+    {"id": "A5", "expect": "Unreliable or incomparable evidence cannot create precise working values"},
+    {"id": "A6", "expect": "Public/working candidates never self-promote to company-confirmed"},
+    {"id": "A7", "expect": "Carrier/regulator external facts differ from provisional supplier terms"},
+    {"id": "A8", "expect": "Unavailable network/provider preserves core judgment"},
+    {"id": "A9", "expect": "Product queries omit unnecessary identities, domains, orders, prices and addresses"},
+    {"id": "A10", "expect": "Fresh reliable cache prevents repeat network; stale history is not preferred"}
+  ],
+  "polarity": [
+    {"id": "P1", "body": "Please assess 400 work vests with taped seams.", "research": false},
+    {"id": "P2", "body": "What is your MOQ for 400 work vests with taped seams?", "research": true},
+    {"id": "P3", "body": "We confirmed the order for 400 work vests. Please issue the PI.", "research": false},
+    {"id": "P4", "body": "Please assess safety vests for Germany; which PPE compliance route is relevant?", "research": true},
+    {"id": "P5", "body": "Please check our attached tech pack before considering the material options.", "research": false}
+  ]
+}

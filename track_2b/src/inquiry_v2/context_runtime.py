@@ -32,8 +32,10 @@ def request_context(payload, understanding):
     return context
 
 
-def load_context(payload, registry, understanding, context_store):
+def load_context(payload, registry, understanding, context_store, *, research_signatures=()):
     context = request_context(payload, understanding)
+    if research_signatures:
+        context["conditions"] = list(dict.fromkeys(context.get("conditions", []) + ["research:" + sig for sig in research_signatures]))
     initial = deepcopy((payload.get("company_context") or {}).get("candidates", []))
     # These fields describe a computed view, never caller-granted authority.
     for candidate in initial:
@@ -95,5 +97,5 @@ def load_context(payload, registry, understanding, context_store):
         status = "read" if states == {"read"} else "partial" if "read" in states else "unread"
         registry["coverage"]["company_context"] = {"status": status, "source_ids": [s["id"] for s in sources]}
     info["pending_confirmations"] = [c["id"] for c in initial if c.get("status") in {"public_reference", "working_value"}
-                                     and c.get("active", True) and c.get("applicable", True)]
+                                     and c.get("role") != "external" and c.get("active", True) and c.get("applicable", True)]
     return initial, info, private_view

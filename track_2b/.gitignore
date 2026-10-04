@@ -33,3 +33,4 @@ _private/
 *.sqlite3-*
 *.db
 *.db-*
+.firecrawl/

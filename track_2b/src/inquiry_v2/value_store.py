@@ -14,12 +14,12 @@ def _value_present(value, quote, key=None):
         recognized = {"min", "max", "value"} & set(value)
         return bool(recognized) and not set(value) - recognized and all(_value_present(value[k], quote, key) for k in recognized)
     if isinstance(value, (int, float)) and not isinstance(value, bool):
-        numbers = [float(n.replace(",", "")) for n in re.findall(r"(?<![\w.-])\d[\d,]*(?:\.\d+)?(?![\w.-])", quote)]
+        numbers = [float(n.replace(",", "")) for n in re.findall(r"(?<![\w.-])\d[\d,]*(?:\.\d+)?(?![\w-]|\.\d)", quote)]
         spelled = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
                    "seven": 7, "eight": 8, "nine": 9, "ten": 10, "single": 1, "a": 1,
                    "an": 1, "un": 1, "uno": 1, "una": 1, "dos": 2, "tres": 3}
         numbers.extend(spelled[t] for t in re.findall(r"\b\w+\b", quote.lower()) if t in spelled)
-        if key == "quantity":
+        if key == "quantity" or isinstance(key, str) and key.startswith("moq."):
             from .understand import QTY_RE, _number
             for match in QTY_RE.finditer(quote):
                 numbers.append(_number(match.group("first")))
