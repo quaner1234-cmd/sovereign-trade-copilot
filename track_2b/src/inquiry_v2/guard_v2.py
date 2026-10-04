@@ -10,7 +10,7 @@ from .understand import (AMOUNT_RE, DATE_RE, PAYMENT_RE, PRODUCT_RE, QTY_RE,
                          _number, _qualifier, canonical_product)
 
 
-NUMBER_RE = re.compile(r"(?<![\w.-])\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\w.-])|(?<![\w.-])\d+(?:\.\d+)?(?![\w.-])")
+NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_,.-])\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![A-Za-z0-9_-]|[.,]\d)|(?<![A-Za-z0-9_,.-])\d+(?:\.\d+)?(?![A-Za-z0-9_-]|[.,]\d)")
 IDENTIFIER_RE = re.compile(r"\b[A-Z]{1,8}[-_]\d[\w-]*\b", re.I)
 POSITIVE_COMPANY_RE = re.compile(
     r"\b(?:we\s+(?:can|will|support|provide|offer|guarantee|confirm|have|manufacture|produce|make|sew)|"

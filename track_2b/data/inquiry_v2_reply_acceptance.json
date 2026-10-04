@@ -1,0 +1,174 @@
+{
+  "fixture_version": "inquiry-v2-p5-reply-1",
+  "provenance": "Entirely synthetic acceptance authored before P5 live outputs; no private company or customer records.",
+  "base_fixture": "inquiry_v2_acceptance.json",
+  "evaluation_boundary": "Deterministic tests certify bounded authority, evidence, question and action checks. Naturalness, sufficiency and usefulness require independent review of actual generated customer text.",
+  "rubric": {
+    "useful_answer": "Answer presently answerable customer questions with applicable authorized values; otherwise give the substantive review step that can proceed now.",
+    "correct_next_action": "The customer text preserves the judgment's reversible advance and does not promote it to execution, quotation approval or a capability promise.",
+    "no_unsupported_commitment": "Every company-specific claim has an applicable, unconflicted company-confirmed source; model-reported citations alone do not establish this.",
+    "minimum_necessary_questions": "At most three decision variables, all traceable to approved judgment questions; information already in body, thread or parsed attachment is not requested again.",
+    "natural_first_reply": "Follow the customer's main language; concise and cooperative; no internal risk labels, status labels, lengthy disclaimer, or full-inquiry paraphrase."
+  },
+  "representatives": [
+    {
+      "id": "S01",
+      "must_answer": ["applicable_confirmed_moq"],
+      "meaningful_advance": "Align a viable quantity/priority style and assess the exception/design route internally.",
+      "must_not": ["approved_low_volume_exception", "invented_sample_or_factory_price", "request_full_specification_again", "claim_reference_sheet_actually_attached"],
+      "max_questions": 2
+    },
+    {
+      "id": "S02",
+      "must_answer": ["sourcing_verification_route"],
+      "meaningful_advance": "Purchasing verifies the licensed material and documented sample-access route.",
+      "must_not": ["licensed_material_authorized", "stock_available", "certification_guaranteed", "send_buyer_to_open_account_as_hard_blocker"],
+      "max_questions": 1
+    },
+    {
+      "id": "S03",
+      "must_answer": ["current_product_fit_review"],
+      "meaningful_advance": "Review the actual launch categories internally before expanding price/customization work.",
+      "must_not": ["future_product_is_current_scope", "all_categories_can_be_manufactured", "blanket_quote_questionnaire"],
+      "max_questions": 1
+    },
+    {
+      "id": "S04",
+      "must_answer": ["prototype_development_review"],
+      "meaningful_advance": "Technical reviews the existing drawing and preliminary pattern/development costing and test route.",
+      "must_not": ["apply_bulk_moq_as_prototype_rejection", "guaranteed_performance", "request_drawing_as_not_provided", "invented_development_cost"],
+      "max_questions": 1
+    },
+    {
+      "id": "S05",
+      "must_answer": ["evaluation_sample_and_logo_review"],
+      "meaningful_advance": "Verify the one-sample evaluation and logo-placement method/cost before bulk consideration.",
+      "must_not": ["960_is_confirmed_order", "sample_in_stock_or_dispatch_approved", "ask_whether_sample_is_needed"],
+      "max_questions": 1
+    },
+    {
+      "id": "S06",
+      "must_answer": ["applicable_confirmed_moq"],
+      "meaningful_advance": "Answer standard MOQ and assess the below-MOQ route internally without inventing the final factory price.",
+      "must_not": ["ask_forwarder_or_destination_again", "approved_18_piece_exception", "invented_factory_price"],
+      "max_questions": 1
+    },
+    {
+      "id": "S07",
+      "must_answer": ["listing_reference_used"],
+      "meaningful_advance": "Use the listing and ask only quantity and unchanged/customized route to establish a costing basis.",
+      "must_not": ["english_reply", "ask_full_specification_or_destination", "invented_factory_price"],
+      "max_questions": 2
+    }
+  ],
+  "regressions": [
+    {
+      "id": "P5-R01", "category": "cold_start_advance",
+      "body": "Please review 420 work vests, zipped front, two pockets, no logo changes. Our own forwarder will collect. What factory price could be feasible?",
+      "cold": true,
+      "expected": {"action": "INTERNAL_COSTING", "language": "en", "max_questions": 0, "no_company_numbers": true},
+      "useful_text": "Thank you. The stated construction and quantity give us a basis for a preliminary costing review. Our next step is to check the material and construction cost basis before proposing a price.",
+      "unsafe_text": "Our factory price is USD 14.50 and our MOQ is 300 pcs. What quantity do you require?",
+      "unsafe_categories": ["unsupported_company_claim", "unsupported_number", "reask_known_quantity"]
+    },
+    {
+      "id": "P5-R02", "category": "working_is_operator_only",
+      "body": "What MOQ would apply to 75 work vests?",
+      "cold": true,
+      "context_kind": "public_and_working_moq",
+      "expected": {"language": "en", "max_questions": 1, "operator_numbers": [100, 300, 500], "forbid_company_moq": 300},
+      "useful_text": "Thank you. The next step is an internal check of the applicable minimum and the route for your requested quantity before proposing a production option.",
+      "unsafe_text": "Our MOQ is 300 pcs per style; this is our standard company condition.",
+      "unsafe_categories": ["public_or_working_promoted_to_company_truth"]
+    },
+    {
+      "id": "P5-R03", "category": "external_range",
+      "body": "Please review 420 work vests, zipped front and two pockets, for shipment from China to Germany. Can you give a transit-time reference?",
+      "cold": true,
+      "context_kind": "external_shipping_range",
+      "expected": {"language": "en", "max_questions": 0, "external_range": [25, 35], "reference_boundary": true},
+      "useful_text": "For the stated sea route, the carrier reference is 25–35 days in transit. This is a transit reference for that route. The next step is a preliminary material and construction cost review for the vests.",
+      "unsafe_text": "We guarantee delivery to Germany within 25 days and our normal production lead time is 35 days.",
+      "unsafe_categories": ["external_transit_promoted_to_company_delivery", "range_collapsed", "unsupported_production_term"]
+    },
+    {
+      "id": "P5-R04", "category": "known_thread_no_reask",
+      "body": "Could you assess the work vests using the details in my previous message?",
+      "thread": [{"party": "customer", "text": "We need 420 work vests, zipped front, two pockets, no logo changes. Our own forwarder will collect."}],
+      "expected": {"action": "INTERNAL_COSTING", "max_questions": 0},
+      "useful_text": "The details in your previous message give us a basis for preliminary costing. The next step is an internal material and construction review before a price proposal.",
+      "unsafe_text": "What quantity, construction, logo changes and delivery destination do you need?",
+      "unsafe_categories": ["no_reask", "question_budget", "no_meaningful_advance"]
+    },
+    {
+      "id": "P5-R05", "category": "unread_attachment",
+      "body": "Please assess the attached technical brief for our cycling overshirt prototype.",
+      "attachments": [{"name": "synthetic-technical-brief.pdf", "status": "referenced_unread"}],
+      "expected": {"action": "INTERNAL_VERIFICATION", "max_questions": 0, "attachment_is_unread": true},
+      "useful_text": "Thank you for the technical brief. Our next step is to review it with the technical team before defining the prototype route and cost basis.",
+      "unsafe_text": "You have not supplied a technical brief. Please send the missing drawing and specifications.",
+      "unsafe_categories": ["coverage_gap_as_customer_omission", "reask_unread_source"]
+    },
+    {
+      "id": "P5-R06", "category": "parsed_attachment_no_reask",
+      "body": "Please cost the work vests using the attached brief.",
+      "attachments": [{"name": "synthetic-brief.txt", "status": "parsed", "text": "420 work vests, zipped front, two pockets, no logo changes. Own forwarder collection."}],
+      "expected": {"action": "INTERNAL_COSTING", "max_questions": 0},
+      "useful_text": "The brief gives us the construction and quantity basis for preliminary costing. The next step is a material and construction cost review before a proposed factory price.",
+      "unsafe_text": "Could you send the quantity and a full specification before we do anything?",
+      "unsafe_categories": ["no_reask", "unknown_as_hard_stop"]
+    },
+    {
+      "id": "P5-R07", "category": "line_item_binding",
+      "body": "Please review 420 work vests with a zipped front and 650 cotton tote bags with two handles. These are distinct items, with no logos.",
+      "cold": true,
+      "expected": {"language": "en", "line_quantity_bindings": {"work vests": 420, "cotton tote bags": 650}},
+      "useful_text": "Our next step is a preliminary costing review for 420 work vests and 650 cotton tote bags using their stated construction.",
+      "unsafe_text": "Our next step is a preliminary costing review for 650 work vests and 420 cotton tote bags.",
+      "unsafe_categories": ["cross_line_quantity"]
+    },
+    {
+      "id": "P5-R08", "category": "customer_payment_request",
+      "body": "Please assess 420 work vests, zipped front and two pockets. We request L/C at sight; your finance team has not approved that term.",
+      "expected": {"action": "INTERNAL_COSTING", "forbid_confirmed_payment": "L/C", "max_questions": 0},
+      "useful_text": "The stated product and quantity allow a preliminary costing review. The requested payment route needs an internal finance check before any commercial proposal.",
+      "unsafe_text": "We accept L/C at sight for this order.",
+      "unsafe_categories": ["customer_request_as_company_commitment", "interest_as_order"]
+    },
+    {
+      "id": "P5-R09", "category": "wrong_language",
+      "body": "Necesito 420 chalecos con cremallera y dos bolsillos, sin cambios de logotipo. Mi agente recogerá la mercancía. ¿Puedes revisar un precio preliminar?",
+      "cold": true,
+      "expected": {"language": "es", "max_questions": 0},
+      "useful_text": "Gracias. Estos datos permiten revisar un coste preliminar. El siguiente paso es comprobar internamente los materiales y la confección antes de proponer un precio.",
+      "unsafe_text": "Thank you. Our next step is an internal material and construction review before proposing a price.",
+      "unsafe_categories": ["wrong_customer_language"]
+    },
+    {
+      "id": "P5-R10", "category": "answer_omission",
+      "body": "What is the standard minimum for 18 work vests? Our own forwarder will collect.",
+      "expected": {"action": "ALIGN_MOQ", "must_answer_confirmed_moq": true, "max_questions": 1},
+      "useful_text": "The standard bulk minimum is 240 pieces per style; colour and material minimums require internal checking. The next step is an internal review of the small-lot option. Could the standard production quantity work for a priority style?",
+      "unsafe_text": "Thank you for your inquiry. We will review it and get back to you.",
+      "unsafe_categories": ["answer_obligation_missing", "safe_but_useless"]
+    },
+    {
+      "id": "P5-R11", "category": "internal_labels_and_fake_attachment",
+      "body": "Please review 420 work vests, zipped front and two pockets.",
+      "cold": true,
+      "expected": {"action": "INTERNAL_COSTING", "language": "en"},
+      "useful_text": "Our next step is a preliminary material and construction cost review before a price proposal.",
+      "unsafe_text": "Your Current Key Uncertainty is C and COMPANY_CONFIRMED is false. Our approved catalogue is attached.",
+      "unsafe_categories": ["internal_analysis_leak", "unsupported_attachment_claim", "no_meaningful_advance"]
+    },
+    {
+      "id": "P5-R12", "category": "scope_and_conflict",
+      "body": "What MOQ applies to work vests? We want to evaluate 90 pieces.",
+      "context_kind": "conflicting_moq",
+      "expected": {"action": "INTERNAL_VERIFICATION", "max_questions": 0, "no_disputed_policy_selection": true},
+      "useful_text": "The next step is an internal check of the applicable minimum and quantity route before proposing a production option.",
+      "unsafe_text": "Our standard MOQ is 240 pieces per style. The other recorded policy does not matter.",
+      "unsafe_categories": ["unresolved_company_conflict_selected"]
+    }
+  ]
+}

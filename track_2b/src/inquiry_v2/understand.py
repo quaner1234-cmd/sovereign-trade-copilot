@@ -13,15 +13,15 @@ PRODUCT_RE = re.compile(
     r"lounge\s+shorts?|technical\s+rainwear|weatherwear|rainwear|"
     r"overshirts?|jackets?|shells?|capes?|vests?|shorts|trousers?|pants|"
     r"shirts?|hoodies?|coats?|bags?|uniforms?|chalecos?|chaquetas?|abrigos?)\b"
-    r"|(?:夹克|外套|马甲|背心|衬衫|雨衣|短裤|长裤|手提袋)", re.I)
+    r"|(?:工装马甲|工装背心|夹克|外套|马甲|背心|衬衫|雨衣|短裤|长裤|手提袋)", re.I)
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
                 "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
                 "single": 1, "a": 1, "an": 1, "un": 1, "una": 1,
                 "uno": 1, "dos": 2, "tres": 3, "一个": 1, "一件": 1}
 NUM = r"(?:\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight|nine|ten|single|un[ao]?|dos|tres)"
-COUNT_NOUN = r"(?:pieces?|pcs|units?|sets?|unidades?|piezas?|prototypes?|samples?|(?:work\s+|safety\s+)?vests?|(?:ski\s+|rain\s+)?jackets?|shells?|overshirts?|capes?|bags?|garments?|chalecos?|chaquetas?|件|套|个)"
+COUNT_NOUN = r"(?:pieces?|pcs|units?|sets?|unidades?|piezas?|prototypes?|samples?|(?:work\s+|safety\s+)?vests?|(?:ski\s+|rain\s+)?jackets?|shells?|overshirts?|capes?|(?:tote\s+)?bags?|garments?|chalecos?|chaquetas?|件|套|个)"
 QTY_RE = re.compile(
-    rf"(?<![\w.-])(?P<qual>about\s+|around\s+|roughly\s+|approximately\s+|approx\.?\s+|at\s+least\s+|at\s+most\s+|minimum\s+|maximum\s+|up\s+to\s+|más\s+de\s+|menos\s+de\s+|约|至少|最多)?"
+    rf"(?<![A-Za-z0-9_.-])(?P<qual>about\s+|around\s+|roughly\s+|approximately\s+|approx\.?\s+|at\s+least\s+|at\s+most\s+|minimum\s+|maximum\s+|up\s+to\s+|más\s+de\s+|menos\s+de\s+|约|至少|最多)?"
     rf"(?P<first>{NUM})(?:(?:\s*[–—-]\s*|\s+(?:to|through|hasta|a)\s+)(?P<second>{NUM}))?"
     rf"(?:\s+(?:insulated|cycling|packable|commuter|custom|blue|red|cotton|lightweight|evaluation|rain)){{0,3}}\s*[-]?\s*"
     rf"(?P<unit>{COUNT_NOUN}|of\s+each|per\s+(?:item|style)|each\b)", re.I)
@@ -34,7 +34,7 @@ SPEC_RE = re.compile(
     r"waterproof|breathable|taped\s+seams?|logo(?:\s+placement)?)\b", re.I)
 FUTURE_RE = re.compile(r"\b(?:in\s+(?:the\s+)?future|later|eventually|next\s+year|future\s+(?:range|collection))\b|未来|以后", re.I)
 DATE_RE = re.compile(r"(?<![\w-])(?:\d{4}-\d{2}-\d{2}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2})(?!\d)", re.I)
-AMOUNT_RE = re.compile(r"(?<!\w)(?:(?:USD|EUR|GBP)\s*|[$€£]\s*)(\d[\d,]*(?:\.\d+)?)(?![\w.])", re.I)
+AMOUNT_RE = re.compile(r"(?<![A-Za-z0-9_])(?:(?:USD|EUR|GBP)\s*|[$€£]\s*)(\d[\d,]*(?:\.\d+)?)(?![A-Za-z0-9_-]|[.,]\d)", re.I)
 
 
 def canonical_product(text):
@@ -43,6 +43,12 @@ def canonical_product(text):
     s = re.sub(r"\b(jacket|overshirt|shell|cape|vest|bag|shirt|hoodie|coat|uniform)s\b", r"\1", s)
     s = re.sub(r"\b(chaleco|chaqueta|abrigo)s\b", r"\1", s)
     s = {"chaleco": "vest", "chaqueta": "jacket", "abrigo": "coat"}.get(s, s)
+    # Existing Chinese garment nouns share the same category identity across
+    # inquiry language and scoped company rules. Source quotes stay literal.
+    s = {"工装马甲": "work vest", "工装背心": "work vest",
+         "马甲": "vest", "背心": "vest", "夹克": "jacket", "外套": "coat",
+         "衬衫": "shirt", "雨衣": "rainwear", "短裤": "shorts",
+         "长裤": "pants", "手提袋": "tote bag"}.get(s, s)
     return s
 
 
@@ -331,7 +337,7 @@ def understand(registry, proposals=None):
                 line["spec_cues"].append({"text": m.group(), "kind": kind, "source_id": source["id"],
                                          "span": list(m.span()), "evidence_id": eid})
         if source.get("kind") in {"customer_email", "thread_message"}:
-            for m in re.finditer(r"[^.!?\n]+[?]|(?:Please|Can\s+you|Could\s+you)[^.!?\n]+[.!]?", body, re.I):
+            for m in re.finditer(r"[^.!?。！？\n]+[?？]|(?:Please|Can\s+you|Could\s+you)[^.!?。！？\n]+[.!。！]?", body, re.I):
                 if m.group().strip():
                     result["customer_asks"].append({"id": "Q"+str(len(result["customer_asks"])+1),
                         "text": m.group().strip(), "source_id": source["id"], "span": list(m.span()), "disposition": "unresolved"})

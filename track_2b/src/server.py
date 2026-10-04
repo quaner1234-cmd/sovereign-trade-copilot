@@ -6,7 +6,7 @@ GET  /samples -> the synthetic demonstration fixtures, for the console's picker
 POST /process {"email": "..."} -> classification + extraction + draft + validation
                  plus, on v4, the validated fact store with per-fact provenance.
 POST /judgment -> source-backed next-action advice; human approval required.
-POST /v2/inquiry -> P0-P2 source coverage, typed lines and reversible inquiry judgment.
+POST /v2/inquiry -> typed inquiry judgment; generate_reply=true requests a first reply.
 GET /v2/company-context -> authenticated private ledger; no public profile.
 POST /v2/company-context/{record,confirm,edit} -> authenticated private changes.
 PIPELINE_VERSION defaults to v4; v3 is a compatibility alias for v4.

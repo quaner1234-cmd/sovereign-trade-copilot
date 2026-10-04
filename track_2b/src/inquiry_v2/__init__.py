@@ -11,8 +11,12 @@ from .context_runtime import load_context
 from .research_executor import execute
 
 
-def analyze(payload, *, context_store=None, research_provider=None):
+def analyze(payload, *, context_store=None, research_provider=None, reply_chat_fn=None):
     registry = build(payload)
+    if type(payload.get("generate_reply", False)) is not bool:
+        raise ValueError("generate_reply must be boolean")
+    if payload.get("generate_reply") and payload.get("candidate_draft") is not None:
+        raise ValueError("generate_reply and candidate_draft are separate input modes")
     if type(payload.get("use_model", False)) is not bool:
         raise ValueError("use_model must be boolean")
     proposals = payload.get("model_proposals")
@@ -87,7 +91,7 @@ def analyze(payload, *, context_store=None, research_provider=None):
     for key, scope in sorted({(c["key"], c["scope"]) for c in store.candidates if c["key"] != "quantity" and c["id"] not in persisted_ids}):
         selections.append({"key": key, "scope": scope, **store.select(key, scope)})
     selections.extend((private_view or {}).get("selections", []))
-    return validate_output({
+    result = {
         "schema_version": SCHEMA_VERSION, "understanding": understanding,
         "assessment": judgment["assessment"], "values": store.candidates,
         "value_selections": selections, "advance": judgment["advance"],
@@ -95,4 +99,9 @@ def analyze(payload, *, context_store=None, research_provider=None):
         "trust": {"coverage": registry["coverage"], "evidence": understanding["evidence"],
                   "guard": guard, "value_issues": store.issues, "model": model,
                   "research": research, "company_context": context_info, "needs_human_approval": True},
-    }, registry)
+    }
+    if payload.get("generate_reply"):
+        from .reply_generation import generate
+        result["reply"] = generate(result, registry, chat_fn=reply_chat_fn)
+        result["trust"]["guard"] = result["reply"]["guard"]
+    return validate_output(result, registry)

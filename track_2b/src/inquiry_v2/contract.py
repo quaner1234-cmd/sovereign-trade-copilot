@@ -1,4 +1,4 @@
-"""P0-P2 inquiry contract. No execution or automatic commercial approval."""
+"""Inquiry judgment and optional human-reviewed first reply. No execution."""
 
 SCHEMA_VERSION = "v2-inquiry-1.0"
 SOURCE_KINDS = {"customer_email", "thread_message", "attachment", "platform_field",
@@ -38,8 +38,16 @@ def validate_output(result, registry=None):
         raise ValueError("human approval cannot be removed")
     if result["reply"].get("language") != result["understanding"].get("customer_language"):
         raise ValueError("reply language must equal customer language")
-    if result["reply"].get("draft") is not None:
-        raise ValueError("P0-P2 does not compose replies")
+    reply = result["reply"]
+    if reply.get("status") not in {"not_composed", "ready_for_review", "withheld", "unavailable"}:
+        raise ValueError("unknown reply status")
+    if reply.get("draft") is not None:
+        if (reply.get("status") != "ready_for_review" or not isinstance(reply["draft"], str)
+                or not reply["draft"].strip() or reply.get("needs_human_approval") is not True
+                or reply.get("guard", {}).get("passed") is not True):
+            raise ValueError("composed reply requires passed gates and human approval")
+    elif reply.get("status") == "ready_for_review":
+        raise ValueError("ready reply requires a draft")
     if registry is not None:
         sources = {s["id"]: s for s in registry["sources"]}
         evidence_ids = set()
