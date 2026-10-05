@@ -270,13 +270,15 @@ class FirstReplyBusinessRegressionTests(unittest.TestCase):
                                         "reason": "Controlled negative semantic verdict for gate testing."}],
                             "speech_acts": [{"text": draft, "kind": "internal_action"}]}
             else:
-                response = {"answers": [], "primary_move": move, "parallel_moves": [], "questions": []}
+                response = {"slots": [{"item_ids": ["primary"], "text": move}]}
             return json.dumps(response), {"mode": "test_semantic_negative"}
         reply = generate(result, registry, chat_fn=chat)
         self.assertEqual(reply["status"], "withheld")
         self.assertIsNone(reply["draft"])
         self.assertTrue(audit_calls)
-        self.assertIn("semantic_grounded_claims", reply["guard"]["issues"])
+        self.assertTrue(reply["guard"]["passed"], reply)
+        self.assertIn("semantic_grounded_claims", reply["advisory_audit"]["issues"])
+        self.assertFalse(reply["advisory_audit"]["can_override_mandatory"])
 
     def test_passing_semantic_verdict_cannot_change_parallel_action_binding(self):
         _, contract = prepared(

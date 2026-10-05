@@ -14,7 +14,7 @@ import llm_client
 
 from .guard_v2 import validate_draft, IDENTIFIER_RE
 from .judgment_v2 import _conflicts, _scope_applies
-from .understand import PRODUCT_RE, QTY_RE, COMMERCIAL_TOPICS, canonical_product, _number
+from .understand import PRODUCT_RE, QTY_RE, COMMERCIAL_TOPICS, canonical_product, canonical_payment, PAYMENT_RE, _number
 from . import reply_semantics
 from .research_planner import COUNTRIES
 from .value_store import ValueStore
@@ -239,117 +239,13 @@ def normalize_proposal(model_output, contract=None):
     return proposal
 
 
-def _topic(key):
-    key = str(key).lower()
-    if key.startswith("moq"):
-        return "moq"
-    if "sample" in key and ("price" in key or "cost" in key):
-        return "sample_cost"
-    if any(part in key for part in ("price", "cost", "amount")):
-        return "price"
-    if "lead_time" in key:
-        return "lead_time"
-    if "payment" in key:
-        return "payment"
-    if "shipping" in key or "transit" in key:
-        return "shipping"
-    return None
-
-
-def build_contract(result, registry):
-    """Freeze permissions from validated facts; do not derive company truth."""
-    understanding, advance = result["understanding"], result["advance"]
-    sources = {s["id"]: s for s in registry["sources"]}
-    validated = ValueStore(registry).extend(result.get("values", [])).candidates
-    lines = [deepcopy(line) for line in understanding.get("lines", []) if line.get("stage") == "current"]
-    current_ids = {line["id"] for line in lines}
-    unresolved_ids = {cid for selection in result.get("value_selections", [])
-                      if selection.get("status") == "unresolved" for cid in selection.get("candidate_ids", [])}
-    confirmed_groups = {}
-    for candidate in validated:
-        if candidate["status"] == "company_confirmed" and candidate.get("active", True) and candidate.get("applicable", True):
-            confirmed_groups.setdefault((candidate["key"], candidate["scope"]), []).append(candidate)
-    for group in confirmed_groups.values():
-        if _conflicts(group):
-            unresolved_ids.update(c["id"] for c in group)
-    facts, operator_only, allowed_values = [], [], []
-    for candidate in validated:
-        if candidate["status"] in {"unknown", "rejected"}:
-            continue
-        source = sources[candidate["source_id"]]
-        proof = candidate["provenance"]
-        fact = {"id": candidate["id"], "key": candidate["key"], "value": deepcopy(candidate.get("value")),
-                "unit": candidate.get("unit"), "scope": candidate["scope"],
-                "scope_spec": deepcopy(candidate.get("scope_spec")), "conditions": deepcopy(candidate.get("conditions", [])),
-                "line_ids": ([candidate["line_id"]] if candidate.get("line_id") else
-                             deepcopy(candidate.get("preferred_line_ids", candidate.get("applicable_line_ids", [])))),
-                "purpose": candidate.get("purpose"), "qualifier": candidate.get("qualifier", "exact"),
-                "approximate": candidate.get("approximate", False), "status": candidate["status"],
-                "source_id": source["id"], "quote": proof["quote"], "span": deepcopy(proof["span"]),
-                "evidence_ids": deepcopy(candidate.get("evidence_ids", [])),
-                "source": {key: source.get("metadata", {}).get(key) for key in ("url", "publisher", "access_date", "source_date")}}
-        if candidate["status"] in {"public_reference", "working_value"} and candidate.get("role") != "external":
-            # A readable listing's product identity is usable as that listing's
-            # reference; supplier commercial conditions are operator-only.
-            listing_fact = source["kind"] == "referenced_url" and candidate["key"] == "product"
-            if not listing_fact:
-                operator_only.append({**fact, "reason": "Company-specific public/working evidence requires Confirm/Edit before a customer claim.",
-                                      "confirmation_point": proof.get("confirmation_point")})
-                continue
-        if not candidate.get("active", True) or not candidate.get("applicable", True) or not candidate.get("preferred", True):
-            continue
-        if candidate["id"] in unresolved_ids or candidate.get("resolution") == "unresolved":
-            operator_only.append({**fact, "reason": "Unresolved candidates require human adjudication; no customer factual selection."})
-            continue
-        if candidate.get("line_id") and candidate["line_id"] not in current_ids:
-            continue
-        if candidate["status"] == "company_confirmed" and not (any(_scope_applies(candidate, line) for line in lines)
-                or not lines and _scope_applies(candidate)):
-            continue
-        role = "company" if candidate["status"] == "company_confirmed" else "customer" if candidate["status"] == "customer_stated" else "system" if candidate["status"] == "system_reported" else "external"
-        facts.append({**fact, "role": role})
-        allowed_values.append(deepcopy(candidate))
-    evidence = []
-    for item in result["trust"].get("evidence", []):
-        source, span = sources.get(item.get("source_id")), item.get("span", [])
-        if source and source["status"] == "read" and len(span) == 2 and source["text"][span[0]:span[1]] == item.get("quote"):
-            evidence.append({**deepcopy(item), "role": "customer" if source["party"] == "customer" else "external"})
-    asks = deepcopy(understanding.get("customer_asks", []))
-    ask_text = " ".join(str(item.get("text", "")) for item in asks)
-    obligations = []
-    for fact in facts:
-        topic = _topic(fact["key"])
-        if fact["role"] not in {"company", "external"} or topic is None:
-            continue
-        explicitly_asked = bool(re.search(_TOPIC_MARKERS[topic], ask_text, re.I))
-        current_barrier = fact["role"] == "company" and topic == "moq" and advance["action"] == "ALIGN_MOQ"
-        if explicitly_asked or current_barrier:
-            obligations.append({"id": "A-" + fact["id"], "key": fact["key"], "candidate_ids": [fact["id"]],
-                                "line_ids": fact["line_ids"], "reason": "Answer the already authorized current condition before questions.",
-                                "value": deepcopy(fact["value"]), "unit": fact["unit"], "conditions": fact["conditions"]})
-    questions = [{"id": "PQ" + str(index + 1), **deepcopy(question)} for index, question in enumerate(advance.get("customer_questions", []))]
-    contract = {"schema_version": CONTRACT_VERSION, "language": understanding["customer_language"],
-                "judgment": deepcopy(advance), "assessment": deepcopy(result["assessment"]),
-                "lines": lines, "customer_asks": asks, "permitted_facts": facts,
-                "permitted_evidence": evidence, "answer_obligations": obligations,
-                "permitted_questions": questions, "operator_only": operator_only,
-                "coverage": deepcopy(registry["coverage"]),
-                "source_context": [{"id": source["id"], "kind": source["kind"],
-                                    "party": source["party"], "status": source["status"],
-                                    "text": source["text"] if source["status"] == "read" else ""}
-                                   for source in registry["sources"] if source["party"] == "customer"],
-                "boundaries": ["Only scoped, resolved company confirmation grants company factual authority.",
-                               "Public/working company-specific values are reviewer-only, even when concrete.",
-                               "A next-move statement authorizes reversible work intent only; no execution or commercial acceptance.",
-                               "Unread attachment/thread coverage is not absence of customer information."],
-                "needs_human_approval": True,
-                "_validation": {"registry": deepcopy(registry), "understanding": deepcopy(understanding), "values": allowed_values}}
-    contract["contract_hash"] = hashlib.sha256(json.dumps(_public_contract(contract), ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-    return contract
+from .reply_contract import build_contract, _topic
 
 
 def _value_in_text(fact, text):
     value = fact.get("value")
+    if "payment" in fact.get("key", ""):
+        return any(canonical_payment(m.group()) == canonical_payment(value) for m in PAYMENT_RE.finditer(text))
     if isinstance(value, (int, float)) and not isinstance(value, bool):
         return value in _count_numbers(text)
     if isinstance(value, dict):
@@ -376,7 +272,7 @@ def _numeric_tokens(text):
     # A terminal sentence period is punctuation; a following decimal digit is
     # part of the number. Identifiers still never grant amount/count authority.
     masked = IDENTIFIER_RE.sub(lambda match: " " * len(match.group()), text)
-    return [_number(match.group()) for match in re.finditer(r"(?<![\w.-])\d[\d,]*(?:\.\d+)?(?![\w-]|\.\d)", masked)]
+    return [_number(match.group()) for match in re.finditer(r"(?<![A-Za-z0-9_.-])\d[\d,]*(?:\.\d+)?(?![A-Za-z0-9_-]|\.\d)", masked)]
 
 
 def _unit_and_basis_present(fact, text):
@@ -517,7 +413,7 @@ def validate_proposal(proposal, contract, registry=None, result=None, semantic_r
     if not isinstance(proposal, dict) or not isinstance(proposal.get("draft"), str) or not proposal["draft"].strip():
         return {"passed": False, "issues": ["empty_or_invalid_reply"], "checked": ["reply_shape"]}
     draft = proposal["draft"].strip()
-    audited = reply_semantics.bound(semantic_review, proposal, contract)
+    audited = False
     if len(draft.split()) > 200 or len(draft) > 1800:
         issues.append("reply_not_minimum")
     arrays = ("claims", "answers", "questions")
@@ -696,30 +592,13 @@ def validate_proposal(proposal, contract, registry=None, result=None, semantic_r
         # product terms and all other claims remain checked in the full draft.
         if next_spans and move.get("action") == action and not _HIGH_RISK.search(move_text) and re.search(_ACTION_WORDS[action], move_text, re.I):
             checked_text = checked_text.replace(move_text, re.sub(r"\bwe\s+(?:will|can)\b|\bwe.ll\b|我们(?:将|会|可以)|我司(?:将|会)|\b(?:podemos|vamos\s+a)\b", "Review intent:", move_text, flags=re.I), 1)
-        legacy = validate_draft(checked_text, validation["understanding"], validation["registry"], validation["values"], semantic_checked=audited)
+        legacy = validate_draft(checked_text, validation["understanding"], validation["registry"], validation["values"], semantic_checked=False)
         issues.extend(legacy["issues"])
     else:
         issues.append("missing_validation_context")
     issues.extend(_source_assertion_issues(draft, contract))
-    if audited:
-        # Replace bounded lexical meaning verdicts only with a fresh review of
-        # these exact texts and permissions. Shape, provenance, values and the
-        # approved primary/parallel bindings remain deterministic requirements.
-        lexical = {"actual_company_claim_lacks_company_authority", "claim_does_not_express_typed_company_fact",
-                   "company_production_claim_type_mismatch", "claim_unit_or_scope_changed", "actual_company_claim_type_mismatch",
-                   "external_reference_lacks_boundary", "external_transport_mode_changed", "external_transport_mode_omitted",
-                   "external_route_scope_changed", "external_named_route_not_in_source", "external_named_route_incomplete",
-                   "question_does_not_match_decision_field", "question_adds_unapproved_decision_field",
-                   "question_reasks_or_adds_quantity", "question_adds_unapproved_customization", "unmapped_customer_question",
-                   "next_move_not_concrete", "next_move_safe_but_uninformative", "next_move_unsupported_execution",
-                   "company_fact_hidden_in_next_move", "actual_quantity_product_binding_mismatch",
-                   "unmapped_reply_content", "wrong_customer_language", "unsupported_customer_provided_material",
-                   "unread_material_stated_as_reviewed", "negated_spec_stated_as_requested"}
-        issues = [issue for issue in issues if issue not in lexical]
-    elif semantic_review is not None:
-        issues.extend(semantic_review.get("issues", []))
-        if not semantic_review.get("issues"):
-            issues.append("semantic_review_failed_or_unbound")
+    if semantic_review is not None and not reply_semantics.bound(semantic_review, proposal, contract):
+        issues.append("semantic_review_failed_or_unbound")
     return {"passed": not issues, "issues": list(dict.fromkeys(issues)),
             "checked": ["exact_draft_mapping", "company_authority", "line_scope", "actual_known_answers", "approved_question_budget", "actual_question_coverage", "judgment_next_move", "language", "coverage_honesty", "legacy_typed_correctness"],
             "limitations": ["Checks use bounded multilingual/product patterns; arbitrary paraphrase entailment and full naturalness require independent human review.",
@@ -727,48 +606,6 @@ def validate_proposal(proposal, contract, registry=None, result=None, semantic_r
 
 
 def generate(result, registry, chat_fn=None):
-    """Compose at most twice using the exact same permissions and judgment."""
-    contract = build_contract(result, registry)
-    public = _public_contract(contract)
-    chat_fn = chat_fn or llm_client.chat
-    attempts = []
-    messages = [{"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": json.dumps(_prompt_contract(public), ensure_ascii=False)}]
-    last_guard = {"passed": False, "issues": ["generation_not_run"], "checked": []}
-    for index in range(MAX_ATTEMPTS):
-        raw, meta = chat_fn(messages, max_tokens=1900, temperature=0.2, json_mode=True)
-        attempt = {"attempt": index + 1, "path": "raw" if index == 0 else "retry", "raw": raw,
-                   "metadata": meta, "contract_hash": contract["contract_hash"]}
-        if raw is None:
-            attempt["guard"] = {"passed": False, "issues": ["model_unavailable"], "checked": []}
-            attempts.append(attempt)
-            last_guard = attempt["guard"]
-            break
-        try:
-            proposal = normalize_proposal(json.loads(raw), contract)
-            semantic = reply_semantics.review(proposal, contract, chat_fn)
-            attempt["semantic_review"] = semantic
-            last_guard = validate_proposal(proposal, contract, semantic_review=semantic)
-        except (ValueError, TypeError, KeyError) as error:
-            proposal = None
-            last_guard = {"passed": False, "issues": ["invalid_reply_json:" + type(error).__name__ + ":" + str(error)[:240]], "checked": ["reply_shape"]}
-        attempt["proposal"], attempt["guard"] = proposal, last_guard
-        attempts.append(attempt)
-        if last_guard["passed"]:
-            return {"language": contract["language"], "draft": proposal["draft"].strip(), "status": "ready_for_review",
-                    "path": attempt["path"], "proposal": proposal, "contract": public, "guard": last_guard,
-                    "attempts": attempts, "prompt_version": PROMPT_VERSION, "needs_human_approval": True}
-        if index + 1 < MAX_ATTEMPTS:
-            messages.extend([{"role": "assistant", "content": raw}, {"role": "user", "content": json.dumps({
-                "instruction": "Regenerate the useful first reply from the SAME contract, correcting only violating expression. The primary advance and required answers/questions remain mandatory. Preserve meaningful content and conditional parallel work. Never pass by deleting the next move, numbers, or useful known answers. No new permissions, facts or questions are granted. Write actual customer sentences, never empty scaffold text.",
-                "guard_issues": last_guard["issues"], "contract_hash": contract["contract_hash"],
-                "semantic_feedback": attempts[-1].get("semantic_review", {}).get("findings", []),
-                "output_counts": {"answers": len(contract["answer_obligations"]),
-                                  "questions": len(contract["permitted_questions"]),
-                                  "parallel_moves_max": len(contract["judgment"]["parallel_reversible_advances"])},
-                "primary_advance": contract["judgment"]["primary_advance"],
-                "parallel_reversible_advances": contract["judgment"]["parallel_reversible_advances"]}, ensure_ascii=False)}])
-    status = "unavailable" if attempts and attempts[-1]["raw"] is None else "withheld"
-    return {"language": contract["language"], "draft": None, "status": status, "path": status,
-            "proposal": None, "contract": public, "guard": last_guard, "attempts": attempts,
-            "prompt_version": PROMPT_VERSION, "needs_human_approval": True}
+    """Production path: immutable plan, local repair, mandatory gates, advisory audit."""
+    from .reply_renderer import generate as render
+    return render(result, registry, chat_fn=chat_fn)

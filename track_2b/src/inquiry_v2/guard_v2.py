@@ -7,7 +7,7 @@ reply usefulness. No retry or fallback text is generated in P0-P2.
 import re
 
 from .understand import (AMOUNT_RE, DATE_RE, PAYMENT_RE, PRODUCT_RE, QTY_RE,
-                         _number, _qualifier, canonical_product)
+                         _number, _qualifier, canonical_product, canonical_payment)
 
 
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_,.-])\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![A-Za-z0-9_-]|[.,]\d)|(?<![A-Za-z0-9_,.-])\d+(?:\.\d+)?(?![A-Za-z0-9_-]|[.,]\d)")
@@ -66,7 +66,7 @@ def _source_valid(candidate, by_id):
             matches.append({"min": a, "max": b} if b is not None else a)
         return candidate.get("value") in matches
     if candidate.get("key") == "payment_terms":
-        return re.sub(r"\s+", "", str(candidate.get("value"))).upper() in {re.sub(r"\s+", "", m.group()).upper() for m in PAYMENT_RE.finditer(quote)}
+        return canonical_payment(candidate.get("value")) in {canonical_payment(m.group()) for m in PAYMENT_RE.finditer(quote)}
     return True
 
 
@@ -86,7 +86,7 @@ def _numeric_tokens(text):
 
 
 def _confirmation_covers(sentence, confirmed):
-    terms = [re.sub(r"\s+", "", m.group()).upper() for m in PAYMENT_RE.finditer(sentence)]
+    terms = [canonical_payment(m.group()) for m in PAYMENT_RE.finditer(sentence)]
     products = [canonical_product(m.group()) for m in PRODUCT_RE.finditer(sentence)]
     numbers = _numeric_tokens(sentence)
     for c in confirmed:
@@ -293,12 +293,12 @@ def validate_draft(draft, understanding, registry, values, *, semantic_checked=F
             cleaned = re.sub(r"\bno\s+podemos\b|(?:我司|我们|本公司)(?:不能|不支持|无法)", "", claim, flags=re.I)
             scope_claim = cleaned if PRODUCT_RE.search(cleaned) else product_prefix + " " + cleaned
             verification = re.search(r"\b(?:check|verify|confirm|review|assess)\b.{0,45}\b(?:whether|if|ability|options|possibility)\b", cleaned, re.I)
-            if not semantic_checked and POSITIVE_COMPANY_RE.search(cleaned) and not verification and not _confirmation_covers(cleaned, _scoped_authority(scope_claim, confirmed, understanding)):
+            if POSITIVE_COMPANY_RE.search(cleaned) and not verification and not _confirmation_covers(cleaned, _scoped_authority(scope_claim, confirmed, understanding)):
                 issues.append("unsupported_company_capability")
     unread = [s for s in registry.get("sources", []) if s.get("kind") == "attachment" and s.get("status") != "read"]
-    if not semantic_checked and unread and re.search(r"(?:not|haven't|hasn't)\s+(?:provided|sent|supplied)|(?:missing|no)\s+(?:drawing|tech\s*pack|attachment|specification)|未提供|没有提供|未给|no\s+(?:has|ha)\s+(?:enviado|proporcionado)", draft, re.I):
+    if unread and re.search(r"(?:not|haven't|hasn't)\s+(?:provided|sent|supplied)|(?:missing|no)\s+(?:drawing|tech\s*pack|attachment|specification)|未提供|没有提供|未给|no\s+(?:has|ha)\s+(?:enviado|proporcionado)", draft, re.I):
         issues.append("coverage_gap_stated_as_not_provided")
-    if not semantic_checked and re.search(r"\b(?:we\s+(?:have\s+)?attached|(?:please\s+)?find\s+attached|I\s+(?:have\s+)?attached)\b|已附上|adjunt[oa]", draft, re.I):
+    if re.search(r"\b(?:we\s+(?:have\s+)?attached|(?:please\s+)?find\s+attached|I\s+(?:have\s+)?attached)\b|已附上|adjunt[oa]", draft, re.I):
         attached = [s for s in registry.get("sources", []) if s.get("party") == "company" and s.get("metadata", {}).get("actually_attached") is True]
         if not attached:
             issues.append("unsupported_attachment_claim")

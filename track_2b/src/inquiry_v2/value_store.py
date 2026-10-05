@@ -14,7 +14,7 @@ def _value_present(value, quote, key=None):
         recognized = {"min", "max", "value"} & set(value)
         return bool(recognized) and not set(value) - recognized and all(_value_present(value[k], quote, key) for k in recognized)
     if isinstance(value, (int, float)) and not isinstance(value, bool):
-        numbers = [float(n.replace(",", "")) for n in re.findall(r"(?<![\w.-])\d[\d,]*(?:\.\d+)?(?![\w-]|\.\d)", quote)]
+        numbers = [float(n.replace(",", "")) for n in re.findall(r"(?<![A-Za-z0-9_.-])\d[\d,]*(?:\.\d+)?(?![A-Za-z0-9_-]|\.\d)", quote)]
         spelled = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
                    "seven": 7, "eight": 8, "nine": 9, "ten": 10, "single": 1, "a": 1,
                    "an": 1, "un": 1, "uno": 1, "una": 1, "dos": 2, "tres": 3}
@@ -27,9 +27,8 @@ def _value_present(value, quote, key=None):
                     numbers.append(_number(match.group("second")))
         return float(value) in numbers
     if key == "payment_terms":
-        from .understand import PAYMENT_RE
-        return re.sub(r"\s+", "", str(value)).casefold() in {
-            re.sub(r"\s+", "", m.group()).casefold() for m in PAYMENT_RE.finditer(quote)}
+        from .understand import PAYMENT_RE, canonical_payment
+        return canonical_payment(value) in {canonical_payment(m.group()) for m in PAYMENT_RE.finditer(quote)}
     return str(value).casefold() in quote.casefold()
 
 

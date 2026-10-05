@@ -290,7 +290,12 @@ def judge(understanding, registry, values, research):
         return candidate.get("status") not in {"rejected", "system_reported"} and candidate.get("semantic_stance") not in {"negated", "prohibited_action"}
 
     bulk_lines = [line for line in lines if _purpose(line) in {"bulk", "bulk_interest", "quote_tier", "unknown"} and _quantity_bounds(line) and plan_quantity(line)]
-    licensed = bool(re.search(r"\b(licensed|licensing|genuine|traceability|authori[sz]ed|branded.material|supplier account)\b", operative_text))
+    from .understand import _cue_polarity, _sentence_bounds
+    licensed = False
+    for mention in re.finditer(r"\b(licensed|licensing|genuine|traceability|authori[sz]ed|branded.material|supplier account)\b", operative_text):
+        left, right = _sentence_bounds(operative_text, *mention.span())
+        if _cue_polarity(operative_text[left:right], mention.start()-left, mention.end()-left) == "positive":
+            licensed = True
     unread_working = [source for source in sources if source.get("status") in {"referenced_unread", "unavailable"}
                       and (source.get("kind") == "attachment" and source.get("party") == "customer"
                            or source.get("kind") == "referenced_url")]
@@ -369,9 +374,9 @@ def judge(understanding, registry, values, research):
                                "Assumptions must be revised if verification changes the route; no firm quote is authorised."],
                 "evidence_ids": _evidence_ids(bulk_lines), "reversible": True,
                 "external_commitment": False, "execution_authorized": False})
-        if not any(cue.get("kind") in {"material_reference", "material_brand", "supplier_reference"} for line in lines for cue in line.get("spec_cues", [])):
+        if not any(cue.get("polarity", "positive") == "positive" and cue.get("kind") in {"material", "material_reference", "material_brand", "supplier_reference"} for line in lines for cue in line.get("spec_cues", [])):
             question("material_reference", primary, "A preferred material reference narrows the supplier route to verify.")
-    elif outside:
+    elif outside and not prototype_lines and not sample_lines:
         action, owner, reason, next_state = "ASSESS_COMPANY_FIT", "business_owner+sales", "Review the current requested categories against confirmed scope; future ambitions do not establish present fit.", "A decision to pursue one current item and its production route"
         uncertainty = ("Current-item fit and justified development effort", "C", "business_owner", "Whether to pursue this category")
         barrier = ("business_owner", "The current items are outside the confirmed category view, so pursuit needs a scope decision.")
@@ -462,6 +467,27 @@ def judge(understanding, registry, values, research):
         uncertainty = ("Performance evidence requiring testing", "D", "technical testing or validated supplier evidence", "Whether a performance claim may later be made; preliminary costing can still proceed")
         check("test_evidence", "Define and verify the required test evidence before any performance claim.", "technical", "Before the dependent performance claim")
 
+    # Preserve already evidenced verification intents as bounded parallel work.
+    # A company-side unknown need not become a customer question or approval.
+    if action not in {'OUT_OF_SCOPE','REQUEST_INFORMATION','RESEARCH'} and not unread_working:
+        parallel_specs=[]
+        if re.search(r'\b(?:check|verify|assess)\b.{0,110}\b(?:dispatch|shipment|shipping)\b',operative_text,re.I):
+            parallel_specs.append(('shipping','Check whether shipment could be supported and which shipping options are available after construction review.',
+                'Subject to construction review and available shipping options; no dispatch is authorised.'))
+        if re.search(r'\b(?:payment|L\s*/\s*C|letter\s+of\s+credit)\b.{0,65}\b(?:check|verify)|\b(?:check|verify|accept)\b.{0,65}\b(?:payment|L\s*/\s*C|letter\s+of\s+credit)\b',operative_text,re.I) and not _confirmed(values,'payment_terms'):
+            parallel_specs.append(('payment','Check internally whether the requested payment method could be accepted.',
+                'Subject to internal payment-term verification; no acceptance is authorised.'))
+        for field,task,condition in parallel_specs:
+            if len(parallel)>=2:break
+            parallel.append({'id':'parallel-'+field,'action':'INTERNAL_VERIFICATION','task':task,'reason':task,
+                'owner':'sales','conditions':[condition],'evidence_ids':evidence_ids,'reversible':True,
+                'external_commitment':False,'execution_authorized':False,'source_preconditions':[]})
+        if outside and action in {'VERIFY_SAMPLE_ROUTE','INTERNAL_COSTING'} and len(parallel)<2:
+            task='Separately assess company fit for the other current product categories before committing resources or capability.'
+            parallel.append({'id':'parallel-fit','action':'ASSESS_COMPANY_FIT','task':task,'reason':task,
+                'owner':'business_owner','line_ids':[l['id'] for l in outside],
+                'conditions':['Subject to company-fit verification; no manufacture capability is confirmed.'],
+                'evidence_ids':_evidence_ids(outside),'reversible':True,'external_commitment':False,'execution_authorized':False,'source_preconditions':[]})
     assessment = {"current_key_uncertainty": {"item": uncertainty[0], "klass": uncertainty[1], "verify_with": uncertainty[2], "changes": uncertainty[3]},
                   "decision_barrier": {"owner": barrier[0], "cannot_decide_because": barrier[1]}, "hard_blocker": None,
                   "company_fit": fit, "buyer_identity": buyer_identity}

@@ -23,7 +23,7 @@ COUNT_NOUN = r"(?:pieces?|pcs|units?|sets?|unidades?|piezas?|prototypes?|samples
 QTY_RE = re.compile(
     rf"(?<![A-Za-z0-9_.-])(?P<qual>about\s+|around\s+|roughly\s+|approximately\s+|approx\.?\s+|at\s+least\s+|at\s+most\s+|minimum\s+|maximum\s+|up\s+to\s+|más\s+de\s+|menos\s+de\s+|约|至少|最多)?"
     rf"(?P<first>{NUM})(?:(?:\s*[–—-]\s*|\s+(?:to|through|hasta|a)\s+)(?P<second>{NUM}))?"
-    rf"(?:\s+(?:insulated|cycling|packable|commuter|custom|blue|red|cotton|lightweight|evaluation|rain)){{0,3}}\s*[-]?\s*"
+    rf"(?:\s+(?!(?:and|or|of|as|the|is|are|with|for)\b)[A-Za-zÀ-ÖØ-öø-ÿ]+){{0,4}}?\s*[-]?\s*"
     rf"(?P<unit>{COUNT_NOUN}|of\s+each|per\s+(?:item|style)|each\b)", re.I)
 PAYMENT_RE = re.compile(r"(?<![\w/])(?:L\s*/\s*C|LC|T\s*/\s*T|TT|letter\s+of\s+credit|bank\s+transfer|PayPal)(?![\w/])", re.I)
 SPEC_RE = re.compile(
@@ -39,7 +39,7 @@ COMMERCIAL_TOPICS = {
     "moq": r"\bMOQ\b|\bminimum\b|mínim[oa]|起订量",
     "price": r"\bpric(?:e|ing)|\bquote|\bcost|precio|cotiz|价格|报价|费用",
     "lead_time": r"lead\s*time|production\s*time|delivery\s*time|plazo|交期",
-    "payment": r"payment|L\s*/\s*C|T\s*/\s*T|PayPal|pago|付款|支付",
+    "payment": r"payment|L\s*/\s*C|letter\s+of\s+credit|T\s*/\s*T|bank\s+transfer|PayPal|pago|付款|支付",
     "shipping": r"shipping|transit|transport|flete|envío|运输|海运",
     "sample_cost": r"sample.*cost|cost.*sample|development.*cost|样品费|开发费",
 }
@@ -68,6 +68,12 @@ def _number(token):
     return int(v) if v.is_integer() else v
 
 
+def canonical_payment(value):
+    compact = re.sub(r"\s+", "", str(value)).casefold()
+    return {"lc": "L/C", "l/c": "L/C", "letterofcredit": "L/C",
+            "tt": "T/T", "t/t": "T/T", "banktransfer": "T/T", "paypal": "PAYPAL"}.get(compact, compact.upper())
+
+
 def _proposal_value_present(value, quote, key=None):
     """The proposed subspan itself must prove the entire value, not one digit."""
     for m in QTY_RE.finditer(quote):
@@ -81,7 +87,7 @@ def _proposal_value_present(value, quote, key=None):
         matches = re.findall(rf"(?<![\w.-]){NUM}(?![\w.-])", quote, re.I)
         return any(_number(token) == value for token in matches)
     if key == "payment_terms":
-        return any(re.sub(r"\s+", "", m.group()).upper() == value
+        return any(canonical_payment(m.group()) == canonical_payment(value)
                    for m in PAYMENT_RE.finditer(quote))
     if key == "product":
         return isinstance(value, str) and value in quote
@@ -126,7 +132,11 @@ def _sentence_bounds(text, start, end):
 def _cue_polarity(context, relative_start, relative_end):
     """Retain negation and missing-assertion state for any specification cue."""
     prefix, suffix = context[:relative_start], context[relative_end:]
-    negative = bool(re.search(r"\b(?:no|not|without|never)\b[^,;.!?]{0,45}$|未|没有|无", prefix, re.I))
+    # Coordinated negative lists retain polarity across commas, but not across
+    # a new affirmative clause. Postposed negation is also local to its cue.
+    local = re.split(r"[;.!?]|\b(?:but|however)\b", prefix, flags=re.I)[-1]
+    negative = bool(re.search(r"\b(?:no|not|without|never)\b[^;.!?]{0,110}$|未|没有|无|不需要|不要求|sin\s+(?:\w+\s+){0,3}$", local, re.I)
+                    or re.match(r"\s+(?:is|are|was|has\s+been)\s+(?:not|never)\b", suffix, re.I))
     if negative and re.search(r"\b(?:stated|specified|provided|known|mentioned)\b|说明|注明|提供", suffix, re.I):
         return "unspecified"
     return "negative" if negative else "positive"
@@ -136,19 +146,32 @@ def _purpose(text, start, end, source, value=None):
     if source.get("kind") == "platform_field":
         return "bulk_interest"
     left, right = _sentence_bounds(text, start, end)
+    # Another item count starts a different ownership context. Do not let a
+    # nearby sample noun assign sample purpose to the next bulk product.
+    previous = [m for m in QTY_RE.finditer(text[left:start])]
+    if previous:
+        left += previous[-1].end()
+        separators = list(re.finditer(r"\b(?:and|but|while|whereas)\b|[;；]", text[left:start], re.I))
+        if separators:
+            left += separators[-1].end()
+    following = QTY_RE.search(text[end:right])
+    if following:
+        right = end + following.start()
     clause = text[left:right].lower()
     local = text[max(left, start-28):min(right, end+35)].lower()
     if re.search(r"prototype|pattern\s+work|development|原型|开发", local):
         return "prototype"
     if value == 1 and re.search(r"fit\s+trial|prototype|pattern\s+work|development|原型|开发", clause):
         return "prototype"
-    if re.search(r"sample|evaluate\s+(?:one|a)|evaluation|试样|样品|muestra", local):
+    if FUTURE_RE.search(clause) and re.search(r"interest|interested|plan|意向", clause):
+        return "future_interest"
+    if (re.search(r"\bsamples?\b|muestras?|试样|样品", clause, re.I) or value == 1 and re.search(r"\bevaluat(?:e|ion)\b", clause, re.I)) and not re.search(r"not\s+(?:a\s+)?sample", clause, re.I):
         return "evaluation_sample"
     if re.search(r"price\s+tier|pricing\s+tier|quote\s+(?:for\s+)?(?:different|each)|volume\s+tier|cost\s+tier", clause):
         return "quote_tier"
     if re.search(r"personal\s+use|for\s+myself|个人|uso\s+personal", clause):
         return "personal_purchase"
-    if re.search(r"interested|considering|planning|looking\s+at|before\s+deciding|form\s+shows|platform\s+form|indicative|not\s+(?:a\s+)?(?:confirmed\s+)?order|意向", clause):
+    if re.search(r"interested|considering|planning|possible\s+bulk|looking\s+at|before\s+deciding|form\s+shows|platform\s+form|indicative|not\s+(?:a\s+)?(?:confirmed\s+)?order|意向", clause):
         return "bulk_interest"
     if re.search(r"pieces?|pcs|units?|unidades?|of\s+each|per\s+(?:item|style)|件|套", text[start:end], re.I):
         return "bulk"
@@ -191,7 +214,8 @@ def _stage(text):
                  r"production\s+(?:has\s+)?started)\b|订单已确认|已付定金|请开.{0,5}发票", re.I)
     for m in pattern.finditer(text):
         prefix = text[max(0, m.start()-40):m.start()]
-        if re.search(r"(?:\bnot(?:\s+yet)?|\bno|\bnever|isn't|hasn't|未|没有|不是)\s+(?:a\s+)?$", prefix, re.I):
+        left, right = _sentence_bounds(text, *m.span())
+        if _cue_polarity(text[left:right], m.start()-left, m.end()-left) != "positive":
             continue
         left, right = _sentence_bounds(text, *m.span())
         sentence = text[left:right]
@@ -258,8 +282,12 @@ def understand(registry, proposals=None):
                 return None
         if not local:
             return None
-        return min(local, key=lambda l: (0 if start < l["span"][1] and end > l["span"][0] else
-                                        min(abs(start-l["span"][1]), abs(end-l["span"][0]))))
+        mentions=[c for c in result['candidates'] if c['key']=='product' and c['source_id']==source['id'] and c['line_id'] in {l['id'] for l in local}]
+        if mentions:
+            nearest=min(mentions,key=lambda c: (0 if start < c['provenance']['span'][1] and end > c['provenance']['span'][0] else
+                min(abs(start-c['provenance']['span'][1]),abs(end-c['provenance']['span'][0]))))
+            return next(l for l in local if l['id']==nearest['line_id'])
+        return min(local, key=lambda l: min(abs(start-l['span'][1]),abs(end-l['span'][0])))
 
     # Product identity is per line, not a single globally conflicting field.
     for source in inbound:
@@ -276,6 +304,13 @@ def understand(registry, proposals=None):
             stage = "future" if FUTURE_RE.search(body[left:right]) else "current"
             product = canonical_product(m.group())
             existing = next((l for l in result["lines"] if l["product_ref"] == product and l["stage"] == stage), None)
+            if existing is None:
+                compatible=[l for l in result['lines'] if l['stage']==stage and
+                    (l['product_ref'].endswith(' '+product) or product.endswith(' '+l['product_ref']))]
+                # A generic later noun/reference can co-refer only when unique.
+                # Two different subtypes still remain distinct line items.
+                if len(compatible)==1 and (len(product.split())==1 or source['kind']=='referenced_url'):
+                    existing=compatible[0]
             if existing is None:
                 existing = {"id": "L"+str(len(result["lines"])+1), "product_ref": product,
                             "source_id": source["id"], "span": list(m.span()), "evidence_ids": [],
@@ -337,7 +372,7 @@ def understand(registry, proposals=None):
                 if line:
                     line["quantity_candidate_ids"].append(c["id"])
         for m in PAYMENT_RE.finditer(body):
-            candidate(source, "payment_terms", re.sub(r"\s+", "", m.group()).upper(), *m.span())
+            candidate(source, "payment_terms", canonical_payment(m.group()), *m.span())
         for m in DATE_RE.finditer(body):
             candidate(source, "date", m.group(), *m.span(), line=closest_line(source, *m.span()))
         for m in AMOUNT_RE.finditer(body):
@@ -356,7 +391,7 @@ def understand(registry, proposals=None):
                                          "context_quote": body[left:right], "context_span": [left, right],
                                          "polarity": _cue_polarity(body[left:right], m.start()-left, m.end()-left)})
         if source.get("kind") in {"customer_email", "thread_message"}:
-            for m in re.finditer(r"[^.!?。！？\n]+[?？]|(?:Please|Can\s+you|Could\s+you)[^.!?。！？\n]+[.!。！]?", body, re.I):
+            for m in re.finditer(r"[^.!?。！？\n]+[?？]|(?:Please|Can\s+you|Could\s+you|请)[^.!?。！？\n]+[.!。！]?", body, re.I):
                 if m.group().strip():
                     result["customer_asks"].append({"id": "Q"+str(len(result["customer_asks"])+1),
                         "text": m.group().strip(), "source_id": source["id"], "span": list(m.span()), "disposition": "unresolved"})

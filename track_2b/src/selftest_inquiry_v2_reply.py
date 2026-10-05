@@ -87,6 +87,14 @@ def chat_sequence(*proposals):
     # observable calls and do not consume a generation proposal sequence.
     return chat, calls
 
+def surface(proposal):
+    """Explicit migration of test fixtures to the new application binding wire."""
+    slots=[{"item_ids":[a["obligation_id"]],"text":a["text"]} for a in proposal.get("answers",[])]
+    move=proposal.get("next_move",proposal.get("move"))
+    slots.append({"item_ids":["primary"],"text":move["text"] if isinstance(move,dict) else move})
+    slots += [{"item_ids":[q["question_id"]],"text":q["text"]} for q in proposal.get("questions",[])]
+    return {"slots":slots,"courtesy":proposal.get("courtesy","")}
+
 class FirstReplyAcceptanceTests(unittest.TestCase):
     def rejected(self, proposal, contract):
         guard = validate_proposal(proposal, contract)
@@ -264,26 +272,28 @@ class FirstReplyAcceptanceTests(unittest.TestCase):
 
     def test_retry_retains_known_answer_and_same_contract(self):
         result, registry, contract = prepared("P5-R10")
-        good, bad = company_moq(contract), company_moq(contract)
-        bad["draft"] += " We guarantee a factory price of USD 1.25."
-        chat, calls = chat_sequence(bad, good)
-        reply = generate(result, registry, chat_fn=chat)
-        self.assertEqual(reply["status"], "ready_for_review", reply)
-        self.assertEqual(reply["path"], "retry")
-        self.assertIn("240", reply["draft"])
-        self.assertEqual(len(reply["attempts"]), 2)
-        self.assertEqual(reply["attempts"][0]["contract_hash"], reply["attempts"][1]["contract_hash"])
-        self.assertEqual(calls[0]["messages"][:2], calls[1]["messages"][:2])
+        good=surface(company_moq(contract)); bad=copy.deepcopy(good)
+        bad["slots"][0]["text"] += " We guarantee a factory price of USD 1.25."
+        repair={"repairs":[{"slot_index":0,"text":good["slots"][0]["text"]}]}
+        chat,calls=chat_sequence(bad,repair)
+        reply=generate(result,registry,chat_fn=chat)
+        self.assertEqual(reply["status"],"ready_for_review",reply)
+        self.assertEqual(reply["path"],"slot_retry")
+        self.assertIn("240",reply["draft"])
+        self.assertEqual(reply["attempts"][0]["plan_hash"],reply["attempts"][1]["plan_hash"])
+        self.assertTrue(reply["attempts"][1]["unchanged_slots_byte_identical"])
         self.assertTrue(reply["needs_human_approval"])
 
     def test_retry_safe_empty_withheld_without_template(self):
-        result, registry, contract = prepared("P5-R10")
-        chat, calls = chat_sequence(envelope("We guarantee USD 1.25. We will review it.", contract), envelope("Thank you. We will review it.", contract))
-        reply = generate(result, registry, chat_fn=chat)
-        self.assertEqual(reply["status"], "withheld")
+        result,registry,contract=prepared("P5-R10")
+        bad=surface(company_moq(contract)); bad["slots"][0]["text"] += " We guarantee USD 1.25."
+        chat,calls=chat_sequence(bad,{"repairs":[{"slot_index":0,"text":"Thank you."}]})
+        reply=generate(result,registry,chat_fn=chat)
+        self.assertEqual(reply["status"],"withheld")
         self.assertIsNone(reply["draft"])
-        self.assertEqual(len(calls), 2)
+        self.assertEqual(len(calls),2)
         self.assertFalse(reply["guard"]["passed"])
+        self.assertFalse(reply["attempts"][1]["required_content_preserved"])
 
     def test_model_unavailable_no_fake_composed_reply(self):
         result, registry, _ = prepared("P5-R01")
@@ -324,7 +334,9 @@ class FirstReplyAcceptanceTests(unittest.TestCase):
             answers=[{"text": clause, "obligation_id": a["id"]} for a in contract["answer_obligations"]])
         guard = validate_proposal(proposal, contract)
         self.assertTrue(guard["passed"], guard)
-        chat, _ = chat_sequence(proposal)
+        wire=surface(proposal)
+        wire["slots"] += [{"item_ids":[q["id"]],"text":"标准起订数量是否可以接受？"} for q in contract["permitted_questions"]]
+        chat, _ = chat_sequence(wire)
         reply = generate(result, registry, chat_fn=chat)
         self.assertEqual(reply["status"], "ready_for_review", reply)
         self.assertIn("240", reply["draft"])
@@ -402,7 +414,7 @@ class FirstReplyAcceptanceTests(unittest.TestCase):
         self.assertEqual(proposal["draft"].count(good["next_move"]["text"]), 1)
         guard = validate_proposal(proposal, contract)
         self.assertTrue(guard["passed"], guard)
-        chat, _ = chat_sequence(slots)
+        chat, _ = chat_sequence(surface(slots))
         reply = generate(result, registry, chat_fn=chat)
         self.assertEqual(reply["status"], "ready_for_review", reply)
         self.assertEqual(reply["draft"], proposal["draft"])
@@ -466,24 +478,18 @@ class FirstReplyAcceptanceTests(unittest.TestCase):
         normalized = normalize_proposal(slots, contract)
         self.assertEqual(normalized["next_move"]["text"], move)
         self.assertEqual(normalized["next_move"]["action"], contract["judgment"]["action"])
-        chat, _ = chat_sequence(slots)
+        chat, _ = chat_sequence(surface(slots))
         reply = generate(result, registry, chat_fn=chat)
         self.assertEqual(reply["status"], "ready_for_review", reply)
 
     def test_schema_error_retry_is_precise_and_contract_stays_fixed(self):
-        result, registry, contract = prepared("P5-R01")
-        move = "Our next step is a preliminary material and construction cost review."
-        bad = {"answers": [{"obligation_id": "invented-policy", "text": "Our MOQ is 300."}],
-               "move": move, "questions": [], "facts": []}
-        good = {"answers": [], "move": move, "questions": [], "facts": []}
-        chat, calls = chat_sequence(bad, good)
-        reply = generate(result, registry, chat_fn=chat)
-        self.assertEqual(reply["status"], "ready_for_review", reply)
-        issues = reply["attempts"][0]["guard"]["issues"]
-        self.assertTrue(any("invented-policy" in issue for issue in issues))
-        feedback = json.loads(calls[1]["messages"][-1]["content"])
-        self.assertEqual(feedback["guard_issues"], issues)
-        self.assertEqual(reply["attempts"][0]["contract_hash"], reply["attempts"][1]["contract_hash"])
+        result,registry,_=prepared("P5-R01")
+        bad={"slots":[{"item_ids":["invented-policy"],"text":"Our MOQ is 300."}]}
+        chat,calls=chat_sequence(bad)
+        reply=generate(result,registry,chat_fn=chat)
+        self.assertEqual(reply["status"],"withheld")
+        self.assertIn("invalid_slot_binding",reply["guard"]["issues"])
+        self.assertEqual(len(calls),1,"Invalid plan bindings cannot trigger renderer replanning")
 
     def test_external_carrier_reference_cannot_be_our_catalogue(self):
         _, _, contract = prepared("P5-R03")

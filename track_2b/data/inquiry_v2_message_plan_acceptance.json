@@ -1,0 +1,410 @@
+{
+  "version": "p52-heldout-1",
+  "all_synthetic": true,
+  "ground_truth": "Frozen same-author evaluation expectations; not independent human approval.",
+  "cases": [
+    {
+      "id": "N01",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "We are considering 735 cotton tote bags, unchanged, for a first collection. No production order is confirmed. Please review a rough cost basis."
+          },
+          "thread": [],
+          "attachments": [],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {},
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "INTERNAL_COSTING",
+        "quantity": [
+          735
+        ],
+        "purpose": [
+          "bulk_interest"
+        ],
+        "questions": []
+      }
+    },
+    {
+      "id": "N02",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "Please assess 285 nylon work vests and 845 polyester tote bags, both unchanged. These are indicative production volumes, not sample quantities. Please review costing."
+          },
+          "thread": [],
+          "attachments": [],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {},
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "INTERNAL_COSTING",
+        "quantity": [
+          285,
+          845
+        ],
+        "purpose": [
+          "bulk_interest",
+          "bulk_interest"
+        ],
+        "questions": []
+      }
+    },
+    {
+      "id": "N03",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "We need 470 rain capes unchanged. No licensed membrane is needed. Please assess rough costing; the performance is not yet tested."
+          },
+          "thread": [],
+          "attachments": [],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {},
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "INTERNAL_COSTING",
+        "quantity": [
+          470
+        ],
+        "purpose": [
+          "bulk"
+        ],
+        "questions": []
+      }
+    },
+    {
+      "id": "N04",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "Please review 64 work vests. The construction and material design are in the attached brief. We have not placed an order."
+          },
+          "thread": [],
+          "attachments": [
+            {
+              "id": "brief",
+              "name": "synthetic-brief.pdf",
+              "status": "referenced_unread"
+            }
+          ],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {},
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "INTERNAL_VERIFICATION",
+        "quantity": [
+          64
+        ],
+        "questions": [],
+        "source_first": true
+      }
+    },
+    {
+      "id": "N05",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "需要680件工装马甲，按原款不修改。正常交期和起订量是多少？请先核算初步成本。"
+          },
+          "thread": [],
+          "attachments": [],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {
+          "sources": [
+            {
+              "id": "policy-scope-source",
+              "kind": "company_context",
+              "party": "company",
+              "status": "read",
+              "text": "The company specialises in lightweight weatherwear and work vests.",
+              "scope": "company.default",
+              "metadata": {
+                "confirmed_by": "Fictional authorized operator",
+                "confirmed_at": "2026-10-04"
+              }
+            },
+            {
+              "id": "policy-minimum-source",
+              "kind": "company_context",
+              "party": "company",
+              "status": "read",
+              "text": "The standard bulk MOQ is 270 pieces per style. Colour and material minimums require review.",
+              "scope": "bulk.per_style",
+              "metadata": {
+                "confirmed_by": "Fictional authorized operator",
+                "confirmed_at": "2026-10-04"
+              }
+            },
+            {
+              "id": "policy-lead-source",
+              "kind": "company_context",
+              "party": "company",
+              "status": "read",
+              "text": "Normal production lead time is 110 days for the standard approved material route.",
+              "scope": "company.default",
+              "metadata": {
+                "confirmed_by": "Fictional authorized operator",
+                "confirmed_at": "2026-10-04"
+              }
+            }
+          ],
+          "candidates": [
+            {
+              "id": "policy-scope",
+              "key": "capability.products",
+              "value": [
+                "lightweight weatherwear",
+                "work vests"
+              ],
+              "unit": null,
+              "status": "company_confirmed",
+              "source_id": "policy-scope-source",
+              "scope": "company.default",
+              "scope_spec": {
+                "global": true
+              },
+              "conditions": [],
+              "provenance": {
+                "span": [
+                  0,
+                  66
+                ],
+                "quote": "The company specialises in lightweight weatherwear and work vests.",
+                "derived_from": [],
+                "confirmed_by": "Fictional authorized operator",
+                "confirmed_at": "2026-10-04"
+              }
+            },
+            {
+              "id": "policy-minimum",
+              "key": "moq.style",
+              "value": 270,
+              "unit": "pcs/style",
+              "status": "company_confirmed",
+              "source_id": "policy-minimum-source",
+              "scope": "bulk.per_style",
+              "scope_spec": {
+                "global": true
+              },
+              "conditions": [
+                "Colour and material minimums require review."
+              ],
+              "provenance": {
+                "span": [
+                  0,
+                  91
+                ],
+                "quote": "The standard bulk MOQ is 270 pieces per style. Colour and material minimums require review.",
+                "derived_from": [],
+                "confirmed_by": "Fictional authorized operator",
+                "confirmed_at": "2026-10-04"
+              }
+            },
+            {
+              "id": "policy-lead",
+              "key": "lead_time.normal",
+              "value": 110,
+              "unit": "days",
+              "status": "company_confirmed",
+              "source_id": "policy-lead-source",
+              "scope": "company.default",
+              "scope_spec": {
+                "global": true
+              },
+              "conditions": [],
+              "provenance": {
+                "span": [
+                  0,
+                  81
+                ],
+                "quote": "Normal production lead time is 110 days for the standard approved material route.",
+                "derived_from": [],
+                "confirmed_by": "Fictional authorized operator",
+                "confirmed_at": "2026-10-04"
+              }
+            }
+          ]
+        },
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "INTERNAL_COSTING",
+        "quantity": [
+          680
+        ],
+        "questions": [],
+        "language": "zh"
+      }
+    },
+    {
+      "id": "N06",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "Please assess 510 work vests unchanged. Can you accept a letter of credit? We have not agreed payment terms. Please review costing."
+          },
+          "thread": [],
+          "attachments": [],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {
+          "sources": [
+            {
+              "id": "synthetic-payment-source",
+              "kind": "company_context",
+              "party": "company",
+              "status": "read",
+              "text": "Our payment terms accept a letter of credit.",
+              "scope": "synthetic.scope",
+              "metadata": {
+                "confirmed_by": "Synthetic company document",
+                "confirmed_at": "2026-10-04"
+              }
+            }
+          ],
+          "candidates": [
+            {
+              "id": "synthetic-payment",
+              "key": "payment_terms",
+              "value": "L/C",
+              "unit": null,
+              "status": "company_confirmed",
+              "source_id": "synthetic-payment-source",
+              "scope": "synthetic.scope",
+              "scope_spec": {
+                "global": true
+              },
+              "conditions": [],
+              "provenance": {
+                "span": [
+                  0,
+                  44
+                ],
+                "quote": "Our payment terms accept a letter of credit.",
+                "derived_from": []
+              }
+            }
+          ]
+        },
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "INTERNAL_COSTING",
+        "quantity": [
+          510
+        ],
+        "questions": []
+      }
+    },
+    {
+      "id": "N07",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "Necesitamos chalecos. ¿Cuál es el siguiente paso para revisar el coste?"
+          },
+          "thread": [],
+          "attachments": [],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {},
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "REQUEST_INFORMATION",
+        "quantity": [
+          null
+        ],
+        "questions": [
+          "quantity",
+          "customization"
+        ],
+        "language": "es"
+      }
+    },
+    {
+      "id": "N08",
+      "request": {
+        "inquiry": {
+          "primary": {
+            "id": "primary",
+            "subject": "Fictional acceptance inquiry",
+            "text": "We plan 920 rain capes with genuine licensed reflective material. Please verify the authorised material route, with conditional rough costing in parallel. No stock or production order is confirmed."
+          },
+          "thread": [],
+          "attachments": [],
+          "platform_fields": [],
+          "referenced_urls": []
+        },
+        "company_context": {},
+        "research": {
+          "enabled": false
+        },
+        "as_of": "2026-10-04"
+      },
+      "expected": {
+        "action": "INTERNAL_VERIFICATION",
+        "quantity": [
+          920
+        ],
+        "questions": [
+          "material_reference"
+        ],
+        "parallel": true
+      }
+    }
+  ]
+}
