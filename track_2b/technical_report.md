@@ -109,8 +109,9 @@ Curated business focus is not validated automatic planning. Source authenticity 
 operator-asserted, not independently verified. The UI does not parse binary
 attachments. Three English cases do not establish multilingual reliability,
 generalization, commercial safety or daily productivity. Capability claims and
-omissions can escape warnings. No timed human study or final independent human
-sendability review has been completed.
+omissions can escape warnings. This final Light Harness has not received a timed
+human study or independent human sendability review; earlier reviewer experiments
+do not establish its usability.
 
 <!-- page -->
 
