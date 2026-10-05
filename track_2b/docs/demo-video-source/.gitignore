@@ -1,0 +1,6 @@
+node_modules/
+.hyperframes/
+.media/
+output/
+screenshots/
+dist/

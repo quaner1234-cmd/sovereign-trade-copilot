@@ -75,6 +75,7 @@ binary attachments. Paste a reviewed extract with its source where appropriate.
 ## Evidence and deliverables
 
 - [Technical report](track_2b/technical_report.md)
+- [Clean-checkout and artifact verification](track_2b/docs/RELEASE-VERIFICATION.md)
 - track_2b/SovereignTradeCopilot_Report.pdf (maximum six pages)
 - track_2b/demo.mp4 (maximum two minutes; local artifact, URL publication pending)
 - [Frozen synthetic inputs, prompts and first outputs](track_2b/data/light-demo/)

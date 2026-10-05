@@ -136,14 +136,18 @@ synthetic cases replay their measured first drafts. Altered input requests a liv
 endpoint. Run python src/selftest_light.py for source/authorization, no-retry,
 cold-start, original preservation and approval-version boundary checks.
 
-Verification targets an actual clean local clone, Docker make run, health/UI,
-three recorded POST /process cases and a separate live Apertus POST /process plus
-version approval. Integration generations are not selected evaluation retries.
-Actual status is recorded in docs/RELEASE-VERIFICATION.md before delivery.
+An actual clean Git clone passed Docker make run, health/UI, three exact recorded
+POST /process cases, changed-input rejection and scripted version approval. A
+separate Docker-contained live Apertus call passed in one attempt: 1,245 tokens,
+5,208 ms, returned v1.5-70B. This proves integration, not better business quality;
+it is not a selected evaluation retry. Six grouped runtime boundary checks passed.
+Browser editing and approval were exercised; privacy checks found no known key
+in application files or logs. See docs/RELEASE-VERIFICATION.md for actual scope.
 
 ## 8. Demo and release interpretation
 The video demonstrates actual recorded first-output review, explicit manual
 correction and scripted approval, not a timed human study. No email is sent.
+The local artifact is a 90-second, 1080p H.264 video with explanatory on-screen copy.
 Publication and the demo-video URL are pending this round's no-push boundary.
 Freeze can cover a reproducible review demo, not an autonomous First Reply service.
 The boundary errors remain visible; architecture expansion is stopped.

@@ -33,14 +33,25 @@ patterns = {
 }
 paths=subprocess.check_output(["git","ls-files","-z"],text=True).split("\0")
 failures=[]
+binary_assets=0
 for path in filter(None,paths):
     if path.endswith((".log",".err",".tmp")) or (os.path.basename(path).startswith(".env") and not path.endswith(".env.example")):
         failures.append((path,"private_or_temporary_file"))
     data=subprocess.check_output(["git","show",":"+path])
-    text=data.decode("utf-8",errors="replace")
-    if any(s in text for s in secrets):failures.append((path,"known_secret_value"))
+    if any(s.encode('utf-8') in data for s in secrets):failures.append((path,"known_secret_value"))
+    try:
+        text=data.decode("utf-8")
+    except UnicodeDecodeError:
+        # Regexes on compressed pixels/video invent random drive paths. Known
+        # credentials are still checked as bytes; asset metadata and visible
+        # content require separate source/visual review, not regex certification.
+        if path.lower().endswith(('.png','.jpg','.jpeg','.mp4','.pdf')):
+            binary_assets+=1
+            continue
+        failures.append((path,"unexpected_non_utf8_source"))
+        continue
     for name,rx in patterns.items():
         if rx.search(text):failures.append((path,name))
 for path,rule in failures:print("FAIL",path,rule)
-print("STAGED SCAN:","FAIL" if failures else "PASS", "files="+str(len(list(filter(None,paths)))),"known_secret_values_checked="+str(len(secrets)))
+print("STAGED SCAN:","FAIL" if failures else "PASS", "files="+str(len(list(filter(None,paths)))),"known_secret_values_checked="+str(len(secrets)),"binary_assets_need_visual_review="+str(binary_assets))
 sys.exit(1 if failures else 0)

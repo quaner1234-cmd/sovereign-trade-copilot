@@ -1,0 +1,85 @@
+<template>
+<style>
+#root{width:100%;height:100%;font-family:system-ui,sans-serif;color:#183329;overflow:hidden}
+.clip{position:absolute;inset:0}
+.review-ground{background:#f7f8f4}
+.review-phase{position:absolute;inset:0}
+.review-brand{position:absolute;left:80px;top:45px;font-size:27px;font-weight:650;letter-spacing:.03em}
+.review-left{position:absolute;left:80px;top:170px;width:555px}
+.review-eyebrow{font-size:26px;color:#315d45;margin:0 0 24px}
+.review-left h2{font-size:52px;line-height:1.12;letter-spacing:-.025em;margin:0 0 34px}
+.review-point{font-size:29px;line-height:1.42;margin:0 0 28px}
+.review-note{font-size:25px;line-height:1.4;color:#4c6358;margin-top:35px}
+.review-window{position:absolute;left:735px;top:195px;width:1105px;height:650px;overflow:hidden;border:2px solid #cbd7ce;border-radius:20px;background:white;box-shadow:0 18px 45px #18332914}
+.review-window img{position:absolute;width:2348.75px;height:1030px;max-width:none;left:-600px;top:-90px}
+.review-window.review-input img{top:-48px}
+.review-window.review-approved img{top:-190px}
+.review-window.review-boundary img{top:-40px}
+.review-full{position:absolute;left:120px;top:230px;right:120px}
+.review-full h1{font-size:84px;line-height:1.12;letter-spacing:-.035em;max-width:1500px;margin:0 0 45px}
+.review-full p{font-size:35px;line-height:1.4;max-width:1400px;margin:0 0 32px}
+.review-pill{display:inline-block;background:#e0ebe2;border-radius:12px;padding:13px 21px;font-size:30px;margin-right:15px}
+.review-warning{color:#815b15}
+.review-footer{position:absolute;left:80px;right:80px;top:955px;font-size:23px;color:#4c6358;line-height:1.35}
+.review-progress-track{position:absolute;left:80px;right:80px;top:922px;height:6px;background:#dce5dd}
+.review-progress{height:6px;background:#315d45;transform-origin:left center}
+</style>
+<div id="root" data-composition-id="01-review" data-start="0" data-duration="90" data-width="1920" data-height="1080">
+<div class="clip review-ground" data-start="0" data-duration="90" data-track-index="0"></div>
+<div class="clip" data-start="0" data-duration="90" data-track-index="1"><div class="review-brand">SOVEREIGN TRADE COPILOT / FIRST REPLY</div></div>
+<section class="clip review-phase" id="review01-phase-1" data-start="0" data-duration="8" data-track-index="2"><div class="review-full">
+<h1 id="review01-title">A traceable first reply.<br>Human approval.</h1>
+<p id="review01-intro">One real Apertus draft. Clear business boundaries.</p>
+<div id="review01-chain"><span class="review-pill">Inquiry + context</span><span class="review-pill">Light brief</span><span class="review-pill">Draft + review</span></div>
+</div></section>
+<section class="clip review-phase" id="review01-phase-2" data-start="8" data-duration="14" data-track-index="2"><div class="review-left">
+<p class="review-eyebrow">01 / SYNTHETIC HERO</p><h2 id="review01-h2">Start with an inquiry.</h2>
+<p class="review-point" id="review01-hp1">Custom cycling jacket + commuter vest.</p>
+<p class="review-point" id="review01-hp2">Authorized conditions: MOQ 240; samples 18 business days; bulk 70–95 calendar days.</p>
+<p class="review-note" id="review01-hp3">Timing remains conditional. Context is fictional and explicitly confirmed.</p>
+</div><div class="review-window review-input"><img data-layout-allow-overflow="true" src="assets/hero-inquiry.png" alt="Actual synthetic inquiry in the conversation interface"></div></section>
+<section class="clip review-phase" id="review01-phase-3" data-start="22" data-duration="16" data-track-index="2"><div class="review-left">
+<p class="review-eyebrow">02 / APERTUS FIRST OUTPUT</p><h2 id="review01-d2">Preserve the first draft.</h2>
+<p class="review-point" id="review01-dp1">Answers MOQ and timing. Asks for priority design and first-run allocation.</p>
+<p class="review-point review-warning" id="review01-dp2">Missing: an explicit conditional costing next move.</p>
+<p class="review-note" id="review01-dp3">Real CSCS Apertus v1.5 70B generation. This screen is marked recorded replay.</p>
+</div><div class="review-window"><img data-layout-allow-overflow="true" src="assets/hero-draft.png" alt="Frozen first Apertus draft, unchanged"></div></section>
+<section class="clip review-phase" id="review01-phase-4" data-start="38" data-duration="13" data-track-index="2"><div class="review-left">
+<p class="review-eyebrow">03 / EDIT + EXPLICIT APPROVAL</p><h2 id="review01-a2">Review the next move.</h2>
+<p class="review-point" id="review01-ap1">Add: review design and material route, then prepare a sample-cost basis and conditional costing.</p>
+<p class="review-point" id="review01-ap2">Approval applies only to this edited version.</p>
+<p class="review-note" id="review01-ap3">Scripted reviewer interaction. No measured time saving. Nothing sent.</p>
+</div><div class="review-window review-approved"><img data-layout-allow-overflow="true" src="assets/hero-approved.png" alt="Actual edited hero draft and scripted approval"></div></section>
+<section class="clip review-phase" id="review01-phase-5" data-start="51" data-duration="15" data-track-index="2"><div class="review-left">
+<p class="review-eyebrow">04 / BOUNDARY: MOQ BASIS</p><h2 id="review01-q2">Retain the failure.</h2>
+<p class="review-point review-warning" id="review01-qp1">240 pcs became “240 pcs per style.” That basis was never authorized.</p>
+<p class="review-point" id="review01-qp2">A located warning helps review. The operator must remove the invented basis.</p>
+<p class="review-note" id="review01-qp3">120 / 360 / 720 are price-comparison tiers, not confirmed orders.</p>
+</div><div class="review-window review-boundary"><img data-layout-allow-overflow="true" src="assets/boundary-quote.png" alt="Actual quotation boundary draft with MOQ basis warning"></div></section>
+<section class="clip review-phase" id="review01-phase-6" data-start="66" data-duration="14" data-track-index="2"><div class="review-left">
+<p class="review-eyebrow">05 / BOUNDARY: UNREAD SOURCE</p><h2 id="review01-p2">A warning is not truth.</h2>
+<p class="review-point" id="review01-pp1">ONE prototype stays known. Referenced notes stay unread.</p>
+<p class="review-point review-warning" id="review01-pp2">The draft invents what the sample fee covers. Operator correction is required.</p>
+<p class="review-note" id="review01-pp3">Fee-scope advisory was added after generation. The original draft is unchanged.</p>
+</div><div class="review-window review-boundary"><img data-layout-allow-overflow="true" src="assets/boundary-prototype.png" alt="Actual prototype boundary draft with unread-source hint and fee-scope warning"></div></section>
+<section class="clip review-phase" id="review01-phase-7" data-start="80" data-duration="10" data-track-index="2"><div class="review-full">
+<h1 id="review01-end">Apertus drafts.<br>You review and approve.</h1>
+<p id="review01-run">make run → paste inquiry → confirm context → draft → edit / approve</p>
+<p id="review01-limits">Warnings support review. They do not certify safety.<br>No automatic sending. Known failures remain visible.</p>
+</div></section>
+<div class="clip" data-start="0" data-duration="90" data-track-index="3"><div class="review-progress-track"><div class="review-progress" id="review01-progress"></div></div><div class="review-footer">Recorded Apertus first-output playback • synthetic data only • editing / approval scripted<br>AI prepares a traceable first reply for human approval.</div></div>
+</div>
+<script>
+window.__timelines=window.__timelines||{};
+const tl=gsap.timeline({paused:true});
+const appear=(selector,at)=>tl.fromTo(selector,{opacity:0,y:14},{opacity:1,y:0,duration:.55,ease:"power2.out"},at);
+appear("#review01-title",0);appear("#review01-intro",2);appear("#review01-chain",4.5);
+const beats=[['h',8,10,14,18],['d',22,24,29,34],['a',38,40,44,48],['q',51,53,57,62],['p',66,68,72,76]];
+for(const [prefix,a,b,c,d] of beats){appear("#review01-"+prefix+"2",a);appear("#review01-"+prefix+"p1",b);appear("#review01-"+prefix+"p2",c);appear("#review01-"+prefix+"p3",d)}
+appear("#review01-end",80);appear("#review01-run",83);appear("#review01-limits",86);
+tl.fromTo(".review-approved img",{y:0},{y:-220,duration:1.2,ease:"power2.inOut"},44);
+tl.fromTo("section[data-start='66'] .review-window img",{y:0},{y:-125,duration:1.2,ease:"power2.inOut"},74);
+tl.fromTo("#review01-progress",{scaleX:0},{scaleX:1,duration:90,ease:"none"},0);
+window.__timelines["01-review"]=tl;
+</script>
+</template>
