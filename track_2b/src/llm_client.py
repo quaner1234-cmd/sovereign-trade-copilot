@@ -24,7 +24,7 @@ def _safe_error(text):
     return str(text).replace(key, "[redacted]") if key else str(text)
 
 
-def chat(messages, max_tokens=400, temperature=0.2, json_mode=False):
+def chat(messages, max_tokens=400, temperature=0.2, json_mode=False, transport_attempts=3):
     """Returns (text, meta). meta: {"mode": "llm"|"demo", "latency_ms", "error"?}"""
     if demo_mode():
         return None, {"mode": "demo", "latency_ms": 0}
@@ -37,7 +37,7 @@ def chat(messages, max_tokens=400, temperature=0.2, json_mode=False):
         headers["Authorization"] = "Bearer " + CONFIG["api_key"]
     t0 = time.time()
     last = None
-    for attempt in range(3):
+    for attempt in range(transport_attempts):
         try:
             req = urllib.request.Request(CONFIG["base_url"].rstrip("/") + "/chat/completions",
                                          data=json.dumps(body).encode(), headers=headers)
@@ -56,6 +56,6 @@ def chat(messages, max_tokens=400, temperature=0.2, json_mode=False):
         except Exception as e:  # network/HTTP errors must not kill the demo path
             last = {"mode": "llm", "error": f"{type(e).__name__}: {_safe_error(e)}",
                     "latency_ms": round((time.time() - t0) * 1000)}
-        if attempt < 2:
+        if attempt < transport_attempts - 1:
             time.sleep(5 * (attempt + 1))
     return None, last

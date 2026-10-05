@@ -2,123 +2,93 @@
 
 **AI prepares a traceable first reply for human approval.**
 
-The v2 First Reply prototype uses an immutable message plan, Apertus surface
-realization, minimal mechanical blockers and advisory warnings. An operator
-reviews, edits or rejects the draft and explicitly approves its current version.
-Approval records do not send email or authorize commercial execution.
+This Track 2B prototype uses a Light Harness: original inquiry, source-backed
+company conditions, explicit source state and a short business focus go to
+Apertus v1.5 70B in one drafting call. Small phrase-located warnings assist a
+person who edits and explicitly approves the current draft. Nothing sends email,
+executes a payment or starts production automatically.
 
-The frozen v4 demonstration remains reproducible at tag `v4-frozen-7276cd2`.
-The default Docker pipeline still runs that demonstration; P6 is a local v2
-review workflow prototype, with its human experiment pending measured results.
+## Run from a clean checkout
 
-For the local reviewer, set `PIPELINE_VERSION=v2`, `BIND_HOST=127.0.0.1`,
-`REVIEW_DB` to a private SQLite path **outside every Git checkout**, and
-`REVIEW_ACTOR` to the human operator. Start `python src/server.py` from
-`track_2b` and open `/ui`. `REVIEW_CASES` optionally points to a private frozen
-study bank; it is not a public demo asset. Real generation requires the existing
-`LLM_*` runtime variables. The reviewer endpoints accept same-origin loopback
-requests only; container reviewer access has not been validated.
+Docker and GNU Make are required. Both commands use the same final entrypoint:
 
-The interface shows the draft, next move, questions, used company claims and
-source state. Evidence and technical traces are expandable. Missing flags do
-not certify a reply: natural-language boundaries still require human review.
-Private company facts, inquiries, study banks and event logs must never be tracked.
+```sh
+make run
+# alternatively: cd track_2b && make run
+```
 
-A separate single-case conversation experiment is available at `/conversation`.
-With `PIPELINE_VERSION=v2` and `UI_MODE=conversation`, `/ui` also opens it.
-It shows a draft and, when relevant, one contextual hint; evidence and traces
-are under “Why this reply?”. Natural-language turns reuse the existing plan,
-renderer and checks. The experiment requires private case/freeze/context paths
-(`CONVERSATION_CASE_PACKET`, `CONVERSATION_FREEZE`, `CONVERSATION_CONTEXT_SEED`)
-and `REVIEW_DB`/`REVIEW_ACTOR`. Gold is excluded from generation. Company edits
-remain scoped to this conversation, in a private copy of the seed ledger.
-UTF-8 text attachments can be read; binary attachments remain explicitly unread.
-This is an interaction experiment, not a validated business-quality release.
+Open http://localhost:8000/ui. Without an endpoint, the app explicitly plays back
+unchanged synthetic Apertus first drafts. It does not claim offline inference.
+Changed inquiries need a real endpoint.
 
-The project root is `track_2b/`. It uses Python's standard library and the
-Apertus model family through a configurable OpenAI-compatible endpoint.
+For live generation, export the official runtime variables before make run:
+
+```sh
+export LLM_NAME=swiss-ai/Apertus-v1.5-70B
+export LLM_BASE_URL=https://your-authorized-endpoint/v1
+# Set LLM_API_KEY through your shell's secure environment mechanism.
+make run
+```
+
+The key is passed by environment name, never written into an image or file.
+An on-premise OpenAI-compatible Apertus server may replace the hosted endpoint.
+Use host.docker.internal when it runs on the Docker host. Model weights, GPU
+provisioning and a local weights server are not included or verified.
+The UI has no CDN, analytics or third-party browser requests.
+
+PORT, IMAGE and CONTAINER can override defaults. make stop stops the named demo.
+Only loopback port access is published by default.
+
+## Demonstration
+
+1. Load the synthetic hero and review/authorize its invented company conditions.
+2. Prepare the first reply. Mode distinguishes live Apertus from recorded playback.
+3. Review the business focus and authorized conditions under **Why this reply?**
+4. Edit the draft. Technical details preserves the raw first draft.
+5. Enter a reviewer name, acknowledge review and approve this version or copy it.
+   Editing invalidates the UI's prior approval. No sending integration exists.
+
+Two boundary examples deliberately retain first-draft failures: an invented
+per-style MOQ basis and unsupported sample-fee inclusions. The hero also needs
+an explicit next-move sentence. Warnings are incomplete review aids, not safety
+certification. See [evaluation and exact required edits](track_2b/docs/LIGHT-DEMO-EVALUATION.md).
+
+## API and checks
+
+- GET /health: pipeline/model/mode; sending disabled.
+- GET /samples: three synthetic input packets, excluding evaluation gold.
+- POST /process: inquiry, optional source-backed company_context,
+  context_authorized, source_state and a text business_brief.
+- POST /approve: existing draft_id, current draft, actor, reviewed: true.
+  Approval binds to that draft version and its input hash.
 
 ```sh
 cd track_2b
-make run
+python src/selftest_light.py
 ```
 
-In the default v4 demonstration, open `http://localhost:8000/ui`, load the synthetic hero and click **Analyze inquiry**.
-Recommended Action, Evidence, Uncertainty and Human Approval lead the workspace;
-model output and metadata are under Technical Details. See the [UI demo guide](track_2b/docs/UI-DEMO.md).
+Drafts/approvals live only in bounded server memory. Restart clears them.
+This is a local prototype, not an authenticated multi-user service.
+Referenced unread material stays explicitly unread; the final UI does not parse
+binary attachments. Paste a reviewed extract with its source where appropriate.
 
-The service listens on port 8000: `GET /health`, `POST /process` with an `email`
-string, `GET /ui` for the operator console (paste an email, see every value with
-its source span, the draft and the guard verdict) and `GET /samples` for the
-demonstration fixtures. `POST /judgment` returns source-backed advice for three
-narrow workflows; see the [Judgment Contract](track_2b/docs/JUDGMENT-CONTRACT.md).
-Set
-`LLM_NAME`, `LLM_BASE_URL`, and `LLM_API_KEY` in the runtime
-environment for real inference. With no endpoint it runs a deterministic
-offline demonstration, which does not use Apertus or measure its quality.
-Never place an actual API key in a tracked file.
+## Evidence and deliverables
 
-See [current status and limitations](track_2b/docs/STATUS.md) for tests,
-benchmark commands, synthetic data scope and remaining submission deliverables.
-Local Docker execution is verified in offline and real CSCS Apertus modes.
+- [Technical report](track_2b/technical_report.md)
+- track_2b/SovereignTradeCopilot_Report.pdf (maximum six pages)
+- track_2b/demo.mp4 (maximum two minutes; local artifact, URL publication pending)
+- [Frozen synthetic inputs, prompts and first outputs](track_2b/data/light-demo/)
+- [Original competition contract](track_2b/README.md)
 
-## Official template contract
+Private mail, company seeds and studies are not public assets. The final image
+copies only the Light Harness and new synthetic data. Older source/experiments
+are historical and excluded from the final image. Frozen v4 remains reproducible
+at v4-frozen-7276cd2.
 
-Template repository for [Hack Apertus](https://hackapertus.ch/) submissions.
-Every project keeps almost the same layout, so organizers and judges find the
-same things in the same place.
+A previous three-case blind review found no directly sendable full-chain draft;
+direct Apertus also failed all three. A native strong-model baseline produced three
+preferred drafts, but contained previous human calibration in its session. This
+was not an isolated causal model comparison. These negative findings motivated a
+smaller drafting boundary and human approval, not a claim of solved safety.
 
-## Select your track
-
-This repository holds one example project per track:
-
-- `track_1a/`
-- `track_1b/`
-- `track_2a/`
-- `track_2b/`
-
-Keep the directory for the track you are competing in **exactly as it is** —
-don't rename it or move its files — and delete the other track directories.
-That directory is your project root. Keep the files and directories as shown
-below.
-
-## The structure
-
-| Path | What it is |
-| --- | --- |
-| `README.md` | The challenge description and submission requirements for your track |
-| `technical_report.md` | The deeper write-up: architecture, evaluation, limitations |
-| `Makefile` | `make run` must spin up your project |
-| `src/` | Your code |
-| `data/` | Datasets — `track_1a`, `track_2a` and `track_2b` only; max. 100 MB |
-| `findings/` | Issue files — `track_1a` only |
-| `docs/` | Diagrams, notes, longer write-ups |
-
-## Run it
-
-Judges run `make run` from the root of the project, on a clean checkout:
-
-```bash
-make run
-```
-
-`make run` is expected to run the project using Docker, since that
-is how the judges will run it.
-- If you used other local open-weight models, include instructions for running the project in your technical report.
-- Use the following environment variables:
-```
-LLM_NAME — name and version of the model
-LLM_BASE_URL — endpoint base URL
-LLM_API_KEY — your API key
-```
-
-## Getting started
-
-1. Click **Use this template** to create your own repository.
-2. Delete the other track directories. Don't rename or restructure yours.
-3. Read its `README.md` and fill in `technical_report.md`.
-4. Make `make run` work from the root of the project, on a clean checkout.
-
-## License
-
-All Hack Apertus projects are open-sourced. Please check our Terms & Conditions for specific licensing details (6. What you build is open source): https://hackapertus.ch/terms-and-conditions
+Code: repository LICENSE. New synthetic data and report: CC-BY-4.0.

@@ -1,0 +1,202 @@
+[
+  {
+    "case_id": "hero",
+    "input_hash": "8639db605e7bbcc95dc0fa73aa5960774b26842503678c5796dab4da9e93edd3",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1",
+    "raw_draft": "We can develop custom cycling jackets and commuter vests based on your designs. Our usual MOQ baseline is 240 pieces, though allocation and minimums are reviewed per project. Sample development typically takes 18 business days after sample fee receipt and material availability confirmation. Production generally requires 70–95 calendar days after deposit and sample approval, subject to material and capacity checks. To move forward, please share the priority design and any available material specs; also let us know the estimated first production quantity and its style/color breakdown.",
+    "draft": "We can develop custom cycling jackets and commuter vests based on your designs. Our usual MOQ baseline is 240 pieces, though allocation and minimums are reviewed per project. Sample development typically takes 18 business days after sample fee receipt and material availability confirmation. Production generally requires 70–95 calendar days after deposit and sample approval, subject to material and capacity checks. To move forward, please share the priority design and any available material specs; also let us know the estimated first production quantity and its style/color breakdown.",
+    "draft_hash": "4187ac1f326faea33692703d70c989559be52114bd5a8b4367ecc269bbd27f37",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "operator_focus": "Answer category fit, the general MOQ baseline, normal sample timing and normal production timing with their applicable conditions. Ask which style to develop first and for any available design material; ask the estimated first production quantity and its style/color allocation. Own designs are already known, so do not ask standard versus custom. Next move: review the priority design and material route, then prepare the sample-cost basis and conditional preliminary costing. Do not offer stock fabrics, certification or a firm project quotation.",
+      "authorized_company_conditions": [
+        {
+          "statement": "We develop and manufacture custom cycling jackets and commuter vests. This confirms the categories only, not any particular material performance or certification.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized capability record, revision 1",
+          "scope": "Cycling jackets and commuter vests"
+        },
+        {
+          "statement": "Our usual MOQ baseline is 240 pcs. No per-style or per-color minimum is authorized; allocation needs project review.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized terms, revision 1",
+          "scope": "Normal bulk inquiries; pcs; general baseline"
+        },
+        {
+          "statement": "Normal sample development takes 18 business days after receipt of the sample fee, once materials are available. The project timeline needs material availability confirmation.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized terms, revision 1",
+          "scope": "Sample development; business days; after fee receipt and material availability"
+        },
+        {
+          "statement": "Normal production takes 70-95 calendar days after both deposit receipt and sample approval, subject to project material availability and capacity confirmation.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized terms, revision 1",
+          "scope": "Bulk production; calendar days; both deposit and sample approval; material/capacity checks"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "thread": "not_supplied",
+        "attachments": []
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers."
+    },
+    "warnings": [],
+    "contextual_hint": "",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 3791,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1093,
+        "total_tokens": 1206,
+        "completion_tokens": 113,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "multimodal_tokens": null
+        }
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "quotation-tiers",
+    "input_hash": "f435435864c22455a616193def5e7165ed8718b2c659565badbc929dbf9f324b",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1",
+    "raw_draft": "Hello,\n\nWe can explore both the lightweight rain jacket and stretch riding trousers. Our usual minimum order quantity is 240 pcs per style; lower-volume runs require internal review and are not guaranteed. Production typically takes 70–95 calendar days after deposit and sample approval, subject to material availability and capacity.\n\nTo provide accurate pricing and confirm the StormMesh-branded fabric and PFAS-free finish, we need to verify material sourcing and performance routes with our suppliers. Could you confirm which product is the priority and whether the StormMesh fabric must be original or if equivalent alternatives are acceptable? Also, do you have a design file or spec sheet to share?",
+    "draft": "Hello,\n\nWe can explore both the lightweight rain jacket and stretch riding trousers. Our usual minimum order quantity is 240 pcs per style; lower-volume runs require internal review and are not guaranteed. Production typically takes 70–95 calendar days after deposit and sample approval, subject to material availability and capacity.\n\nTo provide accurate pricing and confirm the StormMesh-branded fabric and PFAS-free finish, we need to verify material sourcing and performance routes with our suppliers. Could you confirm which product is the priority and whether the StormMesh fabric must be original or if equivalent alternatives are acceptable? Also, do you have a design file or spec sheet to share?",
+    "draft_hash": "060898d26d5c2a7c5c7b078a0ac1935bccbf1c239e53587e68717577a89ac88f",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "operator_focus": "Answer the authorized category fit, normal general MOQ and conditional production time. Primary advance: verify the material/technical route and branded supply access; parallel advance: conditional rough costing at the stated comparison tiers, subject to that verification and internal review of the lower tier. Ask the priority product and available design; ask which specified branded materials must be original and which may use equivalent alternatives. Do not re-ask the performance targets or quote quantities. Do not describe the tiers as an order, promise a MOQ exception, or claim authorized branded sourcing or achieved performance.",
+      "authorized_company_conditions": [
+        {
+          "statement": "We develop rain jackets and stretch riding trousers. Material sourcing, performance and branded-material access must be checked with suppliers before project confirmation.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized capability record, revision 1",
+          "scope": "Rain jackets and stretch riding trousers; category experience only"
+        },
+        {
+          "statement": "Our usual MOQ baseline is 240 pcs. No per-style or per-color minimum is authorized. Lower-volume exceptions require internal review, not automatic acceptance.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized terms, revision 1",
+          "scope": "Normal bulk inquiries; pcs; exceptions require review"
+        },
+        {
+          "statement": "Normal production takes 70-95 calendar days after both deposit receipt and sample approval, subject to project material availability and capacity confirmation.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized terms, revision 1",
+          "scope": "Bulk production; calendar days; both deposit and sample approval; material/capacity checks"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "thread": "not_supplied",
+        "attachments": []
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers."
+    },
+    "warnings": [
+      {
+        "code": "quantity_basis",
+        "phrase": "per style",
+        "start": 129,
+        "end": 138,
+        "reason": "Check this MOQ basis: the authorized company context does not specify a style/color basis."
+      }
+    ],
+    "contextual_hint": "",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 3290,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1068,
+        "total_tokens": 1204,
+        "completion_tokens": 136,
+        "prompt_tokens_details": {
+          "cached_tokens": 480,
+          "multimodal_tokens": null
+        }
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "one-prototype",
+    "input_hash": "b7f64377976b4101a35350ba7a2641ea5b9da9e411825e1da717fb658e5e9b4f",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1",
+    "raw_draft": "We can start by reviewing your shape-notes.pdf to understand the fit direction before any pattern work begins. We will check available fabrics that can meet the 12K waterproof and 8K breathability targets with our suppliers. For a single prototype, we typically require a sample development fee to cover pattern making, grading, and initial sewing; the exact amount depends on complexity and fabric choice. Normal development time is about 18 business days after fee receipt and material availability. We can arrange shipment to Finland once the prototype is ready; freight costs and transit times will be provided upon confirmation. Please confirm if you would like us to proceed with sourcing options and provide the fee estimate once we review the shape notes.",
+    "draft": "We can start by reviewing your shape-notes.pdf to understand the fit direction before any pattern work begins. We will check available fabrics that can meet the 12K waterproof and 8K breathability targets with our suppliers. For a single prototype, we typically require a sample development fee to cover pattern making, grading, and initial sewing; the exact amount depends on complexity and fabric choice. Normal development time is about 18 business days after fee receipt and material availability. We can arrange shipment to Finland once the prototype is ready; freight costs and transit times will be provided upon confirmation. Please confirm if you would like us to proceed with sourcing options and provide the fee estimate once we review the shape notes.",
+    "draft_hash": "bf20ec47aa6dee505cea1df0468c462d84e39379fdd84cb1027ecafc90fe1610",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "operator_focus": "Begin assessing the written specifications now; review the existing shape-notes before making fit assumptions or asking for information they may contain. Verify available material options and relevant test evidence with suppliers. Conditional prototype costing can proceed in parallel, dependent on the route; no firm prototype price is currently authorized. Answer the normal 18-business-day development reference with fee/material conditions and authorized Finland shipment. One prototype is already known: never ask sample quantity or request the already-referenced file again. If useful, ask the expected first production quantity after prototype approval, expressly without making it a prerequisite to current prototype assessment. The 12K/8K figures stay customer targets, and bulk interest stays conditional interest.",
+      "authorized_company_conditions": [
+        {
+          "statement": "We have experience developing custom outerwear patterns and seam-taped outerwear prototypes. This does not confirm current materials achieve the customer's performance targets.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized capability record, revision 1",
+          "scope": "Outerwear prototype experience; current materials/performance not confirmed"
+        },
+        {
+          "statement": "Normal sample development takes 18 business days after receipt of the sample fee, once materials are available. The project timeline needs material availability confirmation.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized terms, revision 1",
+          "scope": "Sample development; business days; after fee receipt and material availability"
+        },
+        {
+          "statement": "We can arrange prototype shipment to Finland. Freight cost and transit time for this project are not confirmed.",
+          "status": "COMPANY_CONFIRMED",
+          "source": "Synthetic operator-authorized shipping record, revision 1",
+          "scope": "Prototype shipment to Finland only; no freight/transit commitment"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "thread": "not_supplied",
+        "attachments": [
+          {
+            "name": "shape-notes.pdf",
+            "state": "referenced_unread",
+            "affects_current_reply": true
+          }
+        ]
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers."
+    },
+    "warnings": [],
+    "contextual_hint": "Review shape-notes.pdf before approving fit/specification claims. It is referenced but unread; the written inquiry can still support preliminary assessment.",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 3259,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1117,
+        "total_tokens": 1263,
+        "completion_tokens": 146,
+        "prompt_tokens_details": {
+          "cached_tokens": 480,
+          "multimodal_tokens": null
+        }
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  }
+]

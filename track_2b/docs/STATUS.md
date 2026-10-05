@@ -1,4 +1,13 @@
-# Development snapshot
+# Current competition demo: Light Harness
+
+The authoritative entrypoint is now `src/light_server.py`, selected by Docker and
+both root/track Makefiles. See the root README and `LIGHT-DEMO-EVALUATION.md`.
+Three new synthetic Apertus first drafts are frozen; hero is development-reviewed
+minor-edit quality, while two boundary drafts retain commercial errors. No claim
+of autonomous safety or measured human productivity is made. Final image excludes
+the older chains. The sections below are historical development evidence.
+
+# Historical development snapshot
 
 The current default HTTP pipeline is v4: semantic classification, deterministic
 candidate spans, model-selected candidate IDs, an evidence store, and guarded

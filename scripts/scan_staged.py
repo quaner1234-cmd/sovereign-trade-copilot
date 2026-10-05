@@ -27,7 +27,8 @@ if os.name == "nt":
 patterns = {
     "token_prefix": re.compile(r"(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})"),
     "private_key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
-    "local_path": re.compile(r"(?<![A-Za-z0-9_])[A-Za-z]:[\\/]|/(?:Users|home)/"),
+    # An inline regex flag such as (?i:\b...) is not a Windows drive path.
+    "local_path": re.compile(r"(?<![A-Za-z0-9_?])[A-Za-z]:[\\/]|/(?:Users|home)/"),
     "private_company_marker": re.compile(r"B[o]wins|Lianch[u]ang|联[创]",re.I),
 }
 paths=subprocess.check_output(["git","ls-files","-z"],text=True).split("\0")
