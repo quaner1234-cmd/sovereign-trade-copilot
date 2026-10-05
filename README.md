@@ -1,9 +1,28 @@
 # Sovereign Trade Copilot
 
-An evidence-first garment trade email prototype for Hack Apertus Track 2B.
-The default v4 pipeline selects exact parser candidate IDs, keeps per-fact
-source spans and business roles, and checks reply drafts for human review.
-It does not send customer emails or make commercial commitments automatically.
+**AI prepares a traceable first reply for human approval.**
+
+The v2 First Reply prototype uses an immutable message plan, Apertus surface
+realization, minimal mechanical blockers and advisory warnings. An operator
+reviews, edits or rejects the draft and explicitly approves its current version.
+Approval records do not send email or authorize commercial execution.
+
+The frozen v4 demonstration remains reproducible at tag `v4-frozen-7276cd2`.
+The default Docker pipeline still runs that demonstration; P6 is a local v2
+review workflow prototype, with its human experiment pending measured results.
+
+For the local reviewer, set `PIPELINE_VERSION=v2`, `BIND_HOST=127.0.0.1`,
+`REVIEW_DB` to a private SQLite path **outside every Git checkout**, and
+`REVIEW_ACTOR` to the human operator. Start `python src/server.py` from
+`track_2b` and open `/ui`. `REVIEW_CASES` optionally points to a private frozen
+study bank; it is not a public demo asset. Real generation requires the existing
+`LLM_*` runtime variables. The reviewer endpoints accept same-origin loopback
+requests only; container reviewer access has not been validated.
+
+The interface shows the draft, next move, questions, used company claims and
+source state. Evidence and technical traces are expandable. Missing flags do
+not certify a reply: natural-language boundaries still require human review.
+Private company facts, inquiries, study banks and event logs must never be tracked.
 
 The project root is `track_2b/`. It uses Python's standard library and the
 Apertus model family through a configurable OpenAI-compatible endpoint.
@@ -13,7 +32,7 @@ cd track_2b
 make run
 ```
 
-Open `http://localhost:8000/ui`, load the synthetic hero and click **Analyze inquiry**.
+In the default v4 demonstration, open `http://localhost:8000/ui`, load the synthetic hero and click **Analyze inquiry**.
 Recommended Action, Evidence, Uncertainty and Human Approval lead the workspace;
 model output and metadata are under Technical Details. See the [UI demo guide](track_2b/docs/UI-DEMO.md).
 

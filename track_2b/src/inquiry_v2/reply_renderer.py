@@ -5,6 +5,7 @@ import llm_client
 from .message_plan import build, customer_view
 from .message_gates import validate
 from . import reply_semantics
+from .review_release import evaluate as release_for_review
 
 PROMPT_VERSION = "immutable-plan-surface-1"
 SYSTEM_PROMPT = """Realize the supplied message plan as a concise natural first
@@ -63,10 +64,15 @@ def render_plan(plan, chat_fn=None):
     public=plan.public()
     attempts=[]
     def response(status,proposal,guard,path,audit=None):
+        policy=release_for_review(plan,proposal,audit=audit) if proposal else guard
+        if proposal:
+            status='ready_for_review' if policy['passed'] else 'withheld'
+            # Keep generation-path telemetry distinct from review disposition.
+            path=attempts[-1]['path'] if policy['passed'] and attempts else 'needs_correction'
         return {'language':public['language'],'draft':text(proposal) if status=='ready_for_review' else None,
             'status':status,'path':path,'proposal':proposal,'message_plan':public,
             'contract':{k:v for k,v in plan.evidence_contract.items() if not k.startswith('_')},
-            'guard':guard,'advisory_audit':audit,'attempts':attempts,'prompt_version':PROMPT_VERSION,
+            'guard':policy,'review_policy':policy,'advisory_audit':audit,'attempts':attempts,'prompt_version':PROMPT_VERSION,
             'needs_human_approval':True,'failure_layer':None if status=='ready_for_review' else
                 'upstream_review' if public['construction_issues'] else 'renderer'}
     if public['construction_issues']:
@@ -87,8 +93,9 @@ def render_plan(plan, chat_fn=None):
         guard={'passed':False,'issues':['invalid_surface_protocol'],'findings':[],'checked':['surface_protocol']}
     attempt.update(proposal=deepcopy(proposal),guard=deepcopy(guard))
     # Upstream and missing/invalid bindings cannot be repaired by language edits.
-    if proposal and not guard['passed']:
-        findings=guard['findings']
+    policy=release_for_review(plan,proposal) if proposal else guard
+    if proposal and not policy['passed']:
+        findings=policy['findings']
         indices=sorted({f['slot'] for f in findings if type(f.get('slot')) is int})
         local=bool(indices) and all(type(f.get('slot')) is int and f['layer']=='renderer'
                                   and f['code']!='invalid_slot_binding' for f in findings)
@@ -123,10 +130,5 @@ def render_plan(plan, chat_fn=None):
     # Audit is deliberately after mandatory validation. It may add concerns,
     # never remove failures or mutate the plan, contract or proposal.
     audit=advisory(plan,deepcopy(proposal),chat_fn) if proposal else None
-    if audit and audit.get('issues'):
-        # An advisory warning has a conservative human-review hold, rather than
-        # claiming that a model warning proves the source/judgment wrong.
-        status='withheld'
-        return response(status,proposal,guard,'advisory_hold',audit)
     return response('ready_for_review' if guard['passed'] else 'withheld',proposal,guard,
                     attempts[-1]['path'] if guard['passed'] else 'withheld',audit)

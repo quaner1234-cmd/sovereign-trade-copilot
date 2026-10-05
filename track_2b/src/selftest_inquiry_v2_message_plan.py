@@ -147,12 +147,13 @@ class MessagePlanTests(unittest.TestCase):
         bad='I have reviewed preliminary construction costing for work vests.'
         self.assertIn('advance_stated_as_completed',validate(self.plan,proposal(self.plan,bad))['issues'])
 
-    def test_courtesy_local_repair_cannot_change_business_slot(self):
+    def test_courtesy_is_advisory_and_does_not_trigger_business_repair(self):
         wire={'slots':[{'item_ids':['primary'],'text':self.good}],'courtesy':'Thank you for sharing these details.'}
         chat,_=chat_sequence(wire,{'repairs':[{'slot_index':-1,'text':'Thank you.'}]})
         result=render_plan(self.plan,chat)
         self.assertEqual(result['status'],'ready_for_review')
-        self.assertTrue(result['attempts'][1]['unchanged_slots_byte_identical'])
+        self.assertEqual(len(result['attempts']),1)
+        self.assertIn('unsupported_courtesy',[w['code'] for w in result['review_policy']['warnings']])
         self.assertEqual(result['proposal']['slots'],wire['slots'])
 
     def test_authorized_payment_synonym_is_condition_not_execution(self):

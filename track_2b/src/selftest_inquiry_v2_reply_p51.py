@@ -252,7 +252,7 @@ class FirstReplyBusinessRegressionTests(unittest.TestCase):
         self.assertFalse(guard["passed"])
         self.assertTrue(any(issue.startswith("missing_known_answer:") for issue in guard["issues"]), guard)
 
-    def test_semantic_failure_withholds_lexically_valid_reply(self):
+    def test_advisory_audit_cannot_withhold_lexically_valid_reply(self):
         request = payload({"body": "Please assess 420 work vests with two pockets."}, cold=True)
         result, registry = analyze(request), build(request)
         contract = build_contract(result, registry)
@@ -273,8 +273,9 @@ class FirstReplyBusinessRegressionTests(unittest.TestCase):
                 response = {"slots": [{"item_ids": ["primary"], "text": move}]}
             return json.dumps(response), {"mode": "test_semantic_negative"}
         reply = generate(result, registry, chat_fn=chat)
-        self.assertEqual(reply["status"], "withheld")
-        self.assertIsNone(reply["draft"])
+        self.assertEqual(reply["status"], "ready_for_review")
+        self.assertEqual(reply["draft"], move)
+        self.assertFalse(reply["review_policy"]["certifies_safety"])
         self.assertTrue(audit_calls)
         self.assertTrue(reply["guard"]["passed"], reply)
         self.assertIn("semantic_grounded_claims", reply["advisory_audit"]["issues"])
