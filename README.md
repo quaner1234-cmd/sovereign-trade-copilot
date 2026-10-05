@@ -24,6 +24,17 @@ source state. Evidence and technical traces are expandable. Missing flags do
 not certify a reply: natural-language boundaries still require human review.
 Private company facts, inquiries, study banks and event logs must never be tracked.
 
+A separate single-case conversation experiment is available at `/conversation`.
+With `PIPELINE_VERSION=v2` and `UI_MODE=conversation`, `/ui` also opens it.
+It shows a draft and, when relevant, one contextual hint; evidence and traces
+are under “Why this reply?”. Natural-language turns reuse the existing plan,
+renderer and checks. The experiment requires private case/freeze/context paths
+(`CONVERSATION_CASE_PACKET`, `CONVERSATION_FREEZE`, `CONVERSATION_CONTEXT_SEED`)
+and `REVIEW_DB`/`REVIEW_ACTOR`. Gold is excluded from generation. Company edits
+remain scoped to this conversation, in a private copy of the seed ledger.
+UTF-8 text attachments can be read; binary attachments remain explicitly unread.
+This is an interaction experiment, not a validated business-quality release.
+
 The project root is `track_2b/`. It uses Python's standard library and the
 Apertus model family through a configurable OpenAI-compatible endpoint.
 

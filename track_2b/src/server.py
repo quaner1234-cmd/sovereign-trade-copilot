@@ -32,6 +32,8 @@ else:
     raise ValueError("PIPELINE_VERSION must be v4, v3 (alias), or v2")
 
 UI_PATH = os.path.join(HERE, "ui", "review.html" if PIPELINE_VERSION == "v2" else "index.html")
+if PIPELINE_VERSION == 'v2' and os.environ.get('UI_MODE') == 'conversation':
+    UI_PATH = os.path.join(HERE, 'ui', 'conversation.html')
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -70,6 +72,22 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path=urlsplit(self.path).path
+        if path.startswith('/conversation/') or path == '/conversation':
+            try:
+                self._review_access()
+                from inquiry_v2.conversation import Conversation
+                service=Conversation()
+                if path == '/conversation':
+                    return self._send_file(os.path.join(HERE,'ui','conversation.html'),'text/html; charset=utf-8')
+                query=parse_qs(urlsplit(self.path).query)
+                if path == '/conversation/case': result=service.case()
+                elif path == '/conversation/state': result=service.view(service._get(query['id'][0]))
+                else: return self._send(404,{'error':'not found'})
+                return self._send(200,result)
+            except PrivateContextError as error:
+                return self._send(error.status,{'error':str(error)})
+            except (ValueError,KeyError,OSError,sqlite3.Error):
+                return self._send(503,{'error':'private conversation configuration or record unavailable'})
         if path.startswith('/review/'):
             try:
                 service=self._review_access()
@@ -88,7 +106,7 @@ class Handler(BaseHTTPRequestHandler):
                              "mode": "demo" if llm_client.demo_mode() else "llm",
                              "pipeline": PIPELINE_VERSION,
                              "model": llm_client.CONFIG["model"] or "(demo)"})
-        elif self.path in ("/ui", "/ui/"):
+        elif path in ("/ui", "/ui/"):
             self._send_file(UI_PATH, "text/html; charset=utf-8")
         elif self.path == "/samples":
             try:
@@ -109,7 +127,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         private_actions = {"/v2/company-context/" + action: action for action in ("record", "confirm", "edit")}
         review_actions={'/review/'+v:v for v in ('start','next','act','regenerate','live','finish')}
-        if self.path not in ("/process", "/judgment", "/v2/inquiry") and self.path not in private_actions and self.path not in review_actions:
+        conversation_actions={'/conversation/'+v:v for v in ('start','turn')}
+        if self.path not in ("/process", "/judgment", "/v2/inquiry") and self.path not in private_actions and self.path not in review_actions and self.path not in conversation_actions:
             return self._send(404, {"error": "not found"})
         try:
             n = int(self.headers.get("Content-Length", 0))
@@ -120,6 +139,22 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(400, {"error": "invalid json"})
         if not isinstance(body, dict):
             return self._send(400, {"error": "JSON object required"})
+        if self.path in conversation_actions:
+            from inquiry_v2.reviewer import ReviewConflict
+            try:
+                if not self.headers.get('Content-Type','').startswith('application/json'):
+                    return self._send(415,{'error':'application/json required'})
+                self._review_access()
+                from inquiry_v2.conversation import Conversation
+                return self._send(200,getattr(Conversation(),conversation_actions[self.path])(body))
+            except PrivateContextError as error:
+                return self._send(error.status,{'error':str(error)})
+            except ReviewConflict as error:
+                return self._send(409,{'error':str(error)})
+            except (ValueError,KeyError) as error:
+                return self._send(400,{'error':str(error) if isinstance(error,ValueError) else 'invalid conversation request'})
+            except (OSError,sqlite3.Error):
+                return self._send(503,{'error':'private conversation storage unavailable'})
         if self.path in review_actions:
             from inquiry_v2.reviewer import ReviewConflict
             try:
