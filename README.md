@@ -41,6 +41,14 @@ Only loopback port access is published by default.
 
 ## Demonstration
 
+For a new inquiry in live mode, paste it and click **Prepare first reply** directly.
+Company context is optional; confirmed company statements require explicit
+authorization. Demo examples are optional and collapsed by default. Choosing one
+automatically fills the inquiry and fictional conditions, with no extra load step.
+Editing its inquiry clears the example's fictional context before a new request.
+Empty input, confirmation and connection failures are shown beside the button;
+generation shows a busy state and preserves the previous draft on failure.
+
 1. Load the synthetic hero and review/authorize its invented company conditions.
 2. Prepare the first reply. Mode distinguishes live Apertus from recorded playback.
 3. Review the business focus and authorized conditions under **Why this reply?**

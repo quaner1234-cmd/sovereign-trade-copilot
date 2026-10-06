@@ -3,36 +3,95 @@
 <title>First Reply · Sovereign Trade Copilot</title>
 <style>
 :root{color-scheme:light;--ink:#183329;--muted:#647369;--paper:#f7f8f4;--line:#dce3d9;--accent:#315d45}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,sans-serif}header{max-width:980px;margin:32px auto 18px;padding:0 24px;display:flex;justify-content:space-between;align-items:center}h1{font-size:23px;letter-spacing:-.5px;margin:0}header p{margin:3px 0;color:var(--muted);font-size:14px}.pill{border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;background:white}main{max-width:900px;margin:auto;padding:0 24px 60px}.intro{font-size:34px;line-height:1.2;letter-spacing:-1px;margin:24px 0 8px}.subtitle{color:var(--muted);margin-bottom:24px}label{display:block;font-weight:600;font-size:14px;margin:12px 0 5px}textarea,input{width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;color:var(--ink)}textarea{resize:vertical}#inquiry{min-height:170px}#draft{min-height:310px;line-height:1.7;border:0;padding:0;border-radius:0}button,select{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:10px 15px;background:white;color:var(--ink);cursor:pointer}button.primary{background:var(--accent);color:white;border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:25px;margin-top:20px}.card h2{font-size:18px;margin:0 0 14px}.meta{color:var(--muted);font-size:13px}.hint{background:#edf3e7;border-radius:12px;padding:14px 17px;margin-top:16px;font-size:14px}.warning{border-left:3px solid #b27b35;background:#fff8ed;padding:12px 14px;margin:12px 0;font-size:14px}.warning q{font-weight:700}.hidden{display:none!important}details{margin:16px 0;font-size:14px}summary{cursor:pointer;color:var(--accent);font-weight:600}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 ui-monospace,monospace;max-height:350px;overflow:auto;background:var(--paper);padding:14px;border-radius:10px}#auth,#reviewed{width:auto;margin-right:6px}#approve-panel{border-top:1px solid var(--line);padding-top:14px;margin-top:20px}#actor{max-width:240px;padding:9px}#notice{font-size:14px;margin:14px 0}.result-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}.result-heading p{margin:0}.approved{color:var(--accent);font-weight:600}@media(max-width:600px){header{display:block}.intro{font-size:27px}.card{padding:18px}main{padding:0 16px}.pill{display:inline-block;margin-top:8px}}
+#notice:not(:empty){padding:12px 15px;border:1px solid var(--line);border-radius:10px;background:#edf3e7}#notice.notice-error{background:#fff8ed;border-color:#b27b35;color:#714c19}
 </style></head><body>
+<noscript><p class="warning">This page needs JavaScript for drafting. Open this address in a browser with JavaScript enabled.</p></noscript>
 <header><div><h1>Sovereign Trade Copilot</h1><p>AI prepares a traceable first reply for human approval.</p></div><span class="pill" id="mode">Checking mode…</span></header>
 <main><h2 class="intro">A useful first reply.<br>With you in control.</h2><p class="subtitle">Paste an inquiry. Review what you can reliably answer, then approve the wording yourself.</p>
-<div class="row"><select id="sample" aria-label="Synthetic example"><option value="">Choose a synthetic example</option></select><button id="load">Load example</button></div>
 <label for="inquiry">Customer inquiry</label><textarea id="inquiry" placeholder="Paste the inquiry here…"></textarea>
+<details id="examples"><summary>Try a demo example (optional)</summary><p class="meta">Choose an example to fill the inquiry automatically. Its company conditions are fictional and require your confirmation. You can also paste your own inquiry directly.</p><select id="sample" aria-label="Synthetic example"><option value="">Choose a synthetic example</option></select></details>
 <details id="context-panel"><summary>Company context, source state &amp; optional business focus</summary><p class="meta">No private company context is preloaded. These examples use invented company conditions. For a new inquiry, enter source-backed conditions or leave context empty for cold start.</p>
 <div id="context-summary"></div><label><input type="checkbox" id="auth">I authorize these confirmed company statements for this inquiry, including their scope and conditions.</label><details><summary>Edit source packet (advanced)</summary><label for="context">Company statements with source and scope (JSON)</label><textarea id="context" rows="7">[]</textarea>
 <label for="sources">Source state (JSON; unread material stays unread)</label><textarea id="sources" rows="3">{"body":"read","thread":"not_supplied","attachments":[]}</textarea>
 </details><label for="brief">Optional business focus</label><textarea id="brief" rows="4" placeholder="A short direction or correction; no full form or message plan required."></textarea></details>
-<div class="row"><button class="primary" id="generate">Prepare first reply</button><span class="meta">One Apertus draft · no automatic sending</span></div><div id="notice" role="status" aria-live="polite"></div>
+<div class="row"><button class="primary" id="generate">Prepare first reply</button><span class="meta" id="generation-note">One Apertus draft · no automatic sending</span></div><div id="notice" role="status" aria-live="polite"></div>
 <section id="result" class="card hidden"><div class="result-heading"><h2>Recommended first reply</h2><p class="meta" id="result-mode"></p></div><textarea id="draft" aria-label="First reply draft" readonly></textarea>
 <div id="hint" class="hint hidden"></div><div id="warnings"></div><div class="row"><button id="edit">Edit draft</button><button id="copy">Copy draft</button></div>
 <details id="why"><summary>Why this reply?</summary><p class="meta">The brief guides drafting; warnings are incomplete review aids. No automated safe-to-send certification is provided.</p><pre id="brief-view"></pre><details><summary>Technical details &amp; preserved first draft</summary><pre id="technical"></pre></details></details>
 <div id="approve-panel"><label for="actor">Reviewer</label><input id="actor" placeholder="Your name" autocomplete="name"><label><input type="checkbox" id="reviewed">I reviewed the answers, next step, quantities, company conditions and unread sources.</label><button id="approve" class="primary" disabled>Approve this version</button><p class="meta" id="approval-state">Approval records this version only. Nothing is sent.</p></div>
 </section><p class="meta">Local prototype · drafts and approvals are held in memory only · restart clears the session</p></main>
 <script>
-let samples=[], current=null, busy=false;
+let samples=[], current=null, busy=false, exampleLoaded=false;
 const $=id=>document.getElementById(id);
-function notice(text){$('notice').textContent=text;}
-async function request(path,body){const r=await fetch(path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const v=await r.json();if(!r.ok)throw Error(v.error||'Request failed');return v;}
+function notice(text,kind='info',reveal=false){$('notice').textContent=text;$('notice').classList.toggle('notice-error',kind==='error');$('notice').setAttribute('role',kind==='error'?'alert':'status');if(reveal)$('notice').scrollIntoView({block:'nearest'});}
+async function request(path,body){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),body?75000:10000);
+  try{
+    const options=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{};
+    const r=await fetch(path,{...options,signal:controller.signal});
+    let v;try{v=await r.json();}catch{throw Error('The service returned an unreadable response. Your input and previous draft are kept.');}
+    if(!r.ok)throw Error(v.error||'The request failed. Your input is kept.');
+    return v;
+  }catch(e){
+    if(e.name==='AbortError')throw Error('The service did not respond in time. Your input and previous draft are kept; no automatic retry was made.');
+    if(e instanceof TypeError)throw Error('Could not reach the service. Your input and previous draft are kept.');
+    throw e;
+  }finally{clearTimeout(timer);}
+}
 function approvalButton(){$('approve').disabled=!current||busy||!$('reviewed').checked||!$('actor').value.trim();}
 function invalidate(){if(current){$('reviewed').checked=false;$('approval-state').textContent='This version needs review. Previous approval does not apply to edits.';approvalButton();}}
 function resizeDraft(){$('draft').style.height='auto';$('draft').style.height=Math.max(310,$('draft').scrollHeight+12)+'px';}
 function show(result){current=result;$('result').classList.remove('hidden');$('draft').value=result.raw_draft;$('draft').readOnly=true;resizeDraft();$('edit').textContent='Edit draft';$('hint').textContent=result.contextual_hint||'';$('hint').classList.toggle('hidden',!result.contextual_hint);$('warnings').replaceChildren();for(const w of result.warnings||[]){const box=document.createElement('div');box.className='warning';const q=document.createElement('q');q.textContent=w.phrase;box.append(q,document.createTextNode(' — '+w.reason));$('warnings').append(box);}$('brief-view').textContent=JSON.stringify(result.brief,null,2);$('technical').textContent=JSON.stringify({meta:result.meta,input_hash:result.input_hash,raw_first_draft:result.raw_draft},null,2);$('result-mode').textContent=result.meta.mode==='recorded_replay'?'Recorded first draft · no new inference':'Live Apertus · first draft';invalidate();}
-$('load').onclick=()=>{const c=samples.find(x=>x.id===$('sample').value);if(!c)return;$('inquiry').value=c.inquiry;$('context-summary').replaceChildren();for(const f of c.company_context){const p=document.createElement('p');p.className='meta';p.textContent=f.statement;$('context-summary').append(p);}$('context').value=JSON.stringify(c.company_context,null,2);$('sources').value=JSON.stringify(c.source_state,null,2);$('brief').value=c.business_brief;$('auth').checked=false;current=null;$('result').classList.add('hidden');$('context-panel').open=true;notice('Synthetic example loaded. Review the context and explicitly authorize its use.');};
-$('generate').onclick=async()=>{if(busy)return;busy=true;$('generate').disabled=true;approvalButton();notice('Preparing one draft… Your previous draft will remain if generation fails.');try{const body={inquiry:$('inquiry').value,company_context:JSON.parse($('context').value),source_state:JSON.parse($('sources').value),business_brief:$('brief').value,context_authorized:$('auth').checked};const r=await request('/process',body);if(r.status==='draft_for_human_review'){show(r);notice(r.meta.mode==='recorded_replay'?'Showing the unchanged synthetic Apertus first draft. Configure an endpoint for new generation.':'First draft preserved. Review company conditions and next step before approval.');$('context-panel').open=false;}else notice(r.confirmation||r.error||'No draft generated.');}catch(e){notice(e.message);}finally{busy=false;$('generate').disabled=false;approvalButton();}};
+$('sample').onchange=()=>{
+  const c=samples.find(x=>x.id===$('sample').value);if(!c)return;
+  $('inquiry').value=c.inquiry;$('context-summary').replaceChildren();
+  for(const f of c.company_context){const p=document.createElement('p');p.className='meta';p.textContent=f.statement;$('context-summary').append(p);}
+  $('context').value=JSON.stringify(c.company_context,null,2);$('sources').value=JSON.stringify(c.source_state,null,2);$('brief').value=c.business_brief;
+  exampleLoaded=true;$('auth').checked=false;current=null;approvalButton();$('result').classList.add('hidden');$('context-panel').open=true;
+  notice('Example filled in. Review the fictional company conditions and tick the authorization box before preparing it.');
+};
+$('generate').onclick=async()=>{
+  if(busy)return;
+  if(!$('inquiry').value.trim()){notice('Paste a customer inquiry first. Demo examples are optional.','error',true);$('inquiry').focus();return;}
+  let facts,sources;
+  try{facts=JSON.parse($('context').value);sources=JSON.parse($('sources').value);}
+  catch{notice('Check the JSON in Company context / Edit source packet. Your inquiry is kept.','error',true);$('context-panel').open=true;return;}
+  if(Array.isArray(facts)&&facts.some(f=>f&&f.status==='COMPANY_CONFIRMED')&&!$('auth').checked){
+    $('context-panel').open=true;notice('Review the company statements and tick “I authorize…” before using them. No draft request has been sent.','error',true);$('auth').focus();return;
+  }
+  busy=true;$('generate').disabled=true;$('generate').textContent='Preparing…';$('generate').setAttribute('aria-busy','true');approvalButton();
+  notice('Preparing one draft… Your previous draft will remain if generation fails.','info',true);
+  try{
+    const body={inquiry:$('inquiry').value,company_context:facts,source_state:sources,business_brief:$('brief').value,context_authorized:$('auth').checked};
+    const r=await request('/process',body);
+    if(r.status==='draft_for_human_review'){
+      show(r);notice(r.meta.mode==='recorded_replay'?'Showing the unchanged synthetic Apertus first draft. New inquiries require a live endpoint.':'First Apertus draft ready. Review the company conditions and next step before approval.');
+      $('context-panel').open=false;$('result').scrollIntoView({block:'start'});
+    }else{
+      if(r.status==='confirmation_required')$('context-panel').open=true;
+      notice(r.status==='endpoint_required'?'This service is in recorded-demo mode. New inquiries need a live Apertus endpoint. Your input is kept.':r.confirmation||r.error||'No draft generated. Your previous draft is kept.','error',true);
+    }
+  }catch(e){notice(e.message,'error',true);}
+  finally{busy=false;$('generate').disabled=false;$('generate').textContent='Prepare first reply';$('generate').removeAttribute('aria-busy');approvalButton();}
+};
 $('edit').onclick=()=>{$('draft').readOnly=false;$('draft').focus();$('edit').textContent='Editing';invalidate();};$('draft').oninput=()=>{resizeDraft();invalidate();};$('reviewed').onchange=approvalButton;$('actor').oninput=approvalButton;
-for(const id of ['inquiry','context','sources','brief'])$(id).addEventListener('input',()=>{if(current){current=null;$('approve').disabled=true;notice('Inputs changed. Prepare a new draft before approving; the prior draft remains visible.');}});
+for(const id of ['inquiry','context','sources','brief'])$(id).addEventListener('input',()=>{
+  if(id==='inquiry'&&exampleLoaded){
+    exampleLoaded=false;$('sample').value='';$('context').value='[]';$('context-summary').replaceChildren();$('sources').value='{"body":"read","thread":"not_supplied","attachments":[]}';$('brief').value='';
+    notice('Demo conditions cleared for your new inquiry. Add your own company context only if needed.');
+  }else if(id!=='inquiry')exampleLoaded=false;
+  if(id==='inquiry'||id==='context')$('auth').checked=false;
+  if(current){current=null;$('approve').disabled=true;notice('Inputs changed. Prepare a new draft before approving; the prior draft remains visible.');}
+});
 $('auth').onchange=()=>{if(current){current=null;approvalButton();}};
 $('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('draft').value);notice('Copied. Sending remains your responsibility.');}catch(e){notice('Select the draft text and copy manually.');}};
 $('approve').onclick=async()=>{if(!current)return;try{const r=await request('/approve',{draft_id:current.draft_id,draft:$('draft').value,actor:$('actor').value,reviewed:$('reviewed').checked});$('approval-state').textContent='Approved by '+r.actor+' for this version. Nothing was sent.';$('approval-state').className='approved';notice('Explicit approval recorded in this local session.');}catch(e){notice(e.message);}};
-(async()=>{try{const h=await request('/health');$('mode').textContent=h.mode==='live_apertus'?'Live Apertus':'Recorded playback · offline';samples=(await request('/samples')).samples;for(const c of samples){const o=document.createElement('option');o.value=c.id;o.textContent=c.title;$('sample').append(o);}}catch(e){notice('Could not load service: '+e.message);}})();
+(async()=>{
+  try{const h=await request('/health');$('mode').textContent=h.mode==='live_apertus'?'Live Apertus':'Recorded playback · offline';
+    if(h.mode!=='live_apertus')$('generation-note').textContent='Recorded examples only · new inquiries need a live endpoint';
+  }catch(e){$('mode').textContent='Service unavailable';notice(e.message,'error');}
+  try{samples=(await request('/samples')).samples;for(const c of samples){const o=document.createElement('option');o.value=c.id;o.textContent=c.title;$('sample').append(o);}}
+  catch{notice('Demo examples could not load. You can still paste an inquiry if the live service is available.','error');}
+})();
 </script></body></html>

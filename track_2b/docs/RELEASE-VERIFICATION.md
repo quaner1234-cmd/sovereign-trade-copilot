@@ -55,3 +55,39 @@ approval. Its source is pinned to HyperFrames 0.8.133.
 
 Publication, public video URL and competition submission are pending. This round
 is local only; no push or upload was performed.
+
+## 6 October 2026: Prepare-button follow-up
+
+The original UI required a separate Load action after choosing an example, and
+empty inquiries reached a generic HTTP 400 response. An owned Chrome window
+reproduced that path. The running local app was also in recorded-replay mode.
+
+The example picker is now optional/collapsed and selection autofills. Empty input
+and unconfirmed company context receive specific visible feedback before a model
+request. Progress is visible; connection errors are explicit; the request has a
+bounded timeout with no automatic retry. Switching from an example to a newly
+typed inquiry clears its fictional company terms and invalidates approval.
+
+Browser checks passed: empty-input feedback; select/autofill; authorization
+prompt; exact offline hero replay; changed input in offline mode gives an explicit
+endpoint-required message and keeps the previous draft. The actual outgoing
+request after replacing an example carried an empty company_context.
+
+After configuring the existing CSCS credentials through runtime environment only,
+the direct-paste path with no sample selection and no Company Context returned a
+real Apertus v1.5-70B draft: one call/attempt, 647 input + 219 output tokens,
+5,295 ms client latency. The browser displayed the draft and restored the button.
+This is UI/integration evidence, not a new scored business case or a replacement
+for the frozen three first drafts. No prompt, guard, judgment or frozen output
+was changed. The earlier video records the UI before this interaction fix.
+
+A task-local browser rule blocked one additional request to test connection
+failure. The UI showed a specific error, restored the button and preserved the
+previous live draft. This was a controlled failure simulation, not an actual API
+outage or another model call. The 75-second timeout is implemented but was not
+tested by waiting for the full timeout interval.
+
+In-app-browser automation could not be inspected because the Codex tool's Windows
+sandbox helper failed; that does not establish an application/browser failure.
+Browser execution evidence above comes from Chrome. The local service is left in
+live mode for review; a fresh page shows Live Apertus.
