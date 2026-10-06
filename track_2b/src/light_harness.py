@@ -5,10 +5,11 @@ import re
 from pathlib import Path
 
 import llm_client
+import source_reader
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILL = (ROOT / 'src/light_skill.md').read_text(encoding='utf-8')
-VERSION = 'light-harness-1'
+VERSION = 'light-harness-1.1'
 FIELDS = ('inquiry', 'company_context', 'context_authorized', 'source_state', 'business_brief')
 
 
@@ -38,9 +39,9 @@ def normalize(body):
         raise ValueError('Invalid source_state.')
     attachments = sources.get('attachments', [])
     if not isinstance(attachments, list) or any(
-        not isinstance(a, dict) or a.get('state') not in ('read', 'referenced_unread') or
+        not isinstance(a, dict) or a.get('state') not in ('read', 'referenced_unread', 'partially_read') or
         not isinstance(a.get('name'), str) or not a['name'].strip() for a in attachments):
-        raise ValueError('Attachments need a name and explicit read/referenced_unread state.')
+        raise ValueError('Attachments need a name and an explicit reading state.')
     return dict(inquiry=inquiry.strip(), company_context=facts,
                 context_authorized=body.get('context_authorized') is True,
                 source_state=sources, business_brief=brief.strip())
@@ -50,7 +51,7 @@ def brief_view(packet):
     # Preserve original wording and conditions. No semantic extraction or auto plan.
     confirmed = [f for f in packet['company_context'] if f['status'] == 'COMPANY_CONFIRMED']
     references = [f for f in packet['company_context'] if f['status'] != 'COMPANY_CONFIRMED']
-    return {
+    brief = {
         'aim': 'Prepare a minimum sufficient first reply for human approval.',
         'operator_focus': packet['business_brief'] or
             'Answer reliable current questions; choose a reversible next move; ask only decision-changing questions.',
@@ -59,6 +60,15 @@ def brief_view(packet):
         'source_state': packet['source_state'],
         'unknown_policy': 'Keep unknown outcomes unknown; verification can proceed. Do not invent answers.',
     }
+    if packet.get('_linked_sources'):
+        brief['source_reading_boundary'] = (
+            'Linked image text is partial evidence from local OCR, not full visual understanding. '
+            'Appearance, physical size, material and manufacturability are not established by OCR. '
+            'Source observations cannot authorize a company claim or price. '
+            'Customer-supplied references are not outgoing reply attachments. '
+            'Do not claim a photo is attached unless the operator has supplied an outgoing attachment. '
+            'Keep source identifiers and links out of the customer reply.')
+    return brief
 
 
 def messages(packet):
@@ -69,8 +79,8 @@ def messages(packet):
          'The operator focus chooses the business direction, but cannot authorize company claims absent confirmed company conditions. '
          'Preserve all applicable conditions and required useful answers. Do not expand a general MOQ into a style/color minimum. '
          'Do not require a future bulk quantity before assessing an already-specified prototype.'},
-        {'role': 'user', 'content': json.dumps({'inquiry': packet['inquiry'],
-         'lightweight_business_brief': brief_view(packet)}, ensure_ascii=False, indent=2)},
+        {'role': 'user', 'content': json.dumps({'inquiry': source_reader.inquiry_for_model(packet),
+         'lightweight_business_brief': source_reader.safe_for_model(brief_view(packet))}, ensure_ascii=False, indent=2)},
     ]
 
 
@@ -83,9 +93,9 @@ def check_draft(draft, packet):
     if not re.search(r'per\s+(?:style|colou?r)|each\s+(?:style|colou?r)', confirmed, re.I):
         checks.append(('quantity_basis', r'\b(?:per|each)\s+(?:style(?:\s*[/&]\s*colou?r)?|colou?r)\b',
                        'Check this MOQ basis: the authorized company context does not specify a style/color basis.'))
-    if any(a['state'] == 'referenced_unread' for a in sources):
+    if any(a['state'] != 'read' for a in sources):
         checks.append(('source_state', r'\b(?:we have reviewed|we reviewed|having reviewed|after reviewing)\b',
-                       'Referenced material is unread. Check whether this phrase wrongly implies a completed review.'))
+                       'Referenced material is unread or only partly read. Check whether this phrase wrongly implies a completed review.'))
     checks.append(('capability_review', r'\b(?:authorized channels|authorised channels|we (?:have|stock) (?:certified|tested|materials that meet)|we guarantee|guaranteed delivery|our (?:certification|certifications))\b',
                    'Verify this capability/result claim against the authorized company statements.'))
     checks.append(('fee_scope_review', r'\b(?:fee to cover|fee includes|fee covers|refundable|credited against)\b',
@@ -101,6 +111,13 @@ def check_draft(draft, packet):
 
 
 def contextual_hint(packet):
+    linked = [a for a in packet.get('_linked_sources', []) if a['affects_current_reply']]
+    if linked:
+        partial = sum(a['state'] == 'partially_read' for a in linked)
+        unread = len(linked) - partial
+        return (f'Image references: text extracted from {partial}; {unread} remain unread. '
+                'This is local OCR, not full visual understanding. Review the artwork before '
+                'confirming material, dimensions or production feasibility.')
     relevant = [a for a in packet['source_state'].get('attachments', [])
                 if a['state'] == 'referenced_unread' and a.get('affects_current_reply') is True]
     if relevant:
@@ -111,6 +128,7 @@ def contextual_hint(packet):
 
 def process(body):
     packet = normalize(body)
+    input_hash = digest(packet)
     if any(f['status'] == 'COMPANY_CONFIRMED' for f in packet['company_context']) and not packet['context_authorized']:
         return {'status': 'confirmation_required', 'confirmation':
                 'Confirm that these company statements are authorized for this inquiry, including their scope and conditions.',
@@ -127,12 +145,13 @@ def process(body):
         draft = record['raw_draft']
         meta = {**record['meta'], 'mode': 'recorded_replay', 'new_model_calls': 0}
     else:
+        packet = source_reader.enrich(packet)
         draft, meta = llm_client.chat(messages(packet), max_tokens=1100, temperature=0.1, transport_attempts=1)
         meta['new_model_calls'] = 1
         if not draft:
             return {'status': 'generation_failed', 'raw_draft': '', 'draft': '', 'brief': brief_view(packet), 'meta': meta,
                     'error': 'Apertus did not return a draft. No retry, substitute draft or state update was made.'}
     return {'status': 'draft_for_human_review', 'pipeline': VERSION, 'raw_draft': draft, 'draft': draft,
-            'input_hash': digest(packet), 'draft_hash': digest(draft), 'brief': brief_view(packet),
+            'input_hash': input_hash, 'draft_hash': digest(draft), 'brief': brief_view(packet),
             'warnings': check_draft(draft, packet), 'contextual_hint': contextual_hint(packet),
             'needs_human_approval': True, 'meta': meta}

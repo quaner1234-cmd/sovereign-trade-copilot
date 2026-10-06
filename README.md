@@ -34,7 +34,9 @@ The key is passed by environment name, never written into an image or file.
 An on-premise OpenAI-compatible Apertus server may replace the hosted endpoint.
 Use host.docker.internal when it runs on the Docker host. Model weights, GPU
 provisioning and a local weights server are not included or verified.
-The UI has no CDN, analytics or third-party browser requests.
+The UI has no CDN, analytics or third-party browser requests. The server can read
+customer-supplied JPEG/PNG links before drafting, using local OCR only. It does
+not send images to a separate vision provider.
 
 PORT, IMAGE and CONTAINER can override defaults. make stop stops the named demo.
 Only loopback port access is published by default.
@@ -77,8 +79,26 @@ python src/selftest_light.py
 
 Drafts/approvals live only in bounded server memory. Restart clears them.
 This is a local prototype, not an authenticated multi-user service.
-Referenced unread material stays explicitly unread; the final UI does not parse
-binary attachments. Paste a reviewed extract with its source where appropriate.
+JPEG/PNG links in an inquiry are detected automatically. At most two are fetched,
+with a 2 MiB limit per image, and readable English text is extracted by Tesseract.
+Evidence includes content hash, access time and exact reading coverage. OCR means
+**partially read**, not full visual understanding: appearance, material, size and
+manufacturability remain unverified. PDF/ZIP/cloud-share pages and binary uploads
+are not supported. Failed or unsupported references remain explicitly unread;
+the written inquiry can still support a draft. Signed URLs are used for retrieval
+but removed from the model input. Temporary images are deleted after OCR.
+
+For disconnected deployments, set `SOURCE_READ_ENABLED=0`. Core drafting can
+still use an on-premise Apertus endpoint; no source retrieval is attempted.
+The Docker image now includes Tesseract and must be built online once before
+air-gapped deployment. A deployed local Fake-IP proxy may need an explicit
+`SOURCE_FAKE_IP_HOSTS` list of operator-approved hostnames. This permits only its
+reserved Fake-IP range for those exact hosts; ordinary private/loopback addresses
+remain forbidden. No system proxy or DNS configuration is changed.
+
+Project-specific operator-confirmed capabilities and prices can be supplied in
+company_context with their project scope. Reading a customer image never creates
+company authorization, confirms an order quantity or supplies an outgoing photo.
 
 ## Evidence and deliverables
 

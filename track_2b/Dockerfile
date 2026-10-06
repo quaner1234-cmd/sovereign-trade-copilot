@@ -1,8 +1,10 @@
 FROM python:3.12-slim
 WORKDIR /app
-COPY src/light_harness.py src/light_server.py src/llm_client.py src/light_skill.md ./src/
+RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng \
+    && rm -rf /var/lib/apt/lists/*
+COPY src/light_harness.py src/light_server.py src/llm_client.py src/light_skill.md src/source_reader.py ./src/
 COPY src/ui/light.html ./src/ui/light.html
 COPY data/light-demo/ ./data/light-demo/
 EXPOSE 8000
-# stdlib only — no pip install, build works air-gapped once base image is present
+# Python stdlib only; prebuild this image for air-gapped deployment (local OCR).
 CMD ["python", "src/light_server.py"]

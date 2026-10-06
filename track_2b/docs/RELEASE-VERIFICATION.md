@@ -91,3 +91,30 @@ In-app-browser automation could not be inspected because the Codex tool's Window
 sandbox helper failed; that does not establish an application/browser failure.
 Browser execution evidence above comes from Chrome. The local service is left in
 live mode for review; a fresh page shows Live Apertus.
+
+## 6 October 2026: bounded image-text source reader
+
+The Light Harness can now fetch customer-linked JPEG/PNG references and extract
+English text locally with Tesseract. Reading coverage is explicitly partial;
+neither image download nor OCR proves full visual understanding, material,
+dimensions or company capability. Failed links remain unread. Source observation
+does not create company authorization. No visual LLM, planner or retry was added.
+
+Focused synthetic regressions cover authorization before retrieval, partial
+coverage, preserved input/company facts, signed-URL isolation, disconnected
+operation, failed/empty OCR, fetch limits, TLS address pinning, private-address
+and redirect rejection, and exact-host Fake-IP deployment configuration.
+The HTTP review path retains the actual reading state when reviewing draft edits.
+The original frozen three-case prompt messages and recorded first drafts remain
+unchanged. Private source inputs and output evaluations stay outside the repo.
+
+An owned Chrome window separately exercised one synthetic unread-link inquiry:
+actual POST /process HTTP 200, one Apertus call, visible draft and explicit
+unread-source hint. No approval/sending was performed. This proves the interaction
+and failure degradation, not business sendability. Private browser capture was
+retained separately; the owned session was stopped.
+
+The Docker build now installs Tesseract; an image must be prebuilt online before
+air-gapped use. SOURCE_READ_ENABLED=0 disables external source reading while
+retaining core drafting against an available on-premise model endpoint. Current
+PDF/video describe the earlier snapshot and were not rebuilt for this source fix.

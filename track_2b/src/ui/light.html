@@ -26,7 +26,7 @@ const $=id=>document.getElementById(id);
 function notice(text,kind='info',reveal=false){$('notice').textContent=text;$('notice').classList.toggle('notice-error',kind==='error');$('notice').setAttribute('role',kind==='error'?'alert':'status');if(reveal)$('notice').scrollIntoView({block:'nearest'});}
 async function request(path,body){
   const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),body?75000:10000);
+  const timer=setTimeout(()=>controller.abort(),body?105000:10000);
   try{
     const options=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{};
     const r=await fetch(path,{...options,signal:controller.signal});
@@ -61,7 +61,7 @@ $('generate').onclick=async()=>{
     $('context-panel').open=true;notice('Review the company statements and tick “I authorize…” before using them. No draft request has been sent.','error',true);$('auth').focus();return;
   }
   busy=true;$('generate').disabled=true;$('generate').textContent='Preparing…';$('generate').setAttribute('aria-busy','true');approvalButton();
-  notice('Preparing one draft… Your previous draft will remain if generation fails.','info',true);
+  notice('Reading linked image references and preparing one draft… Your previous draft will remain if generation fails.','info',true);
   try{
     const body={inquiry:$('inquiry').value,company_context:facts,source_state:sources,business_brief:$('brief').value,context_authorized:$('auth').checked};
     const r=await request('/process',body);

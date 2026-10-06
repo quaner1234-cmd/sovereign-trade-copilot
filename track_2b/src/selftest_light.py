@@ -71,6 +71,19 @@ class LightTests(unittest.TestCase):
                 self.assertEqual(a['approved_draft_hash'],H.digest(b['draft']))
                 with self.assertRaises(urllib.error.HTTPError) as e:post('/approve',b,'https://untrusted.invalid')
                 self.assertEqual(e.exception.code,403)
+            body={'inquiry':'Assess the supplied artwork.'}
+            packet=H.normalize(body)
+            packet['source_state']['attachments']=[{'name':'Linked reference 1','state':'partially_read',
+                                                    'read_coverage':['visible_text']}]
+            with patch.object(H.llm_client,'demo_mode',return_value=False), \
+                 patch.object(H.source_reader,'enrich',return_value=packet), \
+                 patch.object(H.llm_client,'chat',return_value=('We can assess the request.',{})):
+                r=post('/process',body)
+            self.assertEqual(S.RECORDS[r['draft_id']]['packet']['source_state'],packet['source_state'])
+            a=post('/approve',{'draft_id':r['draft_id'],'draft':'We have reviewed the artwork.',
+                               'actor':'Automated test; not human evidence','reviewed':True})
+            self.assertIn('source_state',{w['code'] for w in a['warnings']})
+            self.assertEqual(a['input_hash'],H.digest(H.normalize(body)))
         finally:server.shutdown();server.server_close();thread.join()
 
 if __name__=='__main__':unittest.main(verbosity=2)

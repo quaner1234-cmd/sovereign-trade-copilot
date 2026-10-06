@@ -64,8 +64,11 @@ class Handler(BaseHTTPRequestHandler):
                 if result['status'] == 'draft_for_human_review':
                     draft_id = secrets.token_urlsafe(16)
                     result['draft_id'] = draft_id
+                    packet = H.normalize(body)
+                    # Retain the actual source coverage for review of later edits.
+                    packet['source_state'] = result['brief']['source_state']
                     with LOCK:
-                        RECORDS[draft_id] = {'packet': H.normalize(body), 'original': result, 'approvals': []}
+                        RECORDS[draft_id] = {'packet': packet, 'original': result, 'approvals': []}
                         while len(RECORDS) > 100:
                             RECORDS.popitem(last=False)
                 return self.send(200, result)
