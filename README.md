@@ -80,6 +80,29 @@ it does not crawl, sign in or execute JavaScript. Unreachable/unsupported source
 leave existing context unchanged. Company sources are separate from customer
 attachments and do not establish that customer material was read.
 
+**Additional facts or corrections (optional)** accepts natural-language operational
+context, such as which company materials are ready or where an existing customer
+reference can be found. The agent chooses the present useful next move itself;
+users do not need to write a reply strategy. This field does not authorize a new
+company capability, price or commercial term. Use confirmed company conditions
+for those facts. The drafting call returns two text fields: the customer email and
+an optional operator-only contextual hint. There is no minimum word count.
+Relevant ready company material may be proposed for this reply; prospective
+attachment wording requires a pre-send reminder. Neither importing context nor
+preparing a draft actually attaches a file or sends email.
+Invalid output structure preserves the prior draft and records no new approval;
+no retry, salvage or substitute draft occurs. Original recorded examples retain
+their unchanged historical first drafts and curated business focus.
+
+This decision-first contract remains experimental. In a frozen six-case synthetic
+live trial, four first drafts returned and two requests failed to connect; returned
+drafts still contained unsupported range wording, avoidable questions and internal
+authorization language. A separate browser catalogue case produced a useful
+selection-first draft, but does not establish general reliability. No failed case
+was retried or replaced. Attachment reminders can repeat, and the application-side
+attachment phrase check currently covers English only. Human business review is
+still necessary; these checks do not certify a reply for sending.
+
 1. Load the synthetic hero and review/authorize its invented company conditions.
 2. Prepare the first reply. Mode distinguishes live Apertus from recorded playback.
 3. Review the business focus and authorized conditions under **Why this reply?**
@@ -98,6 +121,9 @@ certification. See [evaluation and exact required edits](track_2b/docs/LIGHT-DEM
 - GET /samples: three synthetic input packets, excluding evaluation gold.
 - POST /process: inquiry, optional source-backed company_context,
   context_authorized, source_state and a text business_brief.
+- Optional operator_context is factual text; optional reply_materials declare
+  name, source and available / planned_for_reply / not_ready state. These are
+  operational facts, not company authorization or evidence of dispatch.
 - POST /approve: existing draft_id, current draft, actor, reviewed: true.
   Approval binds to that draft version and its input hash.
 - POST /context/import: one Markdown/TXT/PDF upload (base64 file bytes) or one

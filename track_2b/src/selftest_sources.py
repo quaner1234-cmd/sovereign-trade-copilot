@@ -83,7 +83,7 @@ class SourceTests(unittest.TestCase):
         with patch.dict(R.os.environ, {'SOURCE_READ_ENABLED': '0'}), \
              patch.object(R, 'fetch_image') as fetch, \
              patch.object(H.llm_client, 'demo_mode', return_value=False), \
-             patch.object(H.llm_client, 'chat', return_value=('We can assess the request.', {})):
+             patch.object(H.llm_client, 'chat', return_value=(json.dumps({'draft':'We can assess the request.','contextual_hint':''}), {})):
             result = H.process(self.packet())
             fetch.assert_not_called()
             self.assertEqual(result['status'], 'draft_for_human_review')
@@ -167,7 +167,7 @@ class SourceTests(unittest.TestCase):
         enriched = self.enrich(packet)
         with patch.object(H.llm_client, 'demo_mode', return_value=False), \
              patch.object(R, 'enrich', return_value=enriched), \
-             patch.object(H.llm_client, 'chat', return_value=('A first draft.', {})) as chat:
+             patch.object(H.llm_client, 'chat', return_value=(json.dumps({'draft':'A first draft.','contextual_hint':''}), {})) as chat:
             result = H.process(packet)
         self.assertEqual(result['input_hash'], H.digest(packet))
         self.assertEqual(result['brief']['source_state'], enriched['source_state'])

@@ -8,6 +8,9 @@ from unittest.mock import patch
 import light_harness as H
 import light_server as S
 
+def model_reply(draft, hint=''):
+    return json.dumps({'draft':draft,'contextual_hint':hint})
+
 class LightTests(unittest.TestCase):
     def setUp(self):
         self.cases=json.loads((H.ROOT/'data/light-demo/cases.json').read_text(encoding='utf-8'))['cases']
@@ -52,9 +55,67 @@ class LightTests(unittest.TestCase):
                 self.assertIn('previous draft are kept',result['error'])
 
     def test_cold_start(self):
-        with patch.object(H.llm_client,'demo_mode',return_value=False),patch.object(H.llm_client,'chat',return_value=('We can review the design before confirming feasibility.',{})):
+        with patch.object(H.llm_client,'demo_mode',return_value=False),patch.object(H.llm_client,'chat',return_value=(model_reply('We can review the design before confirming feasibility.'),{})):
             result=H.process({'inquiry':'Can you assess a custom vest?'})
             self.assertEqual(result['brief']['authorized_company_conditions'],[])
+
+    def test_operator_facts_do_not_authorize_company_claims_or_change_old_replay_hash(self):
+        old=H.normalize(self.cases[0])
+        empty=H.normalize(dict(self.cases[0],operator_context='',reply_materials=[]))
+        self.assertEqual(H.digest(old),H.digest(empty))
+        p=H.normalize({'inquiry':'Please show the product options.',
+                       'operator_context':'The product photos are ready. We are certified.',
+                       'reply_materials':[{'name':'Product photos','state':'available','source':'Operator'}]})
+        self.assertEqual(H.brief_view(p)['authorized_company_conditions'],[])
+        self.assertNotEqual(H.digest(p),H.digest(H.normalize({'inquiry':p['inquiry']})))
+        with self.assertRaises(ValueError):
+            H.normalize(dict(self.cases[0],reply_materials=[{'name':'file','source':'operator','state':'sent'}]))
+
+    def test_operator_reminder_is_separate_and_original_response_is_preserved(self):
+        draft='Please find attached the product options. After selection we can review your specifications.'
+        raw=model_reply(draft,'Attach the selected product options before sending.')
+        with patch.object(H.llm_client,'demo_mode',return_value=False), \
+             patch.object(H.llm_client,'chat',return_value=(raw,{})) as call:
+            r=H.process({'inquiry':'Please send the product options.',
+                         'operator_context':'The product options are ready.'})
+        self.assertEqual(r['raw_draft'],draft)
+        self.assertEqual(r['draft'],draft)
+        self.assertEqual(r['raw_model_output'],raw)
+        self.assertIn('before sending',r['contextual_hint'])
+        self.assertNotIn('before sending',r['draft'])
+        self.assertEqual(call.call_count,1)
+        self.assertEqual(call.call_args.kwargs['transport_attempts'],1)
+
+    def test_unrelated_model_hint_cannot_hide_pre_send_attachment_reminder(self):
+        draft='Please find attached the product options.'
+        with patch.object(H.llm_client,'demo_mode',return_value=False), \
+             patch.object(H.llm_client,'chat',return_value=(model_reply(draft,'Check current certification.'),{})):
+            r=H.process({'inquiry':'Please send the product options.'})
+        self.assertEqual(r['draft'],draft)
+        self.assertIn('Check current certification.',r['contextual_hint'])
+        self.assertIn('Before sending, attach',r['contextual_hint'])
+
+    def test_bad_reply_envelope_is_not_salvaged_retried_or_persisted(self):
+        server=S.ThreadingHTTPServer(('127.0.0.1',0),S.Handler)
+        thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+        base=f'http://127.0.0.1:{server.server_port}'
+        before=H.digest(S.RECORDS)
+        try:
+            for raw in ('Plain unstructured draft.', model_reply(''),
+                        json.dumps({'draft':'Email','contextual_hint':[]}),
+                        json.dumps({'draft':'Email','contextual_hint':'','extra':'company fact'})):
+                with self.subTest(raw=raw),patch.object(H.llm_client,'demo_mode',return_value=False), \
+                     patch.object(H.llm_client,'chat',return_value=(raw,{})) as call:
+                    req=urllib.request.Request(base+'/process',data=json.dumps({'inquiry':'Synthetic request.'}).encode(),
+                                               headers={'Content-Type':'application/json'})
+                    with urllib.request.urlopen(req) as response:r=json.load(response)
+                self.assertEqual(r['status'],'generation_failed')
+                self.assertEqual(r['draft'],'')
+                self.assertEqual(r['raw_model_output'],raw)
+                self.assertNotIn('draft_id',r)
+                self.assertEqual(call.call_count,1)
+                self.assertEqual(H.digest(S.RECORDS),before)
+        finally:server.shutdown();server.server_close();thread.join()
 
     def test_located_generic_warnings_and_source_tense(self):
         packet=H.normalize(self.cases[0]); text='MOQ 875 pieces per color; the fee includes testing.'
@@ -64,6 +125,9 @@ class LightTests(unittest.TestCase):
         packet=H.normalize(self.cases[2])
         self.assertTrue(H.check_draft('We have reviewed the design.',packet))
         self.assertFalse(H.check_draft('We will review the design and check the materials.',packet))
+        packet=H.normalize({'inquiry':'Please send options.',
+                            'reply_materials':[{'name':'Product options','state':'not_ready','source':'Operator'}]})
+        self.assertIn('material_preparation',{f['code'] for f in H.check_draft('Please find attached the options.',packet)})
 
     def test_http_approval_preserves_original_and_requires_review(self):
         server=S.ThreadingHTTPServer(('127.0.0.1',0),S.Handler)
@@ -99,7 +163,7 @@ class LightTests(unittest.TestCase):
                                                     'read_coverage':['visible_text']}]
             with patch.object(H.llm_client,'demo_mode',return_value=False), \
                  patch.object(H.source_reader,'enrich',return_value=packet), \
-                 patch.object(H.llm_client,'chat',return_value=('We can assess the request.',{})):
+                 patch.object(H.llm_client,'chat',return_value=(model_reply('We can assess the request.'),{})):
                 r=post('/process',body)
             self.assertEqual(S.RECORDS[r['draft_id']]['packet']['source_state'],packet['source_state'])
             a=post('/approve',{'draft_id':r['draft_id'],'draft':'We have reviewed the artwork.',
