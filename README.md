@@ -50,6 +50,11 @@ automatically fills the inquiry and fictional conditions, with no extra load ste
 Editing its inquiry clears the example's fictional context before a new request.
 Empty input, confirmation and connection failures are shown beside the button;
 generation shows a busy state and preserves the previous draft on failure.
+Model failures distinguish HTTP rejection, timeout, connection failure and empty
+or invalid responses. **Failed request details** exposes safe status/timing
+metadata only; provider error bodies, credentials and request URLs are not shown.
+Failures make no automatic retry. Clicking **Prepare first reply** again starts
+a new manual attempt.
 
 1. Load the synthetic hero and review/authorize its invented company conditions.
 2. Prepare the first reply. Mode distinguishes live Apertus from recorded playback.

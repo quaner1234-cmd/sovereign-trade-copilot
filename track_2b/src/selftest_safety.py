@@ -83,7 +83,9 @@ class SafetyTests(unittest.TestCase):
             text, meta = P.llm_client.chat([])
         self.assertIsNone(text)
         self.assertNotIn(fake, json.dumps(meta))
-        self.assertIn("[redacted]", meta["error"])
+        self.assertEqual(meta["error_kind"], "http_error")
+        self.assertEqual(meta["http_status"], 401)
+        self.assertNotIn("example.invalid", json.dumps(meta))
 
 
 if __name__ == "__main__":

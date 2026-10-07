@@ -126,6 +126,28 @@ def contextual_hint(packet):
     return ''
 
 
+def generation_error(meta):
+    kind = meta.get('error_kind')
+    status = meta.get('http_status')
+    if kind == 'http_error':
+        reason = {
+            401: 'The model endpoint rejected the API credential (HTTP 401). Check the runtime key.',
+            403: 'The model endpoint denied access (HTTP 403). Check model access permissions.',
+            429: 'The model endpoint is rate-limited or has no available quota (HTTP 429). Try again later.',
+        }.get(status, 'The model endpoint rejected the request (HTTP %s).' % status)
+        if isinstance(status, int) and status >= 500:
+            reason += ' The provider is temporarily unavailable; try again later.'
+    else:
+        reason = {
+            'timeout': 'Apertus did not respond before the model timeout. You can try again manually.',
+            'connection': 'Could not connect to the model endpoint. Check the network and endpoint availability.',
+            'invalid_response': 'Apertus returned an invalid response instead of draft text.',
+            'empty_response': 'Apertus returned an empty draft. You can try again manually.',
+            'client_error': 'The model request could not be completed.',
+        }.get(kind, 'Apertus did not return a draft.')
+    return reason + ' Your input and previous draft are kept. No automatic retry or substitute draft was made.'
+
+
 def process(body):
     packet = normalize(body)
     input_hash = digest(packet)
@@ -150,7 +172,7 @@ def process(body):
         meta['new_model_calls'] = 1
         if not draft:
             return {'status': 'generation_failed', 'raw_draft': '', 'draft': '', 'brief': brief_view(packet), 'meta': meta,
-                    'error': 'Apertus did not return a draft. No retry, substitute draft or state update was made.'}
+                    'error': generation_error(meta)}
     return {'status': 'draft_for_human_review', 'pipeline': VERSION, 'raw_draft': draft, 'draft': draft,
             'input_hash': input_hash, 'draft_hash': digest(draft), 'brief': brief_view(packet),
             'warnings': check_draft(draft, packet), 'contextual_hint': contextual_hint(packet),

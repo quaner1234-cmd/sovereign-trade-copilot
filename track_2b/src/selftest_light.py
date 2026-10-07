@@ -36,6 +36,21 @@ class LightTests(unittest.TestCase):
             self.assertEqual(call.call_count,1)
             self.assertEqual(call.call_args.kwargs['transport_attempts'],1)
 
+    def test_failure_feedback_distinguishes_safe_error_categories(self):
+        for meta, phrase in [({'error_kind':'http_error','http_status':401}, 'HTTP 401'),
+                             ({'error_kind':'http_error','http_status':429}, 'HTTP 429'),
+                             ({'error_kind':'http_error','http_status':503}, 'temporarily unavailable'),
+                             ({'error_kind':'timeout'}, 'timeout'),
+                             ({'error_kind':'connection'}, 'connect'),
+                             ({'error_kind':'invalid_response'}, 'invalid response'),
+                             ({'error_kind':'empty_response'}, 'empty draft')]:
+            with self.subTest(meta=meta), patch.object(H.llm_client,'demo_mode',return_value=False), \
+                 patch.object(H.llm_client,'chat',return_value=(None,meta)):
+                result=H.process({'inquiry':'Synthetic draft request.'})
+                self.assertEqual(result['status'],'generation_failed')
+                self.assertIn(phrase,result['error'])
+                self.assertIn('previous draft are kept',result['error'])
+
     def test_cold_start(self):
         with patch.object(H.llm_client,'demo_mode',return_value=False),patch.object(H.llm_client,'chat',return_value=('We can review the design before confirming feasibility.',{})):
             result=H.process({'inquiry':'Can you assess a custom vest?'})
@@ -71,6 +86,13 @@ class LightTests(unittest.TestCase):
                 self.assertEqual(a['approved_draft_hash'],H.digest(b['draft']))
                 with self.assertRaises(urllib.error.HTTPError) as e:post('/approve',b,'https://untrusted.invalid')
                 self.assertEqual(e.exception.code,403)
+            before=H.digest(S.RECORDS)
+            with patch.object(H.llm_client,'demo_mode',return_value=False), \
+                 patch.object(H.llm_client,'chat',return_value=(None,{'error_kind':'timeout','transport_attempts':1})):
+                failed=post('/process',{'inquiry':'Another synthetic request.'})
+            self.assertEqual(failed['status'],'generation_failed')
+            self.assertNotIn('draft_id',failed)
+            self.assertEqual(H.digest(S.RECORDS),before)
             body={'inquiry':'Assess the supplied artwork.'}
             packet=H.normalize(body)
             packet['source_state']['attachments']=[{'name':'Linked reference 1','state':'partially_read',

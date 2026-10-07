@@ -15,6 +15,7 @@
 <label for="sources">Source state (JSON; unread material stays unread)</label><textarea id="sources" rows="3">{"body":"read","thread":"not_supplied","attachments":[]}</textarea>
 </details><label for="brief">Optional business focus</label><textarea id="brief" rows="4" placeholder="A short direction or correction; no full form or message plan required."></textarea></details>
 <div class="row"><button class="primary" id="generate">Prepare first reply</button><span class="meta" id="generation-note">One Apertus draft · no automatic sending</span></div><div id="notice" role="status" aria-live="polite"></div>
+<details id="failure-details" class="hidden"><summary>Failed request details</summary><pre id="failure-technical"></pre></details>
 <section id="result" class="card hidden"><div class="result-heading"><h2>Recommended first reply</h2><p class="meta" id="result-mode"></p></div><textarea id="draft" aria-label="First reply draft" readonly></textarea>
 <div id="hint" class="hint hidden"></div><div id="warnings"></div><div class="row"><button id="edit">Edit draft</button><button id="copy">Copy draft</button></div>
 <details id="why"><summary>Why this reply?</summary><p class="meta">The brief guides drafting; warnings are incomplete review aids. No automated safe-to-send certification is provided.</p><pre id="brief-view"></pre><details><summary>Technical details &amp; preserved first draft</summary><pre id="technical"></pre></details></details>
@@ -24,6 +25,13 @@
 let samples=[], current=null, busy=false, exampleLoaded=false;
 const $=id=>document.getElementById(id);
 function notice(text,kind='info',reveal=false){$('notice').textContent=text;$('notice').classList.toggle('notice-error',kind==='error');$('notice').setAttribute('role',kind==='error'?'alert':'status');if(reveal)$('notice').scrollIntoView({block:'nearest'});}
+function failedRequest(meta){
+  const safe={};
+  for(const key of ['error_kind','http_status','latency_ms','transport_attempts','finish_reason'])if(meta&&meta[key]!=null)safe[key]=meta[key];
+  for(const key of ['prompt_tokens','completion_tokens','total_tokens'])if(meta&&typeof meta.usage?.[key]==='number'){safe.usage??={};safe.usage[key]=meta.usage[key];}
+  $('failure-technical').textContent=JSON.stringify(safe,null,2);
+  $('failure-details').classList.remove('hidden');
+}
 async function request(path,body){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),body?105000:10000);
@@ -61,6 +69,7 @@ $('generate').onclick=async()=>{
     $('context-panel').open=true;notice('Review the company statements and tick “I authorize…” before using them. No draft request has been sent.','error',true);$('auth').focus();return;
   }
   busy=true;$('generate').disabled=true;$('generate').textContent='Preparing…';$('generate').setAttribute('aria-busy','true');approvalButton();
+  $('failure-details').classList.add('hidden');
   notice('Reading linked image references and preparing one draft… Your previous draft will remain if generation fails.','info',true);
   try{
     const body={inquiry:$('inquiry').value,company_context:facts,source_state:sources,business_brief:$('brief').value,context_authorized:$('auth').checked};
@@ -69,6 +78,7 @@ $('generate').onclick=async()=>{
       show(r);notice(r.meta.mode==='recorded_replay'?'Showing the unchanged synthetic Apertus first draft. New inquiries require a live endpoint.':'First Apertus draft ready. Review the company conditions and next step before approval.');
       $('context-panel').open=false;$('result').scrollIntoView({block:'start'});
     }else{
+      if(r.status==='generation_failed')failedRequest(r.meta);
       if(r.status==='confirmation_required')$('context-panel').open=true;
       notice(r.status==='endpoint_required'?'This service is in recorded-demo mode. New inquiries need a live Apertus endpoint. Your input is kept.':r.confirmation||r.error||'No draft generated. Your previous draft is kept.','error',true);
     }
