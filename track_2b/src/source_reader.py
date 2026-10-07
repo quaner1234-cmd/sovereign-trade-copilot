@@ -65,7 +65,8 @@ def public_address(url):
     return parts, sorted(addresses)[0]
 
 
-def fetch_image(url, deadline):
+def fetch_bytes(url, deadline, *, accepted_types, max_bytes, too_large_reason,
+                accept_header):
     """Direct HTTPS, pinned checked address, bounded redirects/bytes/time."""
     for _ in range(3):
         parts, address = public_address(url)
@@ -81,7 +82,7 @@ def fetch_image(url, deadline):
             path = parts.path or '/'
             if parts.query:
                 path += '?' + parts.query
-            connection.request('GET', path, headers={'Accept': 'image/jpeg,image/png',
+            connection.request('GET', path, headers={'Accept': accept_header,
                                                      'User-Agent': 'TradeCopilot-SourceReader/1'})
             response = connection.getresponse()
             if response.status in (301, 302, 303, 307, 308):
@@ -93,11 +94,11 @@ def fetch_image(url, deadline):
             if response.status != 200:
                 raise ReadFailure('http_' + str(response.status))
             kind = response.getheader('Content-Type', '').split(';')[0].strip().lower()
-            if kind not in ('image/jpeg', 'image/png'):
+            if kind not in accepted_types:
                 raise ReadFailure('unsupported_content')
             size = response.getheader('Content-Length')
-            if size and int(size) > MAX_BYTES:
-                raise ReadFailure('image_too_large')
+            if size and int(size) > max_bytes:
+                raise ReadFailure(too_large_reason)
             chunks, total = [], 0
             while True:
                 remaining = deadline - time.monotonic()
@@ -105,18 +106,15 @@ def fetch_image(url, deadline):
                     raise ReadFailure('read_timeout')
                 if connection.sock:
                     connection.sock.settimeout(min(6, remaining))
-                chunk = response.read1(min(65536, MAX_BYTES + 1 - total))
+                chunk = response.read1(min(65536, max_bytes + 1 - total))
                 if not chunk:
                     break
                 chunks.append(chunk)
                 total += len(chunk)
-                if total > MAX_BYTES:
-                    raise ReadFailure('image_too_large')
+                if total > max_bytes:
+                    raise ReadFailure(too_large_reason)
             data = b''.join(chunks)
-            valid = data.startswith(b'\xff\xd8\xff') if kind == 'image/jpeg' else data.startswith(b'\x89PNG\r\n\x1a\n')
-            if not valid:
-                raise ReadFailure('invalid_image')
-            return data, kind
+            return data, kind, url
         except ReadFailure:
             raise
         except (TimeoutError, socket.timeout):
@@ -126,6 +124,16 @@ def fetch_image(url, deadline):
         finally:
             connection.close()
     raise ReadFailure('redirect_limit')
+
+
+def fetch_image(url, deadline):
+    data, kind, _ = fetch_bytes(url, deadline, accepted_types=('image/jpeg', 'image/png'),
+                                max_bytes=MAX_BYTES, too_large_reason='image_too_large',
+                                accept_header='image/jpeg,image/png')
+    valid = data.startswith(b'\xff\xd8\xff') if kind == 'image/jpeg' else data.startswith(b'\x89PNG\r\n\x1a\n')
+    if not valid:
+        raise ReadFailure('invalid_image')
+    return data, kind
 
 
 def image_text(data, kind):

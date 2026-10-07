@@ -56,6 +56,30 @@ metadata only; provider error bodies, credentials and request URLs are not shown
 Failures make no automatic retry. Clicking **Prepare first reply** again starts
 a new manual attempt.
 
+**Company context (optional)** accepts Markdown, TXT, text-based PDF, a specific
+public HTTPS webpage, or plain-language company conditions. JSON is available
+only under the advanced controls. Importing reads text locally without a model
+call and displays the source, reading coverage and editable text preview. Retain
+only relevant sections and state the product/market/project scope in ordinary
+language. Preview edits are marked as operator edits; the original source hash
+remains attached to the submitted context.
+
+Imported files remain working references and websites remain public references
+until the operator explicitly confirms the applicable text and scope for the
+current inquiry. Confirmation does not create a persistent company profile.
+The configured drafting endpoint receives the selected text when a reply is
+prepared. Original uploads are not saved; temporary PDF files are deleted after
+local extraction. Up to three sources are supported, 4 MiB per file and 60,000
+characters per source. The existing 30-statement context limit still applies;
+trim the preview to relevant sections if a combined packet is too large.
+
+PDFs are limited to 30 pages. PDF text extraction does not verify images, diagrams
+or visual table layout; image-only scans and protected PDFs produce explicit
+errors. Web import reads one page only, including static HTML/text or a PDF URL;
+it does not crawl, sign in or execute JavaScript. Unreachable/unsupported sources
+leave existing context unchanged. Company sources are separate from customer
+attachments and do not establish that customer material was read.
+
 1. Load the synthetic hero and review/authorize its invented company conditions.
 2. Prepare the first reply. Mode distinguishes live Apertus from recorded playback.
 3. Review the business focus and authorized conditions under **Why this reply?**
@@ -76,6 +100,9 @@ certification. See [evaluation and exact required edits](track_2b/docs/LIGHT-DEM
   context_authorized, source_state and a text business_brief.
 - POST /approve: existing draft_id, current draft, actor, reviewed: true.
   Approval binds to that draft version and its input hash.
+- POST /context/import: one Markdown/TXT/PDF upload (base64 file bytes) or one
+  HTTPS website URL. Returns local text/coverage/provenance only; no model call,
+  company authorization, draft or approval is created by import.
 
 ```sh
 cd track_2b

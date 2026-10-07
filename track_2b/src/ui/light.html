@@ -10,8 +10,13 @@
 <main><h2 class="intro">A useful first reply.<br>With you in control.</h2><p class="subtitle">Paste an inquiry. Review what you can reliably answer, then approve the wording yourself.</p>
 <label for="inquiry">Customer inquiry</label><textarea id="inquiry" placeholder="Paste the inquiry here…"></textarea>
 <details id="examples"><summary>Try a demo example (optional)</summary><p class="meta">Choose an example to fill the inquiry automatically. Its company conditions are fictional and require your confirmation. You can also paste your own inquiry directly.</p><select id="sample" aria-label="Synthetic example"><option value="">Choose a synthetic example</option></select></details>
-<details id="context-panel"><summary>Company context, source state &amp; optional business focus</summary><p class="meta">No private company context is preloaded. These examples use invented company conditions. For a new inquiry, enter source-backed conditions or leave context empty for cold start.</p>
-<div id="context-summary"></div><label><input type="checkbox" id="auth">I authorize these confirmed company statements for this inquiry, including their scope and conditions.</label><details><summary>Edit source packet (advanced)</summary><label for="context">Company statements with source and scope (JSON)</label><textarea id="context" rows="7">[]</textarea>
+<details id="context-panel" open><summary>Company context (optional)</summary><p class="meta">Upload your company documents or read a specific company webpage. No JSON needed. Files are read locally; context goes to the configured Apertus endpoint when you prepare a reply. Nothing is saved as a company profile.</p>
+<label for="company-files">Company documents · Markdown, TXT or text-based PDF</label><input id="company-files" type="file" accept=".md,.markdown,.txt,.pdf" multiple><p class="meta">Up to 3 sources · 4 MiB per file · PDF: up to 30 pages. Scans, diagrams and visual tables are not fully read.</p>
+<label for="company-url">Company webpage</label><div class="row"><input id="company-url" type="url" placeholder="https://your-company.example/about" style="flex:1;min-width:180px"><button id="read-company-url">Read this page</button></div><p class="meta">Reads this public HTTPS page only. It does not crawl the website or use a logged-in browser.</p>
+<div id="company-documents"></div><label for="company-note">Add or correct company conditions in your own words</label><textarea id="company-note" rows="3" placeholder="Write the applicable capability, price or terms, keeping their product, market, quantity basis and conditions."></textarea>
+<label for="company-note-scope">These added conditions apply to</label><input id="company-note-scope" maxlength="240" value="This inquiry only; preserve the product, unit and conditions stated above.">
+<div id="context-summary"></div><label><input type="checkbox" id="auth">I reviewed the imported text and confirm the company conditions are current and authorized for this inquiry, within the stated scope. Unchecked sources remain references, not company truth.</label>
+<details><summary>Advanced: source state and structured context</summary><p class="meta">Optional technical controls. Uploaded company documents are separate from customer attachments.</p><label for="context">Company statements with source and scope (JSON)</label><textarea id="context" rows="7">[]</textarea>
 <label for="sources">Source state (JSON; unread material stays unread)</label><textarea id="sources" rows="3">{"body":"read","thread":"not_supplied","attachments":[]}</textarea>
 </details><label for="brief">Optional business focus</label><textarea id="brief" rows="4" placeholder="A short direction or correction; no full form or message plan required."></textarea></details>
 <div class="row"><button class="primary" id="generate">Prepare first reply</button><span class="meta" id="generation-note">One Apertus draft · no automatic sending</span></div><div id="notice" role="status" aria-live="polite"></div>
@@ -22,8 +27,96 @@
 <div id="approve-panel"><label for="actor">Reviewer</label><input id="actor" placeholder="Your name" autocomplete="name"><label><input type="checkbox" id="reviewed">I reviewed the answers, next step, quantities, company conditions and unread sources.</label><button id="approve" class="primary" disabled>Approve this version</button><p class="meta" id="approval-state">Approval records this version only. Nothing is sent.</p></div>
 </section><p class="meta">Local prototype · drafts and approvals are held in memory only · restart clears the session</p></main>
 <script>
-let samples=[], current=null, busy=false, exampleLoaded=false;
+let samples=[], current=null, busy=false, importing=false, exampleLoaded=false, companyDocuments=[];
 const $=id=>document.getElementById(id);
+function lockInputs(){
+  const locked=busy||importing;
+  for(const id of ['inquiry','sample','context','sources','brief','auth','company-note','company-note-scope','company-files','company-url','read-company-url','generate','edit'])$(id).disabled=locked;
+  for(const field of $('company-documents').querySelectorAll('input,textarea,button'))field.disabled=locked;
+}
+function contextChanged(){
+  $('auth').checked=false;
+  if(current){current=null;approvalButton();notice('Company context changed. Prepare a new draft before approving; the prior draft remains visible.');}
+}
+function leaveDemoContext(){
+  if(!exampleLoaded)return;
+  exampleLoaded=false;$('sample').value='';$('context').value='[]';$('context-summary').replaceChildren();$('brief').value='';
+  $('sources').value='{"body":"read","thread":"not_supplied","attachments":[]}';
+}
+function contextFacts(){
+  const facts=JSON.parse($('context').value);
+  if(!Array.isArray(facts))throw Error('Structured company context must be a list.');
+  function append(text,source,scope,status,coverage){
+    if(!scope.trim())throw Error('Add the applicable scope for each company source.');
+    const lines=text.split('\n');let start=1,buffer=[];
+    function emit(){if(!buffer.length)return;facts.push({statement:buffer.join('\n'),source:source+' · lines '+start+'–'+(start+buffer.length-1),scope:scope.trim(),status,...coverage});buffer=[];}
+    for(let n=0;n<lines.length;n++){
+      // Preserve all selected text in order; no semantic extraction or truncation.
+      if(lines[n].length>2000)throw Error('A source has a very long line. Break it at paragraph boundaries in the preview before drafting.');
+      if(buffer.join('\n').length+lines[n].length+1>2000){emit();start=n+1;}
+      if(!buffer.length)start=n+1;
+      buffer.push(lines[n]);
+    }emit();
+  }
+  for(const d of companyDocuments){
+    if(!d.text.trim())continue;
+    append(d.text,d.source.split('?')[0].slice(0,350)+(d.text!==d.original_text?' (operator-edited preview)':''),d.scope,$('auth').checked?'COMPANY_CONFIRMED':d.status,
+      {source_reading_state:d.reading_state,source_coverage:d.coverage,source_sha256:d.sha256,
+       operator_edited:d.text!==d.original_text});
+  }
+  if($('company-note').value.trim())append($('company-note').value,'Operator statement for this inquiry',$('company-note-scope').value,$('auth').checked?'COMPANY_CONFIRMED':'WORKING_VALUE',{});
+  if(facts.length>30)throw Error('Too much company context for one draft. Keep the relevant sections in the source previews or remove a source.');
+  return facts;
+}
+function showCompanyDocuments(){
+  $('company-documents').replaceChildren();
+  for(const [n,d] of companyDocuments.entries()){
+    const box=document.createElement('div');box.className='hint';
+    const title=document.createElement('strong');title.textContent=d.name;box.append(title);
+    const coverage=document.createElement('p');coverage.className='meta';coverage.textContent=d.source+' · '+d.coverage;box.append(coverage);
+    const label=document.createElement('label');label.textContent='Applies to';label.htmlFor='document-scope-'+n;
+    const scope=document.createElement('input');scope.id=label.htmlFor;scope.maxLength=240;scope.value=d.scope;scope.oninput=()=>{d.scope=scope.value;contextChanged();};box.append(label,scope);
+    const details=document.createElement('details'),summary=document.createElement('summary');summary.textContent='Review or select relevant text ('+d.text.length+' characters)';details.append(summary);
+    const preview=document.createElement('textarea');preview.rows=9;preview.value=d.text;preview.setAttribute('aria-label','Imported text: '+d.name);preview.oninput=()=>{d.text=preview.value;contextChanged();};details.append(preview);box.append(details);
+    const remove=document.createElement('button');remove.textContent='Remove '+d.name;remove.onclick=()=>{if(busy||importing)return;companyDocuments.splice(n,1);contextChanged();showCompanyDocuments();};box.append(remove);
+    $('company-documents').append(box);
+  }
+  lockInputs();
+}
+async function importCompanySource(bodies){
+  if(busy||importing)return;
+  if(companyDocuments.length+bodies.length>3){notice('Use up to 3 sources. Remove an existing source first.','error',true);return;}
+  importing=true;lockInputs();approvalButton();
+  notice('Reading company source text locally… Existing context and draft are kept if reading fails.','info',true);
+  let added=0;
+  try{
+    for(const body of bodies){
+      const {document:d}=await request('/context/import',body);
+      if(companyDocuments.some(x=>x.sha256===d.sha256&&x.source===d.source))continue;
+      leaveDemoContext();d.original_text=d.text;d.scope='This inquiry only; retain the source’s product, market, unit and conditions.';
+      companyDocuments.push(d);added++;contextChanged();showCompanyDocuments();
+    }
+    notice(added+' source(s) imported. Review the text and scope, then confirm only company conditions you authorize for this inquiry.');
+  }catch(e){notice(e.message,'error',true);}
+  finally{importing=false;lockInputs();approvalButton();}
+}
+$('company-files').onchange=async()=>{
+  if(busy||importing)return;
+  const files=[...$('company-files').files];if(!files.length)return;
+  if(files.length+companyDocuments.length>3){notice('Use up to 3 company sources.','error',true);$('company-files').value='';return;}
+  importing=true;lockInputs();approvalButton();
+  let bodies=[];
+  try{
+    for(const file of files){
+      if(!/\.(md|markdown|txt|pdf)$/i.test(file.name)||!file.size||file.size>4*1024*1024)throw Error('Select nonempty Markdown, TXT or PDF files of at most 4 MiB each.');
+      const encoded=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=()=>reject(Error('Could not read the selected file.'));reader.readAsDataURL(file);});
+      bodies.push({kind:'file',name:file.name,content_base64:encoded});
+    }
+  }catch(e){bodies=[];notice(e.message,'error',true);}
+  finally{importing=false;lockInputs();approvalButton();$('company-files').value='';}
+  if(bodies.length)await importCompanySource(bodies);
+};
+$('read-company-url').onclick=()=>{if(!$('company-url').value.trim()){notice('Enter a specific company webpage first.','error',true);return;}importCompanySource([{kind:'website',url:$('company-url').value.trim()}]);};
 function notice(text,kind='info',reveal=false){$('notice').textContent=text;$('notice').classList.toggle('notice-error',kind==='error');$('notice').setAttribute('role',kind==='error'?'alert':'status');if(reveal)$('notice').scrollIntoView({block:'nearest'});}
 function failedRequest(meta){
   const safe={};
@@ -47,12 +140,13 @@ async function request(path,body){
     throw e;
   }finally{clearTimeout(timer);}
 }
-function approvalButton(){$('approve').disabled=!current||busy||!$('reviewed').checked||!$('actor').value.trim();}
+function approvalButton(){$('approve').disabled=!current||busy||importing||!$('reviewed').checked||!$('actor').value.trim();}
 function invalidate(){if(current){$('reviewed').checked=false;$('approval-state').textContent='This version needs review. Previous approval does not apply to edits.';approvalButton();}}
 function resizeDraft(){$('draft').style.height='auto';$('draft').style.height=Math.max(310,$('draft').scrollHeight+12)+'px';}
 function show(result){current=result;$('result').classList.remove('hidden');$('draft').value=result.raw_draft;$('draft').readOnly=true;resizeDraft();$('edit').textContent='Edit draft';$('hint').textContent=result.contextual_hint||'';$('hint').classList.toggle('hidden',!result.contextual_hint);$('warnings').replaceChildren();for(const w of result.warnings||[]){const box=document.createElement('div');box.className='warning';const q=document.createElement('q');q.textContent=w.phrase;box.append(q,document.createTextNode(' — '+w.reason));$('warnings').append(box);}$('brief-view').textContent=JSON.stringify(result.brief,null,2);$('technical').textContent=JSON.stringify({meta:result.meta,input_hash:result.input_hash,raw_first_draft:result.raw_draft},null,2);$('result-mode').textContent=result.meta.mode==='recorded_replay'?'Recorded first draft · no new inference':'Live Apertus · first draft';invalidate();}
 $('sample').onchange=()=>{
   const c=samples.find(x=>x.id===$('sample').value);if(!c)return;
+  companyDocuments=[];showCompanyDocuments();$('company-note').value='';$('company-url').value='';
   $('inquiry').value=c.inquiry;$('context-summary').replaceChildren();
   for(const f of c.company_context){const p=document.createElement('p');p.className='meta';p.textContent=f.statement;$('context-summary').append(p);}
   $('context').value=JSON.stringify(c.company_context,null,2);$('sources').value=JSON.stringify(c.source_state,null,2);$('brief').value=c.business_brief;
@@ -60,15 +154,15 @@ $('sample').onchange=()=>{
   notice('Example filled in. Review the fictional company conditions and tick the authorization box before preparing it.');
 };
 $('generate').onclick=async()=>{
-  if(busy)return;
+  if(busy||importing)return;
   if(!$('inquiry').value.trim()){notice('Paste a customer inquiry first. Demo examples are optional.','error',true);$('inquiry').focus();return;}
   let facts,sources;
-  try{facts=JSON.parse($('context').value);sources=JSON.parse($('sources').value);}
-  catch{notice('Check the JSON in Company context / Edit source packet. Your inquiry is kept.','error',true);$('context-panel').open=true;return;}
+  try{facts=contextFacts();sources=JSON.parse($('sources').value);}
+  catch(e){notice(e.message||'Check the advanced source state. Your inquiry is kept.','error',true);$('context-panel').open=true;return;}
   if(Array.isArray(facts)&&facts.some(f=>f&&f.status==='COMPANY_CONFIRMED')&&!$('auth').checked){
     $('context-panel').open=true;notice('Review the company statements and tick “I authorize…” before using them. No draft request has been sent.','error',true);$('auth').focus();return;
   }
-  busy=true;$('generate').disabled=true;$('generate').textContent='Preparing…';$('generate').setAttribute('aria-busy','true');approvalButton();
+  busy=true;lockInputs();$('generate').textContent='Preparing…';$('generate').setAttribute('aria-busy','true');approvalButton();
   $('failure-details').classList.add('hidden');
   notice('Reading linked image references and preparing one draft… Your previous draft will remain if generation fails.','info',true);
   try{
@@ -83,7 +177,7 @@ $('generate').onclick=async()=>{
       notice(r.status==='endpoint_required'?'This service is in recorded-demo mode. New inquiries need a live Apertus endpoint. Your input is kept.':r.confirmation||r.error||'No draft generated. Your previous draft is kept.','error',true);
     }
   }catch(e){notice(e.message,'error',true);}
-  finally{busy=false;$('generate').disabled=false;$('generate').textContent='Prepare first reply';$('generate').removeAttribute('aria-busy');approvalButton();}
+  finally{busy=false;lockInputs();$('generate').textContent='Prepare first reply';$('generate').removeAttribute('aria-busy');approvalButton();}
 };
 $('edit').onclick=()=>{$('draft').readOnly=false;$('draft').focus();$('edit').textContent='Editing';invalidate();};$('draft').oninput=()=>{resizeDraft();invalidate();};$('reviewed').onchange=approvalButton;$('actor').oninput=approvalButton;
 for(const id of ['inquiry','context','sources','brief'])$(id).addEventListener('input',()=>{
@@ -95,6 +189,7 @@ for(const id of ['inquiry','context','sources','brief'])$(id).addEventListener('
   if(current){current=null;$('approve').disabled=true;notice('Inputs changed. Prepare a new draft before approving; the prior draft remains visible.');}
 });
 $('auth').onchange=()=>{if(current){current=null;approvalButton();}};
+for(const id of ['company-note','company-note-scope'])$(id).addEventListener('input',()=>{leaveDemoContext();contextChanged();});
 $('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('draft').value);notice('Copied. Sending remains your responsibility.');}catch(e){notice('Select the draft text and copy manually.');}};
 $('approve').onclick=async()=>{if(!current)return;try{const r=await request('/approve',{draft_id:current.draft_id,draft:$('draft').value,actor:$('actor').value,reviewed:$('reviewed').checked});$('approval-state').textContent='Approved by '+r.actor+' for this version. Nothing was sent.';$('approval-state').className='approved';notice('Explicit approval recorded in this local session.');}catch(e){notice(e.message);}};
 (async()=>{

@@ -9,6 +9,7 @@ from urllib.parse import urlsplit
 
 import light_harness as H
 import llm_client
+import company_import
 
 RECORDS = OrderedDict()
 LOCK = threading.Lock()
@@ -48,17 +49,21 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(403, {'error': 'same-origin request required'})
         if self.headers.get('Sec-Fetch-Site') == 'cross-site':
             return self.send(403, {'error': 'cross-site request denied'})
-        if urlsplit(self.path).path not in ('/process', '/approve'):
+        path = urlsplit(self.path).path
+        if path not in ('/process', '/approve', '/context/import'):
             return self.send(404, {'error': 'not found'})
         try:
             n = int(self.headers.get('Content-Length', '0'))
-            if not 0 < n <= 120000:
+            limit = 6 * 1024 * 1024 if path == '/context/import' else 512000
+            if not 0 < n <= limit:
                 return self.send(413, {'error': 'request size invalid'})
             if not self.headers.get('Content-Type', '').startswith('application/json'):
                 return self.send(415, {'error': 'application/json required'})
             body = json.loads(self.rfile.read(n))
             if not isinstance(body, dict):
                 raise ValueError('JSON object required')
+            if path == '/context/import':
+                return self.send(200, {'document': company_import.import_source(body)})
             if urlsplit(self.path).path == '/process':
                 result = H.process(body)
                 if result['status'] == 'draft_for_human_review':
@@ -86,6 +91,8 @@ class Handler(BaseHTTPRequestHandler):
                             'warnings': H.check_draft(draft, record['packet'])}
                 record['approvals'].append(approval)
             return self.send(200, {'status': 'human_approved', **approval})
+        except company_import.ImportFailure as error:
+            return self.send(400, {'error': str(error)})
         except (ValueError, TypeError, KeyError):
             return self.send(400, {'error': 'Invalid request. Check inquiry, source-backed context and explicit review fields.'})
         except Exception:
