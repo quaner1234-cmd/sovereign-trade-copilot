@@ -115,6 +115,16 @@ per-style MOQ basis and unsupported sample-fee inclusions. The hero also needs
 an explicit next-move sentence. Warnings are incomplete review aids, not safety
 certification. See [evaluation and exact required edits](track_2b/docs/LIGHT-DEMO-EVALUATION.md).
 
+A later same-context calibration also failed: neither adding stage-specific
+decision principles nor a separate shortened revision reliably preserved MOQ
+basis, NDA order and responsibility for performance verification. All synthetic
+first outputs are preserved in [the calibration record](track_2b/docs/DECISION-CALIBRATION.md).
+The attempted prompts were rolled back. Light Harness 1.3 retains advisory review
+aids and shows actual link-reading coverage under **Why this reply?**, explicitly
+including **public buyer search: not run**. It does not claim improved business
+acceptance. A list-based question warning is heuristic and may miss grouped
+requests or flag an answer list; it never rewrites or blocks the draft.
+
 ## API and checks
 
 - GET /health: pipeline/model/mode; sending disabled.

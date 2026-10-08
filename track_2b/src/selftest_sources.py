@@ -93,12 +93,20 @@ class SourceTests(unittest.TestCase):
             result = R.enrich(self.packet())
             self.assertEqual(result['_linked_sources'][0]['reason'], 'http_403')
             self.assertEqual(result['_linked_sources'][0]['state'], 'referenced_unread')
+            self.assertEqual(result['_linked_sources'][0]['retrieval'], 'attempted')
+            coverage = H.brief_view(result)['retrieval_coverage']
+            self.assertEqual(coverage['linked_sources_attempted'], 1)
+            self.assertEqual(coverage['linked_sources_downloaded'], 0)
+            self.assertEqual(coverage['linked_sources_with_text'], 0)
         with patch.dict(R.os.environ, {'SOURCE_READ_ENABLED': '1'}), \
              patch.object(R, 'fetch_image', return_value=(PNG, 'image/png')), \
              patch.object(R, 'image_text', side_effect=R.ReadFailure('no_readable_text')):
             result = R.enrich(self.packet())
             self.assertEqual(result['_linked_sources'][0]['retrieval'], 'downloaded')
             self.assertEqual(result['_linked_sources'][0]['state'], 'referenced_unread')
+            coverage = H.brief_view(result)['retrieval_coverage']
+            self.assertEqual(coverage['linked_sources_downloaded'], 1)
+            self.assertEqual(coverage['linked_sources_with_text'], 0)
 
     def test_read_count_and_no_source_work_before_company_confirmation(self):
         packet = self.packet()
@@ -109,6 +117,10 @@ class SourceTests(unittest.TestCase):
             result = R.enrich(packet)
             self.assertEqual(fetch.call_count, R.MAX_READS)
             self.assertEqual(result['_linked_sources'][2]['reason'], 'read_limit')
+            coverage = H.brief_view(result)['retrieval_coverage']
+            self.assertEqual(coverage['linked_references_tracked'], 4)
+            self.assertEqual(coverage['linked_sources_attempted'], 2)
+            self.assertEqual(coverage['linked_sources_with_text'], 2)
         with patch.object(R, 'enrich') as reader:
             self.assertEqual(H.process(dict(self.packet(), context_authorized=False))['status'], 'confirmation_required')
             reader.assert_not_called()

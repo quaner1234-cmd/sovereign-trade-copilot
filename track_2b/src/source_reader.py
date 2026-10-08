@@ -188,6 +188,7 @@ def enrich(packet):
             item['reason'] = 'read_limit'
             continue
         reads += 1
+        item['retrieval'] = 'attempted'
         try:
             data, kind = fetch_image(url, deadline)
             item.update(retrieval='downloaded', byte_count=len(data), content_type=kind,

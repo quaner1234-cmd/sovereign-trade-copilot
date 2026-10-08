@@ -9,7 +9,7 @@ import source_reader
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILL = (ROOT / 'src/light_skill.md').read_text(encoding='utf-8')
-VERSION = 'light-harness-1.2'
+VERSION = 'light-harness-1.3'
 FIELDS = ('inquiry', 'company_context', 'context_authorized', 'source_state', 'business_brief',
           'operator_context', 'reply_materials')
 
@@ -78,6 +78,18 @@ def brief_view(packet):
         'authorized_company_conditions': confirmed,
         'provisional_references_not_company_truth': references,
         'source_state': packet['source_state'],
+        'retrieval_coverage': {
+            'public_buyer_search': 'not_performed; no search tool in this drafting call',
+            'customer_links': 'JPEG/PNG local text OCR only; no full visual understanding',
+            'linked_references_tracked': len(packet.get('_linked_sources', [])),
+            'linked_sources_attempted': sum(a.get('retrieval') in ('attempted', 'downloaded')
+                                          for a in packet.get('_linked_sources', [])),
+            'linked_sources_downloaded': sum(a.get('retrieval') == 'downloaded'
+                                           for a in packet.get('_linked_sources', [])),
+            'linked_sources_with_text': sum(a.get('method') == 'local_ocr'
+                                          for a in packet.get('_linked_sources', [])),
+            'company_context': 'Operator-selected text and scope, preserved without a generated summary',
+        },
         'unknown_policy': 'Keep unknown outcomes unknown; verification can proceed. Do not invent answers.',
         'material_boundary': ('Incoming source reading state is separate from company material availability. '
             'Private company-context imports are not outgoing attachments. Operator context supplies operational '
@@ -97,6 +109,9 @@ def brief_view(packet):
 
 
 def messages(packet):
+    view = brief_view(packet)
+    # Actual retrieval coverage is for the reviewer, not another drafting rule.
+    view.pop('retrieval_coverage', None)
     return [
         {'role': 'system', 'content': SKILL + '\nReturn a JSON object with exactly two text fields: '
          '"draft" (only the customer-facing email, in the inquiry main language) and '
@@ -108,7 +123,7 @@ def messages(packet):
          'Preserve all applicable conditions and required useful answers. Do not expand a general MOQ into a style/color minimum. '
          'Do not require a future bulk quantity before assessing an already-specified prototype.'},
         {'role': 'user', 'content': json.dumps({'inquiry': source_reader.inquiry_for_model(packet),
-         'lightweight_business_brief': source_reader.safe_for_model(brief_view(packet))}, ensure_ascii=False, indent=2)},
+         'lightweight_business_brief': source_reader.safe_for_model(view)}, ensure_ascii=False, indent=2)},
     ]
 
 
@@ -142,6 +157,8 @@ def check_draft(draft, packet):
                    'Verify this capability/result claim against the authorized company statements.'))
     checks.append(('fee_scope_review', r'\b(?:fee to cover|fee includes|fee covers|refundable|credited against)\b',
                    'Check the fee inclusions/refund/credit against an authorized company source. A normal sample-time condition does not authorize a fee breakdown.'))
+    checks.append(('operator_wording', r'\b(?:operator note|internal note|not authori[sz]ed|company.confirmed|working.value)\b',
+                   'This looks like operator/internal wording. Review it separately from the customer email.'))
     for code, pattern, reason in checks:
         for match in re.finditer(pattern, draft, re.I):
             warnings.append({'code': code, 'phrase': match.group(), 'start': match.start(), 'end': match.end(), 'reason': reason})
@@ -149,6 +166,14 @@ def check_draft(draft, packet):
         match = re.search(r'[^\n?]+\?', draft)
         warnings.append({'code': 'question_count', 'phrase': match.group().strip() if match else '?',
                          'reason': 'More than three question marks. Review question necessity; punctuation is not a complete question detector.'})
+    elif re.search(r'clarify|please (?:provide|share|confirm)|following (?:details|information|questions)', draft, re.I):
+        requests = list(re.finditer(r'^\s*(?:\d+[.)]|[-*])\s+\S[^\n]*', draft, re.M))
+        if len(requests) > 3:
+            match = requests[3]
+            start = match.start() + len(match.group()) - len(match.group().lstrip())
+            warnings.append({'code': 'question_count', 'phrase': match.group().strip(),
+                             'start': start, 'end': start + len(match.group().strip()),
+                             'reason': 'More than three list items alongside a request for details. Check whether this is an unnecessary questionnaire; this is an advisory heuristic, not a semantic count.'})
     return warnings
 
 

@@ -1,0 +1,56 @@
+{
+  "synthetic_only": true,
+  "protocol": "Freeze before changing the candidate; identical inputs, first output only, no retry. Gold is evaluation-only. These are developer-designed holdouts, not human blind review.",
+  "criteria": ["Supported questions answered", "Necessary customer questions only, at most three", "Correct current next move", "No unsupported company claim, value, basis or condition", "Known information and source state preserved", "No operator wording in customer email"],
+  "cases": [
+    {
+      "id": "S01",
+      "inquiry": "Hello, please send the catalogue and detail photos for your existing travel pouches. We want to select two shapes before specifying colours and fabric weight. We may start with about 650 pieces per selected model if the samples and pricing work. We will send our fabric requirements after selecting the models; we do not need a quotation today.",
+      "company_context": [{"statement": "We manufacture travel pouches. Our existing-model catalogue and detail photographs are ready and available for this reply. No project price is approved.", "source": "Synthetic range record", "scope": "Existing travel-pouch range only", "status": "COMPANY_CONFIRMED"}],
+      "context_authorized": true,
+      "operator_context": "The catalogue and detail photographs are available to attach to this reply. They have not yet been attached or sent.",
+      "source_state": {"body": "read", "attachments": []},
+      "gold": {"next_move": "Provide ready selection materials in this round; customer selects models, then supplies their specifications for costing.", "answers": ["Requested catalogue and photographs"], "questions": [], "forbidden": ["Re-ask quantity", "Ask specifications before selection", "Invent price or dispatch", "Replace customer's fabric requirements with company-supplied requirements"], "severity": "Prospective attachment wording is allowed with an operator reminder. Omitting a repetition of quantity is fine; changing it is not."}
+    },
+    {
+      "id": "S02",
+      "inquiry": "Hi, our new label is looking for a manufacturer for a custom cycling gilet. We already have a detailed tech pack and a draft NDA, and would like to share them once confidentiality is agreed. Could we discuss development?",
+      "company_context": [{"statement": "We develop cycling garments. An NDA may be submitted for internal review; no NDA is pre-approved. Feasibility and a project quotation require review of the design.", "source": "Synthetic development policy", "scope": "Cycling garment development", "status": "COMPANY_CONFIRMED"}],
+      "context_authorized": true,
+      "source_state": {"body": "read", "attachments": [{"name": "Customer tech pack and draft NDA", "state": "referenced_unread"}]},
+      "gold": {"next_move": "Invite the NDA for review; after agreement review the existing tech pack. Estimated first production quantity may be asked in parallel.", "answers": ["Development discussion can start with NDA review"], "questions": ["Estimated first production quantity"], "forbidden": ["Ask customer to rewrite fabric or performance details before reviewing tech pack", "Promise NDA signature", "Claim the tech pack was read", "Promise a quotation before review"], "severity": "New label is not evidence of fraud; no identity conclusion is authorized."}
+    },
+    {
+      "id": "S03",
+      "inquiry": "Hi, do you manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips? Can you obtain a lightweight fabric with a 12,000 mm waterproof rating? What is your MOQ?",
+      "company_context": [{"statement": "We manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips. Normal MOQ: 420 pcs. No per-style or per-colour basis or lower-quantity exception is confirmed. Availability and test evidence for the customer's requested fabric rating must be checked with suppliers.", "source": "Synthetic confirmed capability and terms", "scope": "Hiking overtrousers; normal MOQ only", "status": "COMPANY_CONFIRMED"}],
+      "context_authorized": true,
+      "source_state": {"body": "read", "attachments": []},
+      "gold": {"next_move": "Answer confirmed construction and general MOQ, check fabric options against the known target; invite design/reference and estimated quantity.", "answers": ["Confirmed construction", "MOQ 420 pcs with no invented basis", "Requested fabric rating needs supplier verification"], "questions": ["Design or reference", "Estimated quantity"], "forbidden": ["Re-ask waterproof rating", "Claim rating achieved or fabric stocked", "Add per style/color", "Introduce sample fee, shipping address or trade terms"], "severity": "Checking availability is allowed; claiming the target is available is not."}
+    },
+    {
+      "id": "S04",
+      "inquiry": "Hello, I maintain industrial chemical dosing equipment and want to develop a warm, waterproof coverall that is comfortable and durable. I have not found suitable clothing for my work and would like to discuss a new design with a manufacturer.",
+      "company_context": [{"statement": "We can review custom industrial-workwear concepts and assess ordinary garment construction. Chemical-protection performance and certification are not confirmed capabilities.", "source": "Synthetic technical review boundary", "scope": "Concept review only; no protection or certification claim", "status": "COMPANY_CONFIRMED"}],
+      "context_authorized": true,
+      "source_state": {"body": "read", "attachments": []},
+      "gold": {"next_move": "Review concept and clarify whether protective performance is required in addition to weather comfort; obtain initial design/reference and approximate project scale.", "answers": ["Willingness to review concept within confirmed boundary"], "questions": ["Required chemical exposure/protection, if any, alongside weather needs", "Initial design/reference and approximate quantity"], "forbidden": ["Select a mandatory standard", "Claim protective certification or safe use", "Ask a full RFQ questionnaire", "Invent samples or prices", "Treat weather comfort and chemical protection as mutually exclusive"], "severity": "At most three customer information requests; no safety determination."}
+    },
+    {
+      "id": "S05",
+      "inquiry": "Please assess and quote 900 plain canvas tool rolls, 45 x 30 cm, natural 340 gsm cotton canvas, six pockets, cotton binding, no logo, individual paper sleeves. An EXW price is fine. No special performance testing is needed. Please also indicate normal production lead time; we are evaluating costs rather than placing an order yet.",
+      "company_context": [{"statement": "We manufacture canvas tool rolls with ordinary cotton binding. Normal production lead time is 35–45 days after approved pre-production sample and deposit. No price or deposit percentage is approved for this project.", "source": "Synthetic commercial terms", "scope": "Ordinary canvas tool rolls; lead-time prerequisites must be preserved", "status": "COMPANY_CONFIRMED"}],
+      "context_authorized": true,
+      "source_state": {"body": "read", "attachments": []},
+      "gold": {"next_move": "Start internal costing using supplied specifications, with a later price for review. Answer authorized conditional lead time now.", "answers": ["35–45 days after approved pre-production sample and deposit"], "questions": [], "forbidden": ["Re-ask quantity, dimensions, fabric, logo, packaging or trade terms", "Require deposit agreement/payment before costing", "Ask permission to start requested costing", "Invent price or confirmed order"], "severity": "Deposit is a production timing condition, not a prerequisite to preparing a quotation."}
+    },
+    {
+      "id": "S06",
+      "inquiry": "Hello, we want ONE prototype of our own roomy paddling jacket design, not a larger standard jacket. The target is 18K/18K performance. Our sketches and measurements are in the PDF already supplied in the previous email. Please assess development options and let us know how we can proceed.",
+      "company_context": [{"statement": "We can review custom paddling-jacket patterns and seam construction. Fabric availability and performance test evidence must be verified; no 18K/18K capability, prototype price or development date is approved.", "source": "Synthetic development capability record", "scope": "Preliminary pattern and material assessment only", "status": "COMPANY_CONFIRMED"}],
+      "context_authorized": true,
+      "source_state": {"body": "read", "thread": "referenced_unread", "attachments": [{"name": "Previous-email sketches and measurements PDF", "state": "referenced_unread", "affects_current_reply": true}]},
+      "gold": {"next_move": "Review the existing PDF and assess custom pattern/material options before further specification questions. Conditional rough costing may accompany feasibility assessment.", "answers": ["Custom pattern review and material verification as next step"], "questions": ["Estimated first production quantity after prototype approval, optional and not a development blocker"], "forbidden": ["Re-ask sample quantity or supplied sketches/measurements", "Claim previous PDF read", "Turn performance target into company capability", "Block initial assessment on future bulk quantity", "Assume an order"], "severity": "Operator hint should request access/review of existing unread material rather than a new customer request."}
+    }
+  ]
+}

@@ -1,0 +1,472 @@
+[
+  {
+    "case_id": "S01",
+    "route": "control",
+    "input_hash": "16c6f626f511cc8f3ca3d8ed7aa066d2a70f6cb786b7e1eddc30263989c4b5a9",
+    "status": "draft_for_human_review",
+    "raw_draft": "Hello,\n\nWe can provide the catalogue and detail photos for our existing travel pouches right away. Please find them attached.\n\nWe’ll wait for you to select the two preferred shapes before you send the fabric requirements and colour/fabric-weight specifications.\n\nOnce you confirm the models, we can discuss samples and pricing for an initial run of approximately 650 pieces per selected model.\n\nLet us know which models you’d like to review first.",
+    "contextual_hint": "Catalogue and detail photographs are ready to attach; operator reminder to attach them before sending.",
+    "raw_model_output": "{\n  \"draft\": \"Hello,\\n\\nWe can provide the catalogue and detail photos for our existing travel pouches right away. Please find them attached.\\n\\nWe’ll wait for you to select the two preferred shapes before you send the fabric requirements and colour/fabric-weight specifications.\\n\\nOnce you confirm the models, we can discuss samples and pricing for an initial run of approximately 650 pieces per selected model.\\n\\nLet us know which models you’d like to review first.\",\n  \"contextual_hint\": \"Catalogue and detail photographs are ready to attach; operator reminder to attach them before sending.\"\n}",
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 4166,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1267,
+        "completion_tokens": 130,
+        "total_tokens": 1397
+      },
+      "finish_reason": "stop"
+    }
+  },
+  {
+    "case_id": "S01",
+    "route": "candidate",
+    "input_hash": "16c6f626f511cc8f3ca3d8ed7aa066d2a70f6cb786b7e1eddc30263989c4b5a9",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1.3",
+    "raw_draft": "We can send the existing travel-pouch catalogue and detail photographs right away. Please review the models; once you select the two shapes we will provide the fabric-weight options and a provisional cost estimate for approximately 650 pieces per chosen model. We’ll wait for your fabric requirements before finalizing colours and any other details.",
+    "draft": "We can send the existing travel-pouch catalogue and detail photographs right away. Please review the models; once you select the two shapes we will provide the fabric-weight options and a provisional cost estimate for approximately 650 pieces per chosen model. We’ll wait for your fabric requirements before finalizing colours and any other details.",
+    "raw_model_output": "{\n  \"draft\": \"We can send the existing travel-pouch catalogue and detail photographs right away. Please review the models; once you select the two shapes we will provide the fabric-weight options and a provisional cost estimate for approximately 650 pieces per chosen model. We’ll wait for your fabric requirements before finalizing colours and any other details.\",\n  \"contextual_hint\": \"Catalogue and detail photos are ready to attach; remind operator to attach them before sending.\"\n}",
+    "draft_hash": "5ecf479351166a4c2b1c85afc1fa01f010c714bba6a1f75211c0967f5ee10847",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "optional_operator_correction": "",
+      "operator_supplied_context": "The catalogue and detail photographs are available to attach to this reply. They have not yet been attached or sent.",
+      "reply_materials": [],
+      "authorized_company_conditions": [
+        {
+          "statement": "We manufacture travel pouches. Our existing-model catalogue and detail photographs are ready and available for this reply. No project price is approved.",
+          "source": "Synthetic range record",
+          "scope": "Existing travel-pouch range only",
+          "status": "COMPANY_CONFIRMED"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "attachments": []
+      },
+      "retrieval_coverage": {
+        "public_buyer_search": "not_performed; no search tool in this drafting call",
+        "customer_links": "JPEG/PNG local text OCR only; no full visual understanding",
+        "linked_sources_attempted": 0,
+        "company_context": "Operator-selected text and scope, preserved without a generated summary"
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers.",
+      "material_boundary": "Incoming source reading state is separate from company material availability. Private company-context imports are not outgoing attachments. Operator context supplies operational facts, not company capability/price authorization. Choose the present useful advance yourself. Prospective attachment wording for explicitly ready relevant company material requires an operator reminder before sending; nothing here dispatches or attaches a file."
+    },
+    "warnings": [],
+    "contextual_hint": "Catalogue and detail photos are ready to attach; remind operator to attach them before sending.",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2777,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 2094,
+        "completion_tokens": 100,
+        "total_tokens": 2194
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "S02",
+    "route": "candidate",
+    "input_hash": "a0a1a54f06d5e154c8205253db4858edf6118eb9c38d15fc5ea84bd0a63ebb60",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1.3",
+    "raw_draft": "We’re happy to review your cycling gilet tech pack and draft NDA once confidentiality is agreed. Please send the signed NDA and the tech pack so we can assess feasibility and provide a quotation for development. We’ll outline next steps after our internal review.",
+    "draft": "We’re happy to review your cycling gilet tech pack and draft NDA once confidentiality is agreed. Please send the signed NDA and the tech pack so we can assess feasibility and provide a quotation for development. We’ll outline next steps after our internal review.",
+    "raw_model_output": "{\n  \"draft\": \"We’re happy to review your cycling gilet tech pack and draft NDA once confidentiality is agreed. Please send the signed NDA and the tech pack so we can assess feasibility and provide a quotation for development. We’ll outline next steps after our internal review.\",\n  \"contextual_hint\": \"\"\n}",
+    "draft_hash": "1e4cf69ad1dffa0960e52fabd98f1c500e67e117d11674c50542568500cc9024",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "optional_operator_correction": "",
+      "operator_supplied_context": "",
+      "reply_materials": [],
+      "authorized_company_conditions": [
+        {
+          "statement": "We develop cycling garments. An NDA may be submitted for internal review; no NDA is pre-approved. Feasibility and a project quotation require review of the design.",
+          "source": "Synthetic development policy",
+          "scope": "Cycling garment development",
+          "status": "COMPANY_CONFIRMED"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "attachments": [
+          {
+            "name": "Customer tech pack and draft NDA",
+            "state": "referenced_unread"
+          }
+        ]
+      },
+      "retrieval_coverage": {
+        "public_buyer_search": "not_performed; no search tool in this drafting call",
+        "customer_links": "JPEG/PNG local text OCR only; no full visual understanding",
+        "linked_sources_attempted": 0,
+        "company_context": "Operator-selected text and scope, preserved without a generated summary"
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers.",
+      "material_boundary": "Incoming source reading state is separate from company material availability. Private company-context imports are not outgoing attachments. Operator context supplies operational facts, not company capability/price authorization. Choose the present useful advance yourself. Prospective attachment wording for explicitly ready relevant company material requires an operator reminder before sending; nothing here dispatches or attaches a file."
+    },
+    "warnings": [],
+    "contextual_hint": "",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2478,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 2085,
+        "completion_tokens": 69,
+        "total_tokens": 2154
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "S02",
+    "route": "control",
+    "input_hash": "a0a1a54f06d5e154c8205253db4858edf6118eb9c38d15fc5ea84bd0a63ebb60",
+    "status": "draft_for_human_review",
+    "raw_draft": "We’re happy to discuss development for your custom cycling gilet. To move forward we’ll need to review your tech pack and NDA once confidentiality is agreed. Please confirm you’d like us to proceed with that review and share any additional details you have on quantities, target price range, or delivery timeline.",
+    "contextual_hint": "",
+    "raw_model_output": "{\n  \"draft\": \"We’re happy to discuss development for your custom cycling gilet. To move forward we’ll need to review your tech pack and NDA once confidentiality is agreed. Please confirm you’d like us to proceed with that review and share any additional details you have on quantities, target price range, or delivery timeline.\",\n  \"contextual_hint\": \"\"\n}",
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2302,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1258,
+        "completion_tokens": 78,
+        "total_tokens": 1336
+      },
+      "finish_reason": "stop"
+    }
+  },
+  {
+    "case_id": "S03",
+    "route": "control",
+    "input_hash": "02837a02ae8c1a8c28e819ceb3d5064b864ea8a43af48be1b6cd9f736823b52e",
+    "status": "draft_for_human_review",
+    "raw_draft": "Yes, we manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips. We can source lightweight fabrics with high waterproof ratings, but the exact 12,000 mm rating availability needs supplier verification. Our standard minimum order quantity is 420 pieces per style/color combination. Could you confirm your preferred fabric composition and color options so we can check the 12,000 mm rating and provide a quotation?",
+    "contextual_hint": "",
+    "raw_model_output": "{\n  \"draft\": \"Yes, we manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips. We can source lightweight fabrics with high waterproof ratings, but the exact 12,000 mm rating availability needs supplier verification. Our standard minimum order quantity is 420 pieces per style/color combination. Could you confirm your preferred fabric composition and color options so we can check the 12,000 mm rating and provide a quotation?\",\n  \"contextual_hint\": \"\"\n}",
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2709,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1267,
+        "completion_tokens": 112,
+        "total_tokens": 1379
+      },
+      "finish_reason": "stop"
+    }
+  },
+  {
+    "case_id": "S03",
+    "route": "candidate",
+    "input_hash": "02837a02ae8c1a8c28e819ceb3d5064b864ea8a43af48be1b6cd9f736823b52e",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1.3",
+    "raw_draft": "Yes, we manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips. We can source lightweight fabrics; however, we must verify whether our suppliers can meet a confirmed 12,000 mm waterproof rating for the exact construction you require. Our standard minimum order quantity is 420 pieces per style/color combination. Could you confirm the exact fabric composition and any additional technical requirements you need verified? This will allow us to provide a precise quotation and lead-time.",
+    "draft": "Yes, we manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips. We can source lightweight fabrics; however, we must verify whether our suppliers can meet a confirmed 12,000 mm waterproof rating for the exact construction you require. Our standard minimum order quantity is 420 pieces per style/color combination. Could you confirm the exact fabric composition and any additional technical requirements you need verified? This will allow us to provide a precise quotation and lead-time.",
+    "raw_model_output": "{\n  \"draft\": \"Yes, we manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips. We can source lightweight fabrics; however, we must verify whether our suppliers can meet a confirmed 12,000 mm waterproof rating for the exact construction you require. Our standard minimum order quantity is 420 pieces per style/color combination. Could you confirm the exact fabric composition and any additional technical requirements you need verified? This will allow us to provide a precise quotation and lead-time.\",\n  \"contextual_hint\": \"\"\n}",
+    "draft_hash": "495974d549c9030a5a9b396acf527ac621ece03859fd9a06cc36dae63a6278b0",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "optional_operator_correction": "",
+      "operator_supplied_context": "",
+      "reply_materials": [],
+      "authorized_company_conditions": [
+        {
+          "statement": "We manufacture hiking overtrousers with sealed seams, ankle adjustment and waterproof zips. Normal MOQ: 420 pcs. No per-style or per-colour basis or lower-quantity exception is confirmed. Availability and test evidence for the customer's requested fabric rating must be checked with suppliers.",
+          "source": "Synthetic confirmed capability and terms",
+          "scope": "Hiking overtrousers; normal MOQ only",
+          "status": "COMPANY_CONFIRMED"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "attachments": []
+      },
+      "retrieval_coverage": {
+        "public_buyer_search": "not_performed; no search tool in this drafting call",
+        "customer_links": "JPEG/PNG local text OCR only; no full visual understanding",
+        "linked_sources_attempted": 0,
+        "company_context": "Operator-selected text and scope, preserved without a generated summary"
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers.",
+      "material_boundary": "Incoming source reading state is separate from company material availability. Private company-context imports are not outgoing attachments. Operator context supplies operational facts, not company capability/price authorization. Choose the present useful advance yourself. Prospective attachment wording for explicitly ready relevant company material requires an operator reminder before sending; nothing here dispatches or attaches a file."
+    },
+    "warnings": [
+      {
+        "code": "quantity_basis",
+        "phrase": "per style/color",
+        "start": 317,
+        "end": 332,
+        "reason": "Check this MOQ basis: the authorized company context does not specify a style/color basis."
+      }
+    ],
+    "contextual_hint": "",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 3026,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 2094,
+        "completion_tokens": 120,
+        "total_tokens": 2214
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "S04",
+    "route": "candidate",
+    "input_hash": "482669ee64cf08e1d8fb924f330bf6b9a9a77b0060b56a3c912744ca631a7caa",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1.3",
+    "raw_draft": "Thank you for describing your need for a warm, waterproof, comfortable and durable coverall for industrial chemical dosing equipment maintenance. We can review your concept and discuss ordinary garment construction options within our current capabilities. Chemical-protection performance and certification are not confirmed capabilities at this stage. To move forward, please share any existing design sketches, fabric preferences, or specific comfort requirements you have already identified. We will then provide a concept review and outline any feasibility considerations or next steps.",
+    "draft": "Thank you for describing your need for a warm, waterproof, comfortable and durable coverall for industrial chemical dosing equipment maintenance. We can review your concept and discuss ordinary garment construction options within our current capabilities. Chemical-protection performance and certification are not confirmed capabilities at this stage. To move forward, please share any existing design sketches, fabric preferences, or specific comfort requirements you have already identified. We will then provide a concept review and outline any feasibility considerations or next steps.",
+    "raw_model_output": "{\n  \"draft\": \"Thank you for describing your need for a warm, waterproof, comfortable and durable coverall for industrial chemical dosing equipment maintenance. We can review your concept and discuss ordinary garment construction options within our current capabilities. Chemical-protection performance and certification are not confirmed capabilities at this stage. To move forward, please share any existing design sketches, fabric preferences, or specific comfort requirements you have already identified. We will then provide a concept review and outline any feasibility considerations or next steps.\",\n  \"contextual_hint\": \"\"\n}",
+    "draft_hash": "3632da59c6d3305f4141effedbaab4243ce84a4d407c3a3ef2a83f84d05a5209",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "optional_operator_correction": "",
+      "operator_supplied_context": "",
+      "reply_materials": [],
+      "authorized_company_conditions": [
+        {
+          "statement": "We can review custom industrial-workwear concepts and assess ordinary garment construction. Chemical-protection performance and certification are not confirmed capabilities.",
+          "source": "Synthetic technical review boundary",
+          "scope": "Concept review only; no protection or certification claim",
+          "status": "COMPANY_CONFIRMED"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "attachments": []
+      },
+      "retrieval_coverage": {
+        "public_buyer_search": "not_performed; no search tool in this drafting call",
+        "customer_links": "JPEG/PNG local text OCR only; no full visual understanding",
+        "linked_sources_attempted": 0,
+        "company_context": "Operator-selected text and scope, preserved without a generated summary"
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers.",
+      "material_boundary": "Incoming source reading state is separate from company material availability. Private company-context imports are not outgoing attachments. Operator context supplies operational facts, not company capability/price authorization. Choose the present useful advance yourself. Prospective attachment wording for explicitly ready relevant company material requires an operator reminder before sending; nothing here dispatches or attaches a file."
+    },
+    "warnings": [],
+    "contextual_hint": "",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2980,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 2052,
+        "completion_tokens": 111,
+        "total_tokens": 2163
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "S04",
+    "route": "control",
+    "input_hash": "482669ee64cf08e1d8fb924f330bf6b9a9a77b0060b56a3c912744ca631a7caa",
+    "status": "draft_for_human_review",
+    "raw_draft": "Thank you for describing your need for a warm, waterproof, comfortable, and durable coverall for industrial chemical dosing equipment maintenance. We can review custom industrial-workwear concepts and assess ordinary garment construction for your use case. Chemical-protection performance and certification are not confirmed capabilities at this stage—our initial focus is on fit, comfort, and durability aligned with your work environment. Could you share more details on the specific chemicals handled, typical temperature range, and any existing garment issues you’ve encountered? This will help us narrow the design direction.",
+    "contextual_hint": "",
+    "raw_model_output": "{\n  \"draft\": \"Thank you for describing your need for a warm, waterproof, comfortable, and durable coverall for industrial chemical dosing equipment maintenance. We can review custom industrial-workwear concepts and assess ordinary garment construction for your use case. Chemical-protection performance and certification are not confirmed capabilities at this stage—our initial focus is on fit, comfort, and durability aligned with your work environment. Could you share more details on the specific chemicals handled, typical temperature range, and any existing garment issues you’ve encountered? This will help us narrow the design direction.\",\n  \"contextual_hint\": \"\"\n}",
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2896,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1225,
+        "completion_tokens": 125,
+        "total_tokens": 1350
+      },
+      "finish_reason": "stop"
+    }
+  },
+  {
+    "case_id": "S05",
+    "route": "control",
+    "input_hash": "f07094c54e344a205a2f4ea9380f5485678ecfdc640913bb65947d740e5cdc29",
+    "status": "draft_for_human_review",
+    "raw_draft": "We can provide plain cotton canvas tool rolls as described. For 900 units, 45 x 30 cm, natural 340 gsm, six pockets, cotton binding, no logo, individual paper sleeves, EXW pricing is feasible. Normal production lead time is 35–45 days after approved pre-production sample and deposit. No deposit or price is confirmed yet; we can prepare a provisional cost estimate upon receipt of a pre-production sample. Please advise if you wish to proceed with sample submission.",
+    "contextual_hint": "",
+    "raw_model_output": "{\n  \"draft\": \"We can provide plain cotton canvas tool rolls as described. For 900 units, 45 x 30 cm, natural 340 gsm, six pockets, cotton binding, no logo, individual paper sleeves, EXW pricing is feasible. Normal production lead time is 35–45 days after approved pre-production sample and deposit. No deposit or price is confirmed yet; we can prepare a provisional cost estimate upon receipt of a pre-production sample. Please advise if you wish to proceed with sample submission.\",\n  \"contextual_hint\": \"\"\n}",
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2913,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1276,
+        "completion_tokens": 125,
+        "total_tokens": 1401
+      },
+      "finish_reason": "stop"
+    }
+  },
+  {
+    "case_id": "S05",
+    "route": "candidate",
+    "input_hash": "f07094c54e344a205a2f4ea9380f5485678ecfdc640913bb65947d740e5cdc29",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1.3",
+    "raw_draft": "We can provide a provisional EXW price estimate for 900 plain cotton canvas tool rolls (45 x 30 cm, 340 gsm, six pockets, cotton binding, no logo, individual paper sleeves). To proceed with a firm quote we require an approved pre-production sample and a deposit. Normal production lead time is 35–45 days after sample approval and deposit receipt. Please confirm if you would like us to prepare the sample and quote based on these conditions.",
+    "draft": "We can provide a provisional EXW price estimate for 900 plain cotton canvas tool rolls (45 x 30 cm, 340 gsm, six pockets, cotton binding, no logo, individual paper sleeves). To proceed with a firm quote we require an approved pre-production sample and a deposit. Normal production lead time is 35–45 days after sample approval and deposit receipt. Please confirm if you would like us to prepare the sample and quote based on these conditions.",
+    "raw_model_output": "{\n  \"draft\": \"We can provide a provisional EXW price estimate for 900 plain cotton canvas tool rolls (45 x 30 cm, 340 gsm, six pockets, cotton binding, no logo, individual paper sleeves). To proceed with a firm quote we require an approved pre-production sample and a deposit. Normal production lead time is 35–45 days after sample approval and deposit receipt. Please confirm if you would like us to prepare the sample and quote based on these conditions.\",\n  \"contextual_hint\": \"\"\n}",
+    "draft_hash": "aa72641d92c71436794c012fcb882ce812291d7f5930d46d8f9c93e4b9a15d4f",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "optional_operator_correction": "",
+      "operator_supplied_context": "",
+      "reply_materials": [],
+      "authorized_company_conditions": [
+        {
+          "statement": "We manufacture canvas tool rolls with ordinary cotton binding. Normal production lead time is 35–45 days after approved pre-production sample and deposit. No price or deposit percentage is approved for this project.",
+          "source": "Synthetic commercial terms",
+          "scope": "Ordinary canvas tool rolls; lead-time prerequisites must be preserved",
+          "status": "COMPANY_CONFIRMED"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "attachments": []
+      },
+      "retrieval_coverage": {
+        "public_buyer_search": "not_performed; no search tool in this drafting call",
+        "customer_links": "JPEG/PNG local text OCR only; no full visual understanding",
+        "linked_sources_attempted": 0,
+        "company_context": "Operator-selected text and scope, preserved without a generated summary"
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers.",
+      "material_boundary": "Incoming source reading state is separate from company material availability. Private company-context imports are not outgoing attachments. Operator context supplies operational facts, not company capability/price authorization. Choose the present useful advance yourself. Prospective attachment wording for explicitly ready relevant company material requires an operator reminder before sending; nothing here dispatches or attaches a file."
+    },
+    "warnings": [],
+    "contextual_hint": "",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 3133,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 2103,
+        "completion_tokens": 119,
+        "total_tokens": 2222
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "S06",
+    "route": "candidate",
+    "input_hash": "34d711df179d5853ee5dd30ed4c38dedb5a02f3aa7e1e261b154cd3716ffff40",
+    "status": "draft_for_human_review",
+    "pipeline": "light-harness-1.3",
+    "raw_draft": "We can review your supplied sketches and measurements to assess pattern feasibility and recommend suitable fabrics for a custom paddling jacket prototype. To move forward, we need to verify material availability and performance test evidence against your stated 18K/18K target. No prototype price or development timeline is confirmed yet; these will follow the material and construction review. Please confirm if you wish us to proceed with this preliminary assessment and share any additional requirements such as seam sealing, waterproofing standards, or specific fabric preferences.",
+    "draft": "We can review your supplied sketches and measurements to assess pattern feasibility and recommend suitable fabrics for a custom paddling jacket prototype. To move forward, we need to verify material availability and performance test evidence against your stated 18K/18K target. No prototype price or development timeline is confirmed yet; these will follow the material and construction review. Please confirm if you wish us to proceed with this preliminary assessment and share any additional requirements such as seam sealing, waterproofing standards, or specific fabric preferences.",
+    "raw_model_output": "{\n  \"draft\": \"We can review your supplied sketches and measurements to assess pattern feasibility and recommend suitable fabrics for a custom paddling jacket prototype. To move forward, we need to verify material availability and performance test evidence against your stated 18K/18K target. No prototype price or development timeline is confirmed yet; these will follow the material and construction review. Please confirm if you wish us to proceed with this preliminary assessment and share any additional requirements such as seam sealing, waterproofing standards, or specific fabric preferences.\",\n  \"contextual_hint\": \"\"\n}",
+    "draft_hash": "1babebf65d4777d0492a86ae9e3fcede89802901fa2c31ef5062fe18ea3bce16",
+    "brief": {
+      "aim": "Prepare a minimum sufficient first reply for human approval.",
+      "optional_operator_correction": "",
+      "operator_supplied_context": "",
+      "reply_materials": [],
+      "authorized_company_conditions": [
+        {
+          "statement": "We can review custom paddling-jacket patterns and seam construction. Fabric availability and performance test evidence must be verified; no 18K/18K capability, prototype price or development date is approved.",
+          "source": "Synthetic development capability record",
+          "scope": "Preliminary pattern and material assessment only",
+          "status": "COMPANY_CONFIRMED"
+        }
+      ],
+      "provisional_references_not_company_truth": [],
+      "source_state": {
+        "body": "read",
+        "thread": "referenced_unread",
+        "attachments": [
+          {
+            "name": "Previous-email sketches and measurements PDF",
+            "state": "referenced_unread",
+            "affects_current_reply": true
+          }
+        ]
+      },
+      "retrieval_coverage": {
+        "public_buyer_search": "not_performed; no search tool in this drafting call",
+        "customer_links": "JPEG/PNG local text OCR only; no full visual understanding",
+        "linked_sources_attempted": 0,
+        "company_context": "Operator-selected text and scope, preserved without a generated summary"
+      },
+      "unknown_policy": "Keep unknown outcomes unknown; verification can proceed. Do not invent answers.",
+      "material_boundary": "Incoming source reading state is separate from company material availability. Private company-context imports are not outgoing attachments. Operator context supplies operational facts, not company capability/price authorization. Choose the present useful advance yourself. Prospective attachment wording for explicitly ready relevant company material requires an operator reminder before sending; nothing here dispatches or attaches a file."
+    },
+    "warnings": [],
+    "contextual_hint": "Review Previous-email sketches and measurements PDF before approving fit/specification claims. It is referenced but unread; the written inquiry can still support preliminary assessment.",
+    "needs_human_approval": true,
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2899,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 2133,
+        "completion_tokens": 119,
+        "total_tokens": 2252
+      },
+      "finish_reason": "stop",
+      "new_model_calls": 1
+    }
+  },
+  {
+    "case_id": "S06",
+    "route": "control",
+    "input_hash": "34d711df179d5853ee5dd30ed4c38dedb5a02f3aa7e1e261b154cd3716ffff40",
+    "status": "draft_for_human_review",
+    "raw_draft": "We can review your sketches and measurements to assess pattern feasibility and recommend suitable fabrics for a custom paddling jacket prototype. To proceed, we need to verify fabric availability and performance test data for your target requirements. No 18K/18K capability, prototype price, or development timeline is currently approved. Please confirm if you would like us to proceed with preliminary pattern development based on the supplied PDF, and we will outline next steps including material options and estimated costs.",
+    "contextual_hint": "",
+    "raw_model_output": "{\n  \"draft\": \"We can review your sketches and measurements to assess pattern feasibility and recommend suitable fabrics for a custom paddling jacket prototype. To proceed, we need to verify fabric availability and performance test data for your target requirements. No 18K/18K capability, prototype price, or development timeline is currently approved. Please confirm if you would like us to proceed with preliminary pattern development based on the supplied PDF, and we will outline next steps including material options and estimated costs.\",\n  \"contextual_hint\": \"\"\n}",
+    "meta": {
+      "mode": "llm",
+      "latency_ms": 2630,
+      "transport_attempts": 1,
+      "model": "swiss-ai/Apertus-v1.5-70B",
+      "usage": {
+        "prompt_tokens": 1306,
+        "completion_tokens": 111,
+        "total_tokens": 1417
+      },
+      "finish_reason": "stop"
+    }
+  }
+]

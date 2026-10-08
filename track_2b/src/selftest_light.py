@@ -59,6 +59,41 @@ class LightTests(unittest.TestCase):
             result=H.process({'inquiry':'Can you assess a custom vest?'})
             self.assertEqual(result['brief']['authorized_company_conditions'],[])
 
+    def test_context_packet_preserves_authorization_scope_unit_conditions_and_provenance(self):
+        fact={'statement':'Normal MOQ: 615 pcs. Production: 38–52 days after design approval; no lower-quantity exception confirmed.',
+              'source':'Synthetic source · lines 7–9', 'scope':'Standard product range only; no style/colour basis',
+              'status':'COMPANY_CONFIRMED', 'source_reading_state':'partially_read',
+              'source_coverage':'PDF text only; diagrams not read', 'source_sha256':'synthetic'}
+        body={'inquiry':'Can you review the existing design?', 'company_context':[fact], 'context_authorized':True,
+              'source_state':{'body':'read','attachments':[{'name':'Prior design PDF','state':'referenced_unread'}]}}
+        packet=H.normalize(body)
+        view=json.loads(H.messages(packet)[1]['content'])['lightweight_business_brief']
+        self.assertEqual(view['authorized_company_conditions'],[fact])
+        self.assertEqual(view['source_state'],body['source_state'])
+        coverage=H.brief_view(packet)['retrieval_coverage']
+        self.assertIn('not_performed',coverage['public_buyer_search'])
+        self.assertEqual(coverage['linked_sources_attempted'],0)
+        self.assertNotIn('retrieval_coverage',view)
+        self.assertEqual(body['company_context'],[fact])
+
+    def test_numbered_requests_without_question_marks_are_advisory_and_never_rewritten(self):
+        text='Please provide the following details:\n1. Quantity\n2. Budget\n3. Materials\n  4. Shipping destination   \n5. Timeline'
+        with patch.object(H.llm_client,'demo_mode',return_value=False), \
+             patch.object(H.llm_client,'chat',return_value=(model_reply(text),{})) as call:
+            result=H.process({'inquiry':'Please send the available selection materials.'})
+        self.assertEqual(result['draft'],text)
+        self.assertEqual(result['raw_draft'],text)
+        self.assertEqual(call.call_count,1)
+        warning=next(w for w in result['warnings'] if w['code']=='question_count')
+        self.assertEqual(text[warning['start']:warning['end']],warning['phrase'])
+        self.assertEqual(H.check_draft('Confirmed construction:\n1. Bound seams\n2. Zip\n3. Cuffs\n4. Pockets',H.normalize({'inquiry':'Describe the construction.'})),[])
+
+    def test_operator_wording_is_located_not_silently_removed(self):
+        text='We can review the concept.\nOperator note: check the source.'
+        flags=H.check_draft(text,H.normalize({'inquiry':'Please assess the concept.'}))
+        warning=next(w for w in flags if w['code']=='operator_wording')
+        self.assertEqual(text[warning['start']:warning['end']],warning['phrase'])
+
     def test_operator_facts_do_not_authorize_company_claims_or_change_old_replay_hash(self):
         old=H.normalize(self.cases[0])
         empty=H.normalize(dict(self.cases[0],operator_context='',reply_materials=[]))

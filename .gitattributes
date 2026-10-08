@@ -4,6 +4,7 @@
 Makefile text eol=lf
 track_2b/Makefile text eol=lf
 track_2b/data/light-demo/*.json text eol=lf
+track_2b/data/decision-calibration/*.json text eol=lf
 track_2b/src/light*.py text eol=lf
 track_2b/src/light_skill.md text eol=lf
 track_2b/src/llm_client.py text eol=lf
