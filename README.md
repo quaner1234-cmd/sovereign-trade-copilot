@@ -105,7 +105,9 @@ still necessary; these checks do not certify a reply for sending.
 
 1. Load the synthetic hero and review/authorize its invented company conditions.
 2. Prepare the first reply. Mode distinguishes live Apertus from recorded playback.
-3. Review the business focus and authorized conditions under **Why this reply?**
+3. Open **Why this reply? · Review card (optional)** only when needed. It shows
+   actual source coverage, supplied company conditions and located review flags.
+   Its next action is a reviewer action, not a validated business decision.
 4. Edit the draft. Technical details preserves the raw first draft.
 5. Enter a reviewer name, acknowledge review and approve this version or copy it.
    Editing invalidates the UI's prior approval. No sending integration exists.
@@ -145,7 +147,15 @@ cd track_2b
 python src/selftest_light.py
 ```
 
-Drafts/approvals live only in bounded server memory. Restart clears them.
+Server draft records and approvals live in bounded memory. Restart clears them.
+The UI optionally recovers inquiry, selected company text/scope and the latest
+draft from tab-scoped `sessionStorage` across refresh. It does not store original
+upload bytes, raw provider output or approval objects. Refresh requires re-review;
+an expired server token cannot be approved. **Forget tab recovery** removes this
+page's cache and keeps recovery off across refresh. On a shared computer, use it
+before leaving: browser session restoration may retain a tab cache. This cache
+is not a persistent Company Context or a trusted ledger.
+See [browser and Docker verification](track_2b/docs/CONVERSATION-CARD-VERIFICATION.md).
 This is a local prototype, not an authenticated multi-user service.
 JPEG/PNG links in an inquiry are detected automatically. At most two are fetched,
 with a 2 MiB limit per image, and readable English text is extracted by Tesseract.

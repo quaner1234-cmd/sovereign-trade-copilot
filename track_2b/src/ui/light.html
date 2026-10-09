@@ -4,13 +4,14 @@
 <style>
 :root{color-scheme:light;--ink:#183329;--muted:#647369;--paper:#f7f8f4;--line:#dce3d9;--accent:#315d45}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,sans-serif}header{max-width:980px;margin:32px auto 18px;padding:0 24px;display:flex;justify-content:space-between;align-items:center}h1{font-size:23px;letter-spacing:-.5px;margin:0}header p{margin:3px 0;color:var(--muted);font-size:14px}.pill{border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;background:white}main{max-width:900px;margin:auto;padding:0 24px 60px}.intro{font-size:34px;line-height:1.2;letter-spacing:-1px;margin:24px 0 8px}.subtitle{color:var(--muted);margin-bottom:24px}label{display:block;font-weight:600;font-size:14px;margin:12px 0 5px}textarea,input{width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;color:var(--ink)}textarea{resize:vertical}#inquiry{min-height:170px}#draft{min-height:310px;line-height:1.7;border:0;padding:0;border-radius:0}button,select{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:10px 15px;background:white;color:var(--ink);cursor:pointer}button.primary{background:var(--accent);color:white;border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:25px;margin-top:20px}.card h2{font-size:18px;margin:0 0 14px}.meta{color:var(--muted);font-size:13px}.hint{background:#edf3e7;border-radius:12px;padding:14px 17px;margin-top:16px;font-size:14px}.warning{border-left:3px solid #b27b35;background:#fff8ed;padding:12px 14px;margin:12px 0;font-size:14px}.warning q{font-weight:700}.hidden{display:none!important}details{margin:16px 0;font-size:14px}summary{cursor:pointer;color:var(--accent);font-weight:600}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 ui-monospace,monospace;max-height:350px;overflow:auto;background:var(--paper);padding:14px;border-radius:10px}#auth,#reviewed{width:auto;margin-right:6px}#approve-panel{border-top:1px solid var(--line);padding-top:14px;margin-top:20px}#actor{max-width:240px;padding:9px}#notice{font-size:14px;margin:14px 0}.result-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}.result-heading p{margin:0}.approved{color:var(--accent);font-weight:600}@media(max-width:600px){header{display:block}.intro{font-size:27px}.card{padding:18px}main{padding:0 16px}.pill{display:inline-block;margin-top:8px}}
 #notice:not(:empty){padding:12px 15px;border:1px solid var(--line);border-radius:10px;background:#edf3e7}#notice.notice-error{background:#fff8ed;border-color:#b27b35;color:#714c19}
+#review-status{font-weight:600}.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.review-box{border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}.review-box h3{font-size:14px;margin:0 0 8px}.review-box p{margin:6px 0;font-size:13px;overflow-wrap:anywhere}.review-box ul{padding-left:18px;margin:6px 0;font-size:13px}.session-row{border-top:1px solid var(--line);margin-top:24px;padding-top:14px}.session-row label{font-weight:400}.session-row input[type=checkbox]{width:auto}#result{scroll-margin-top:18px}#review-card-actions{margin:12px 0}@media(max-width:600px){.review-grid{grid-template-columns:1fr}}
 </style></head><body>
 <noscript><p class="warning">This page needs JavaScript for drafting. Open this address in a browser with JavaScript enabled.</p></noscript>
 <header><div><h1>Sovereign Trade Copilot</h1><p>AI prepares a traceable first reply for human approval.</p></div><span class="pill" id="mode">Checking mode…</span></header>
 <main><h2 class="intro">A useful first reply.<br>With you in control.</h2><p class="subtitle">Paste an inquiry. Review what you can reliably answer, then approve the wording yourself.</p>
 <label for="inquiry">Customer inquiry</label><textarea id="inquiry" placeholder="Paste the inquiry here…"></textarea>
 <details id="examples"><summary>Try a demo example (optional)</summary><p class="meta">Choose an example to fill the inquiry automatically. Its company conditions are fictional and require your confirmation. You can also paste your own inquiry directly.</p><select id="sample" aria-label="Synthetic example"><option value="">Choose a synthetic example</option></select></details>
-<details id="context-panel" open><summary>Company context (optional)</summary><p class="meta">Upload your company documents or read a specific company webpage. No JSON needed. Files are read locally; context goes to the configured Apertus endpoint when you prepare a reply. Nothing is saved as a company profile.</p>
+<details id="context-panel"><summary>Add company documents or context (optional)</summary><p class="meta">Upload your company documents or read a specific company webpage. No JSON needed. Files are read locally; context goes to the configured Apertus endpoint when you prepare a reply. Nothing is saved as a company profile.</p>
 <label for="company-files">Company documents · Markdown, TXT or text-based PDF</label><input id="company-files" type="file" accept=".md,.markdown,.txt,.pdf" multiple><p class="meta">Up to 3 sources · 4 MiB per file · PDF: up to 30 pages. Scans, diagrams and visual tables are not fully read.</p>
 <label for="company-url">Company webpage</label><div class="row"><input id="company-url" type="url" placeholder="https://your-company.example/about" style="flex:1;min-width:180px"><button id="read-company-url">Read this page</button></div><p class="meta">Reads this public HTTPS page only. It does not crawl the website or use a logged-in browser.</p>
 <div id="company-documents"></div><label for="company-note">Add or correct company conditions in your own words</label><textarea id="company-note" rows="3" placeholder="Write the applicable capability, price or terms, keeping their product, market, quantity basis and conditions."></textarea>
@@ -22,21 +23,126 @@
 <div class="row"><button class="primary" id="generate">Prepare first reply</button><span class="meta" id="generation-note">One Apertus draft · no automatic sending</span></div><div id="notice" role="status" aria-live="polite"></div>
 <details id="failure-details" class="hidden"><summary>Failed request details</summary><pre id="failure-technical"></pre></details>
 <section id="result" class="card hidden"><div class="result-heading"><h2>Recommended first reply</h2><p class="meta" id="result-mode"></p></div><textarea id="draft" aria-label="First reply draft" readonly></textarea>
-<div id="hint" class="hint hidden"></div><div id="warnings"></div><div class="row"><button id="edit">Edit draft</button><button id="copy">Copy draft</button></div>
-<details id="why"><summary>Why this reply?</summary><p class="meta">The brief guides drafting; warnings are incomplete review aids. No automated safe-to-send certification is provided.</p><p class="meta" id="reading-coverage"></p><pre id="brief-view"></pre><details><summary>Technical details &amp; preserved first draft</summary><pre id="technical"></pre></details></details>
+<div id="hint" class="hint hidden"></div><div class="row"><button id="edit">Edit draft</button><button id="copy">Copy draft</button></div>
+<details id="why"><summary>Why this reply? · Review card (optional)</summary><p id="review-status"></p><p id="review-next" class="meta"></p><p class="meta">This card shows preparation and review state, not a validated business decision or safe-to-send certification.</p>
+<div class="review-grid"><section class="review-box"><h3>Sources available for this draft</h3><div id="source-card"></div><p class="meta" id="reading-coverage"></p></section><section class="review-box"><h3>Company conditions supplied for this draft</h3><div id="conditions-card"></div><p class="meta">These are supplied conditions, not a claim that every item was used in the draft.</p></section></div>
+<h3 style="font-size:14px">Review flags · advisory, not blockers</h3><p id="flags-note" class="meta"></p><div id="warnings"></div>
+<div id="review-card-actions" class="row"><button id="review-context">Review / add context</button><button id="review-edit">Edit this draft</button><button id="review-regenerate">Prepare a new draft manually</button></div>
+<details><summary>Technical details &amp; preserved first draft</summary><pre id="brief-view"></pre><pre id="technical"></pre></details></details>
 <div id="approve-panel"><label for="actor">Reviewer</label><input id="actor" placeholder="Your name" autocomplete="name"><label><input type="checkbox" id="reviewed">I reviewed the answers, next step, quantities, company conditions and unread sources.</label><button id="approve" class="primary" disabled>Approve this version</button><p class="meta" id="approval-state">Approval records this version only. Nothing is sent.</p></div>
-</section><p class="meta">Local prototype · drafts and approvals are held in memory only · restart clears the session</p></main>
+</section><div class="session-row"><label><input type="checkbox" id="remember-tab" checked>Keep input and draft in this tab across refresh</label><p class="meta" id="session-state">Tab-scoped browser recovery · selected company text is included · no persistent company profile.</p><button id="forget-tab">Forget tab recovery</button></div><p class="meta">Local prototype · approval records are held in server memory · refresh requires re-review · server restart expires records · nothing is sent</p></main>
+<script id="review-cache">
+/* Tab recovery is a presentation cache, never an approval or company-truth store. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.LightReview = api;
+})(typeof window === 'undefined' ? {} : window, function () {
+  const KEY = 'stc.first-reply.tab.v1';
+  const PREFERENCE = 'stc.first-reply.tab.preference';
+  const fields = ['inquiry', 'context', 'sources', 'brief', 'company-note', 'company-note-scope'];
+  const documentFields = ['name', 'source', 'scope', 'status', 'reading_state', 'coverage', 'sha256', 'text'];
+  const resultFields = ['status', 'draft_id', 'pipeline', 'input_hash', 'raw_draft', 'contextual_hint', 'brief', 'warnings'];
+  function text(value, limit) {
+    if (typeof value !== 'string' || value.length > limit) throw Error('Invalid tab recovery text.');
+    return value;
+  }
+  function snapshot(value) {
+    if (!value || typeof value !== 'object') throw Error('Invalid tab recovery state.');
+    const inputs = {};
+    for (const key of fields) inputs[key] = text(value.inputs?.[key] ?? '', key === 'context' ? 100000 : key === 'company-note' ? 60000 : key === 'inquiry' ? 16000 : 5000);
+    inputs.auth = value.inputs?.auth === true;
+    if (!Array.isArray(value.documents) || value.documents.length > 3) throw Error('Invalid recovered company documents.');
+    const documents = value.documents.map(d => {
+      const item = {};
+      for (const key of documentFields) item[key] = text(d[key] ?? '', key === 'text' ? 60000 : 2000);
+      item.operator_edited = d.operator_edited === true || (typeof d.original_text === 'string' && d.text !== d.original_text);
+      if (!['PUBLIC_REFERENCE', 'WORKING_VALUE'].includes(item.status)) throw Error('Invalid recovered document reference.');
+      return item;
+    });
+    let result = null;
+    if (value.result) {
+      const r = value.result;
+      if (r.status !== 'draft_for_human_review' || !/^[A-Za-z0-9_-]{8,128}$/.test(r.draft_id) ||
+          !/^[a-f0-9]{64}$/.test(r.input_hash) || !r.brief || !Array.isArray(r.warnings)) throw Error('Invalid recovered draft.');
+      const b = r.brief;
+      if (!b.source_state || !Array.isArray(b.source_state.attachments || []) ||
+          !Array.isArray(b.authorized_company_conditions) || !Array.isArray(b.provisional_references_not_company_truth) ||
+          !r.warnings.every(w => w && typeof w.phrase === 'string' && typeof w.reason === 'string')) throw Error('Invalid recovered review evidence.');
+      for (const f of [...b.authorized_company_conditions, ...b.provisional_references_not_company_truth])
+        for (const key of ['statement', 'source', 'scope']) text(f[key], 3000);
+      for (const a of b.source_state.attachments || []) {
+        text(a.name, 5000);
+        if (!['read', 'referenced_unread', 'partially_read'].includes(a.state)) throw Error('Invalid recovered source state.');
+      }
+      text(r.raw_draft, 16000); text(r.contextual_hint ?? '', 4000);
+      result = Object.fromEntries(resultFields.filter(k => r[k] !== undefined).map(k => [k, r[k]]));
+      result.meta = {mode: r.meta?.mode === 'recorded_replay' ? 'recorded_replay' : 'llm'};
+      // Never restore raw provider output, credentials, reviewer identity or approval.
+    }
+    const out = {schema: 1, inputs, documents, result,
+      draft: text(value.draft ?? '', 16000), inputActive: value.inputActive === true && !!result,
+      exampleLoaded: value.exampleLoaded === true, exampleId: text(value.exampleId ?? '', 120)};
+    if (JSON.stringify(out).length > 750000) throw Error('Tab recovery is too large.');
+    return JSON.parse(JSON.stringify(out));
+  }
+  function load(storage) {
+    const raw = storage.getItem(KEY);
+    if (raw === null) return null;
+    const value = JSON.parse(raw);
+    if (value.schema !== 1) throw Error('Unsupported tab recovery version.');
+    return snapshot(value);
+  }
+  function save(storage, value) {storage.setItem(KEY, JSON.stringify(snapshot(value)));}
+  return {KEY, PREFERENCE, fields, snapshot, load, save};
+});
+
+</script>
 <script>
-let samples=[], current=null, busy=false, importing=false, exampleLoaded=false, companyDocuments=[];
+let samples=[], current=null, lastResult=null, busy=false, importing=false, approving=false, exampleLoaded=false, companyDocuments=[], approvalState='pending';
 const $=id=>document.getElementById(id);
+function saveTab(){
+  if(!$('remember-tab').checked){$('session-state').textContent='Tab recovery is off. Current text remains on this page only.';return;}
+  try{
+    const inputs=Object.fromEntries(LightReview.fields.map(id=>[id,$(id).value]));inputs.auth=$('auth').checked;
+    LightReview.save(sessionStorage,{inputs,documents:companyDocuments,result:lastResult,draft:$('draft').value,
+      inputActive:!!current,exampleLoaded,exampleId:$('sample').value});
+    $('session-state').textContent='Saved in this browser tab for refresh. Selected company text is included; approval is not restored. Use Forget tab recovery on a shared computer.';
+  }catch{ $('session-state').textContent='Could not save the latest tab changes. Current text is kept; refresh may restore an older saved version.'; }
+}
+function updateReviewCard(){
+  if(!lastResult)return;
+  const edited=$('draft').value!==lastResult.raw_draft;
+  $('review-status').textContent=approvalState==='approved'?'Human approved this version · nothing sent':
+    !current?'Draft input or server record changed · prepare again before approval':
+    edited?'Edited draft · needs human review':'First draft · needs human review';
+  $('review-next').textContent=!current?'Review the current input/context, then manually prepare a new draft. The prior text is kept.':
+    'Next reviewer action: check the answers, company conditions and unread sources; edit or explicitly approve this version.';
+  $('flags-note').textContent=edited?'These flags refer to the preserved first draft. Edits need a fresh human review; flags are not a certificate.':
+    (lastResult.warnings||[]).length?'Review the located phrases below. These are incomplete advisory checks.':'No automatic flags were found. Human business review is still required.';
+}
+function showReviewEvidence(result){
+  $('source-card').replaceChildren();$('conditions-card').replaceChildren();
+  function line(target,text){const p=document.createElement('p');p.textContent=text;$(target).append(p);}
+  const source=result.brief?.source_state||{};
+  line('source-card','Inquiry body: '+(source.body||'unknown')+' · prior thread: '+(source.thread||'unknown'));
+  const attachments=source.attachments||[];
+  if(!attachments.length)line('source-card','No separate attachment reading record is available. This does not establish that the customer sent no attachment.');
+  for(const a of attachments)line('source-card',a.name+' — '+a.state+(a.method==='local_ocr'?' · local text OCR only':''));
+  const confirmed=result.brief?.authorized_company_conditions||[], references=result.brief?.provisional_references_not_company_truth||[];
+  if(!confirmed.length)line('conditions-card','No company conditions were confirmed for this draft. Cold start remains available.');
+  for(const f of confirmed){line('conditions-card',f.statement);line('conditions-card','Source: '+f.source+' · Scope: '+f.scope);}
+  for(const f of references){line('conditions-card','Unconfirmed reference: '+f.statement);line('conditions-card','Source: '+f.source+' · Scope: '+f.scope);}
+}
 function lockInputs(){
   const locked=busy||importing;
-  for(const id of ['inquiry','sample','context','sources','brief','auth','company-note','company-note-scope','company-files','company-url','read-company-url','generate','edit'])$(id).disabled=locked;
+  for(const id of ['inquiry','sample','context','sources','brief','auth','company-note','company-note-scope','company-files','company-url','read-company-url','generate','edit','draft','review-context','review-edit','review-regenerate'])$(id).disabled=locked;
   for(const field of $('company-documents').querySelectorAll('input,textarea,button'))field.disabled=locked;
 }
 function contextChanged(){
   $('auth').checked=false;
   if(current){current=null;approvalButton();notice('Company context changed. Prepare a new draft before approving; the prior draft remains visible.');}
+  invalidate();saveTab();
 }
 function leaveDemoContext(){
   if(!exampleLoaded)return;
@@ -60,9 +166,10 @@ function contextFacts(){
   }
   for(const d of companyDocuments){
     if(!d.text.trim())continue;
-    append(d.text,d.source.split('?')[0].slice(0,350)+(d.text!==d.original_text?' (operator-edited preview)':''),d.scope,$('auth').checked?'COMPANY_CONFIRMED':d.status,
+    const edited=d.operator_edited===true||d.text!==d.original_text;
+    append(d.text,d.source.split('?')[0].slice(0,350)+(edited?' (operator-edited preview)':''),d.scope,$('auth').checked?'COMPANY_CONFIRMED':d.status,
       {source_reading_state:d.reading_state,source_coverage:d.coverage,source_sha256:d.sha256,
-       operator_edited:d.text!==d.original_text});
+       operator_edited:edited});
   }
   if($('company-note').value.trim())append($('company-note').value,'Operator statement for this inquiry',$('company-note-scope').value,$('auth').checked?'COMPANY_CONFIRMED':'WORKING_VALUE',{});
   if(facts.length>30)throw Error('Too much company context for one draft. Keep the relevant sections in the source previews or remove a source.');
@@ -132,7 +239,7 @@ async function request(path,body){
     const options=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{};
     const r=await fetch(path,{...options,signal:controller.signal});
     let v;try{v=await r.json();}catch{throw Error('The service returned an unreadable response. Your input and previous draft are kept.');}
-    if(!r.ok)throw Error(v.error||'The request failed. Your input is kept.');
+    if(!r.ok){const error=Error(v.error||'The request failed. Your input is kept.');error.status=r.status;throw error;}
     return v;
   }catch(e){
     if(e.name==='AbortError')throw Error('The service did not respond in time. Your input and previous draft are kept; no automatic retry was made.');
@@ -140,8 +247,8 @@ async function request(path,body){
     throw e;
   }finally{clearTimeout(timer);}
 }
-function approvalButton(){$('approve').disabled=!current||busy||importing||!$('reviewed').checked||!$('actor').value.trim();}
-function invalidate(){if(current){$('reviewed').checked=false;$('approval-state').textContent='This version needs review. Previous approval does not apply to edits.';approvalButton();}}
+function approvalButton(){$('approve').disabled=!current||busy||importing||approving||approvalState==='approved'||!$('reviewed').checked||!$('actor').value.trim()||!$('draft').value.trim()||$('draft').value.length>16000;}
+function invalidate(){approvalState='pending';$('reviewed').checked=false;$('approval-state').className='meta';$('approval-state').textContent='This version needs review. Previous approval does not apply to edits.';approvalButton();updateReviewCard();}
 function resizeDraft(){$('draft').style.height='auto';$('draft').style.height=Math.max(310,$('draft').scrollHeight+12)+'px';}
 function readingCoverage(result){
   if(result.meta.mode==='recorded_replay')return 'Recorded playback: no source retrieval or public buyer search ran for this request.';
@@ -150,14 +257,14 @@ function readingCoverage(result){
     '; retrieval attempted: '+c.linked_sources_attempted+'; downloaded: '+c.linked_sources_downloaded+
     '; with locally extracted image text: '+c.linked_sources_with_text+'. OCR does not establish visual understanding. Company conditions use your selected text and scope.';
 }
-function show(result){current=result;$('result').classList.remove('hidden');$('draft').value=result.raw_draft;$('draft').readOnly=true;resizeDraft();$('edit').textContent='Edit draft';$('hint').textContent=result.contextual_hint||'';$('hint').classList.toggle('hidden',!result.contextual_hint);$('warnings').replaceChildren();for(const w of result.warnings||[]){const box=document.createElement('div');box.className='warning';const q=document.createElement('q');q.textContent=w.phrase;box.append(q,document.createTextNode(' — '+w.reason));$('warnings').append(box);}$('reading-coverage').textContent=readingCoverage(result);$('brief-view').textContent=JSON.stringify(result.brief,null,2);$('technical').textContent=JSON.stringify({meta:result.meta,input_hash:result.input_hash,raw_first_draft:result.raw_draft,raw_model_output:result.raw_model_output},null,2);$('result-mode').textContent=result.meta.mode==='recorded_replay'?'Recorded first draft · no new inference':'Live Apertus · first draft';invalidate();}
+function show(result){current=result;lastResult=result;$('result').classList.remove('hidden');$('draft').value=result.raw_draft;$('draft').readOnly=true;resizeDraft();$('edit').textContent='Edit draft';const hint=(result.contextual_hint||'').trim();$('hint').textContent=hint;$('hint').classList.toggle('hidden',!hint||/^(none|null|n\/a)$/i.test(hint));$('warnings').replaceChildren();for(const w of result.warnings||[]){const box=document.createElement('div');box.className='warning';const q=document.createElement('q');q.textContent=w.phrase;box.append(q,document.createTextNode(' — '+w.reason));$('warnings').append(box);}$('reading-coverage').textContent=readingCoverage(result);$('brief-view').textContent=JSON.stringify(result.brief,null,2);$('technical').textContent=JSON.stringify({meta:result.meta,input_hash:result.input_hash,raw_first_draft:result.raw_draft,raw_model_output:result.raw_model_output},null,2);$('result-mode').textContent=result.meta.mode==='recorded_replay'?'Recorded first draft · no new inference':'Live Apertus · first draft';showReviewEvidence(result);$('why').open=false;invalidate();}
 $('sample').onchange=()=>{
   const c=samples.find(x=>x.id===$('sample').value);if(!c)return;
   companyDocuments=[];showCompanyDocuments();$('company-note').value='';$('company-url').value='';
   $('inquiry').value=c.inquiry;$('context-summary').replaceChildren();
   for(const f of c.company_context){const p=document.createElement('p');p.className='meta';p.textContent=f.statement;$('context-summary').append(p);}
   $('context').value=JSON.stringify(c.company_context,null,2);$('sources').value=JSON.stringify(c.source_state,null,2);$('brief').value=c.business_brief;
-  exampleLoaded=true;$('auth').checked=false;current=null;approvalButton();$('result').classList.add('hidden');$('context-panel').open=true;
+  exampleLoaded=true;$('auth').checked=false;current=null;lastResult=null;$('draft').value='';approvalState='pending';approvalButton();$('result').classList.add('hidden');$('context-panel').open=true;saveTab();
   notice('Example filled in. Review the fictional company conditions and tick the authorization box before preparing it.');
 };
 $('generate').onclick=async()=>{
@@ -184,9 +291,9 @@ $('generate').onclick=async()=>{
       notice(r.status==='endpoint_required'?'This service is in recorded-demo mode. New inquiries need a live Apertus endpoint. Your input is kept.':r.confirmation||r.error||'No draft generated. Your previous draft is kept.','error',true);
     }
   }catch(e){notice(e.message,'error',true);}
-  finally{busy=false;lockInputs();$('generate').textContent='Prepare first reply';$('generate').removeAttribute('aria-busy');approvalButton();}
+  finally{busy=false;lockInputs();$('generate').textContent='Prepare first reply';$('generate').removeAttribute('aria-busy');approvalButton();saveTab();}
 };
-$('edit').onclick=()=>{$('draft').readOnly=false;$('draft').focus();$('edit').textContent='Editing';invalidate();};$('draft').oninput=()=>{resizeDraft();invalidate();};$('reviewed').onchange=approvalButton;$('actor').oninput=approvalButton;
+$('edit').onclick=()=>{$('draft').readOnly=false;$('draft').focus();$('edit').textContent='Editing';invalidate();};$('draft').oninput=()=>{resizeDraft();invalidate();saveTab();};$('reviewed').onchange=approvalButton;$('actor').oninput=approvalButton;
 for(const id of ['inquiry','context','sources','brief'])$(id).addEventListener('input',()=>{
   if(id==='inquiry'&&exampleLoaded){
     exampleLoaded=false;$('sample').value='';$('context').value='[]';$('context-summary').replaceChildren();$('sources').value='{"body":"read","thread":"not_supplied","attachments":[]}';$('brief').value='';
@@ -194,16 +301,55 @@ for(const id of ['inquiry','context','sources','brief'])$(id).addEventListener('
   }else if(id!=='inquiry')exampleLoaded=false;
   if(id==='inquiry'||id==='context')$('auth').checked=false;
   if(current){current=null;$('approve').disabled=true;notice('Inputs changed. Prepare a new draft before approving; the prior draft remains visible.');}
+  approvalState='input_changed';invalidate();saveTab();
 });
-$('auth').onchange=()=>{if(current){current=null;approvalButton();}};
+$('auth').onchange=()=>{if(current){current=null;approvalButton();}invalidate();saveTab();};
 for(const id of ['company-note','company-note-scope'])$(id).addEventListener('input',()=>{leaveDemoContext();contextChanged();});
 $('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('draft').value);notice('Copied. Sending remains your responsibility.');}catch(e){notice('Select the draft text and copy manually.');}};
-$('approve').onclick=async()=>{if(!current)return;try{const r=await request('/approve',{draft_id:current.draft_id,draft:$('draft').value,actor:$('actor').value,reviewed:$('reviewed').checked});$('approval-state').textContent='Approved by '+r.actor+' for this version. Nothing was sent.';$('approval-state').className='approved';notice('Explicit approval recorded in this local session.');}catch(e){notice(e.message);}};
+$('approve').onclick=async()=>{
+  if($('approve').disabled||!current)return;
+  const submitted=current, draft=$('draft').value;
+  approving=true;approvalButton();
+  try{
+    const r=await request('/approve',{draft_id:submitted.draft_id,draft,actor:$('actor').value,reviewed:$('reviewed').checked});
+    if(current!==submitted||$('draft').value!==draft){notice('Approval recorded for the submitted text only. Your changed version still needs review.');return;}
+    approvalState='approved';$('approval-state').textContent='Approved by '+r.actor+' for this version. Nothing was sent.';$('approval-state').className='approved';updateReviewCard();notice('Explicit approval recorded in this local session.');
+  }catch(e){if(e.status===409&&current===submitted){current=null;invalidate();notice('The server draft record has expired. Your text is kept. Manually prepare a new draft before approval.','error',true);}else notice(e.status===409?'The submitted older record expired; your current draft is unchanged.':e.message,'error',true);}
+  finally{approving=false;approvalButton();saveTab();}
+};
+$('review-context').onclick=()=>{$('context-panel').open=true;$('context-panel').scrollIntoView({block:'start'});};
+$('review-edit').onclick=()=>$('edit').click();
+$('review-regenerate').onclick=()=>$('generate').click();
+$('remember-tab').onchange=()=>{
+  try{sessionStorage.setItem(LightReview.PREFERENCE,$('remember-tab').checked?'on':'off');if(!$('remember-tab').checked)sessionStorage.removeItem(LightReview.KEY);}
+  catch{$('session-state').textContent='Could not update tab recovery preference/cache. Current page text is kept.';return;}
+  saveTab();
+};
+$('forget-tab').onclick=()=>{
+  $('remember-tab').checked=false;
+  try{sessionStorage.setItem(LightReview.PREFERENCE,'off');sessionStorage.removeItem(LightReview.KEY);saveTab();notice('Tab recovery forgotten. Current page text remains; refreshing will not restore it.');}
+  catch{notice('Could not clear tab recovery. Current text is kept.','error',true);}
+};
+window.addEventListener('pagehide',saveTab);
+function restoreTab(){
+  try{
+    if(sessionStorage.getItem(LightReview.PREFERENCE)==='off'){$('remember-tab').checked=false;saveTab();return;}
+    const saved=LightReview.load(sessionStorage);if(!saved)return;
+    for(const id of LightReview.fields)$(id).value=saved.inputs[id];$('auth').checked=saved.inputs.auth;
+    companyDocuments=saved.documents.map(d=>({...d,original_text:d.text}));exampleLoaded=saved.exampleLoaded;showCompanyDocuments();
+    if(saved.result){show(saved.result);$('draft').value=saved.draft;resizeDraft();if(!saved.inputActive)current=null;invalidate();}
+    $('actor').value='';$('reviewed').checked=false;approvalButton();
+    $('session-state').textContent='Restored input and draft from this tab. Re-review is required; the server record may expire after a restart.';
+    notice('Tab restored. Nothing was generated, approved or sent automatically.');
+    return saved.exampleId;
+  }catch{$('remember-tab').checked=false;$('session-state').textContent='Could not restore tab recovery. Existing cache was not overwritten. Use Forget tab recovery or enable recovery after checking your input.';}
+}
+const recoveredExampleId=restoreTab();
 (async()=>{
   try{const h=await request('/health');$('mode').textContent=h.mode==='live_apertus'?'Live Apertus':'Recorded playback · offline';
     if(h.mode!=='live_apertus')$('generation-note').textContent='Recorded examples only · new inquiries need a live endpoint';
   }catch(e){$('mode').textContent='Service unavailable';notice(e.message,'error');}
-  try{samples=(await request('/samples')).samples;for(const c of samples){const o=document.createElement('option');o.value=c.id;o.textContent=c.title;$('sample').append(o);}}
+  try{samples=(await request('/samples')).samples;for(const c of samples){const o=document.createElement('option');o.value=c.id;o.textContent=c.title;$('sample').append(o);}if(recoveredExampleId)$('sample').value=recoveredExampleId;}
   catch{notice('Demo examples could not load. You can still paste an inquiry if the live service is available.','error');}
 })();
 </script></body></html>
