@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>询盘卡片实验 · Sovereign Trade Copilot</title>
+<style>
+:root{color-scheme:light;--ink:#183329;--muted:#647369;--paper:#f7f8f4;--line:#dce3d9;--accent:#315d45}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 system-ui,sans-serif}header,main{max-width:900px;margin:auto;padding:24px}header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:0}header strong{font-size:20px}header p{margin:2px 0;color:var(--muted);font-size:13px}h1{font-size:30px;letter-spacing:-.7px;line-height:1.3;margin:18px 0 8px}h2{font-size:16px;margin:0 0 8px}p{margin:6px 0 12px}.muted{color:var(--muted)}.small{font-size:13px}.pill{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:20px;padding:5px 12px;background:#fff}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}button,input,textarea{font:inherit}button{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:#fff;color:var(--ink);cursor:pointer}button.primary{background:var(--accent);color:white;border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #86a68f;outline-offset:2px}.cases{margin:20px 0}.cases button[aria-pressed="true"]{background:#e7efdf;border-color:#95ae91}.bubble{background:#edf0e9;padding:16px 20px;border-radius:16px 16px 2px 16px;margin:22px 0 16px 60px}.bubble p{margin:0;white-space:pre-wrap}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px}.card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}.identity{font-size:13px}.next{padding:15px 17px;background:#edf3e7;border-radius:12px;margin:12px 0 14px}.next p{font-size:16px;font-weight:600;margin:0}.blockers{margin:0 0 18px;padding:12px 15px;background:#fff8ed;border-left:3px solid #bc9053;border-radius:4px}.blockers ul{padding-left:18px;margin:4px 0}.facts{display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px;margin:16px 0}.facts p{margin:0}.actions{margin-top:18px}.panel{padding:16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;margin-top:14px}label{display:block;font-weight:600;font-size:14px;margin-bottom:7px}input[type="number"],textarea{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;color:var(--ink)}input[type="number"]{width:160px}textarea{display:block;width:100%;min-height:280px;line-height:1.65;resize:vertical;margin-bottom:12px}input[type="checkbox"]{margin-right:8px}.draft-area{border-top:1px solid var(--line);margin-top:22px;padding-top:20px}#notice:not(:empty){padding:12px 16px;margin:16px 0;border:1px solid var(--line);border-radius:10px;background:#edf3e7}#notice.error{background:#fff8ed;border-color:#bc9053}details{margin-top:18px;font-size:13px}summary{cursor:pointer;font-weight:600;color:var(--accent)}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--paper);padding:14px;border-radius:10px;font:12px/1.6 ui-monospace,monospace;max-height:300px;overflow:auto}#history{padding-left:20px}footer{margin:20px 0 40px;color:var(--muted);font-size:12px}.reset{margin-top:18px}.hidden,[hidden]{display:none!important}@media(max-width:600px){header{display:block}header .pill{margin-top:12px}header,main{padding:18px}h1{font-size:25px}.bubble{margin-left:24px}.card{padding:18px}.card-top{display:block}.card-top .pill{margin-top:10px}.actions button{flex:1}.facts{gap:12px}}
+</style>
+<script type="module" src="/app.mjs"></script>
+</head>
+<body>
+<noscript>此交互实验需要 JavaScript。没有启用时不会保存或批准任何状态。</noscript>
+<header><div><strong>Sovereign Trade Copilot</strong><p>Inquiry card · 独立交互实验</p></div><span class="pill">全部虚构 · 无模型调用 · 不发送</span></header>
+<main>
+<h1>看懂询盘，确认下一步。</h1><p class="muted">模拟 Agent 输出驱动卡片。试着看资料、补数量、准备草稿和批准，再刷新页面。</p>
+<nav class="row cases" aria-label="选择虚构询盘">
+<button data-case="development" aria-pressed="true">定制开发</button>
+<button data-case="known" aria-pressed="false">数量已知</button>
+<button data-case="protection" aria-pressed="false">防护边界</button>
+</nav>
+<div id="notice" role="status" aria-live="polite"></div>
+<section class="bubble" aria-label="虚构客户询盘"><p id="inquiry"></p></section>
+<article class="card" aria-label="询盘卡片">
+<div class="card-top"><div><h2 id="case-title"></h2><div id="customer" class="identity"></div><div id="customer-meta" class="muted small"></div></div><span id="status" class="pill"></span></div>
+<section class="next"><h2>Next Action · 建议下一步</h2><p id="next-action"></p></section>
+<section class="blockers"><h2>Blocker · 具体阻止什么</h2><ul id="blockers"></ul></section>
+<section class="facts"><div><span class="muted small">客户资料</span><p id="source-state"></p></div><div><span class="muted small">首批预计总量</span><p id="quantity"></p></div></section>
+<div class="row actions"><button id="show-source">查看模拟资料</button><button id="show-quantity">补充 / 修改模拟数量</button><button id="prepare" class="primary">准备模拟草稿</button></div>
+<section id="source-panel" class="panel" hidden><h2 id="source-title"></h2><pre id="source-text"></pre><p class="muted small">这是内置的虚构纯文本。展开不等于已审阅，也不等于确认公司能力。</p><button id="mark-read">确认已模拟审阅</button></section>
+<section id="quantity-panel" class="panel" hidden><label for="quantity-input">首批预计总量（pcs）</label><p class="small muted">只补充这个虚构项目的预计总量，不更改公司 MOQ，也不确认订单。</p><div class="row"><input id="quantity-input" type="number" min="1" max="999999" step="1"><button id="save-quantity">保存模拟数量</button></div></section>
+<section id="draft-area" class="draft-area" hidden>
+<label for="draft">客户回复草稿 · 固定示例，没有调用 Apertus</label><textarea id="draft" maxlength="8000" spellcheck="false"></textarea>
+<p id="draft-version" class="muted small"></p>
+<div class="row"><button id="save-edit">保存草稿修改</button><button id="reject">退回当前草稿</button></div>
+<label class="small" style="margin-top:18px"><input id="reviewed" type="checkbox">我已审阅当前模拟版本的内容和下一步</label>
+<button id="approve" class="primary" disabled>模拟批准此版本</button><p id="approval-note" class="muted small">只记录演示批准；不发送邮件。</p>
+</section>
+<details><summary>Why this card? · 条件、状态与操作记录</summary><p id="company"></p><p class="muted">卡片内的商业判断和回复为人工写定的模拟数据。界面只展示结构化数据并执行有限动作；不会自动补事实或验证文字是否适合发送。</p><ol id="history"></ol><details><summary>结构化卡片数据</summary><pre id="schema-view"></pre></details></details>
+</article>
+<div class="reset"><button id="show-reset">重置此实验</button><span id="reset-confirm" hidden>仅清除三个虚构案例的状态。<button id="reset">确认重置</button><button id="cancel-reset">取消</button></span></div>
+<footer id="persistence">正在读取本浏览器的演示状态…</footer>
+</main>
+</body></html>
