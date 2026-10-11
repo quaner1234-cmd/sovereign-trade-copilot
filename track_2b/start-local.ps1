@@ -82,7 +82,10 @@ try {
     $env:PATH = (Split-Path -Parent $docker) + [IO.Path]::PathSeparator + $env:PATH
     # Avoid selecting the Windows WSL bash shim for GNU Make.
     $gitBash = Join-Path $env:ProgramFiles 'Git\bin\bash.exe'
-    if (Test-Path -LiteralPath $gitBash) { $env:SHELL = $gitBash.Replace('\', '/') }
+    if (Test-Path -LiteralPath $gitBash) {
+        $env:SHELL = $gitBash.Replace('\', '/')
+        $env:PATH = (Join-Path $env:ProgramFiles 'Git\usr\bin') + [IO.Path]::PathSeparator + $env:PATH
+    }
     & $MakePath -C $PSScriptRoot run "PORT=$Port" "CONTAINER=$Container" "IMAGE=$Image" 'RUN_OPTIONS=--restart unless-stopped'
     if ($LASTEXITCODE -ne 0) { throw 'make run failed. No existing container was replaced.' }
     $health = Invoke-RestMethod "$base/health" -TimeoutSec 10
