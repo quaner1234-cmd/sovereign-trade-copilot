@@ -2,12 +2,17 @@
 import argparse
 import hashlib
 import json
+import sys
 import urllib.request
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+from light_harness import VERSION
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--url', default='http://127.0.0.1:8000')
 parser.add_argument('--mode', choices=['recorded_replay', 'live_apertus'], required=True)
+parser.add_argument('--output', type=Path, help='Preserve complete synthetic first outputs, including failed attempts.')
 args = parser.parse_args()
 
 
@@ -21,17 +26,22 @@ def request(path, body=None):
 
 
 health = request('/health')
-assert health['pipeline'] == 'light-harness-1' and health['mode'] == args.mode
+assert health['pipeline'] == VERSION and health['mode'] == args.mode
 assert health['sending_enabled'] is False
 assert 'Why this reply?' in request('/ui')
 cases = request('/samples')['samples']
 assert len(cases) == 3 and all('gold' not in case for case in cases)
 frozen = json.loads((Path(__file__).resolve().parents[1] / 'data/light-demo/first-drafts.json').read_text(encoding='utf-8'))
 summary = {'mode': args.mode, 'pipeline': health['pipeline'], 'health_ui': 'PASS', 'cases': []}
+records = []
 for case in cases if args.mode == 'recorded_replay' else cases[:1]:
     unconfirmed = {**case, 'context_authorized': False}
     assert request('/process', unconfirmed)['status'] == 'confirmation_required'
     result = request('/process', {**case, 'context_authorized': True})
+    records.append({'case': case['id'], 'input': case, 'first_output': result})
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding='utf-8')
     assert result['status'] == 'draft_for_human_review' and result['raw_draft'] == result['draft']
     assert result['needs_human_approval'] is True
     if args.mode == 'recorded_replay':

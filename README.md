@@ -41,6 +41,38 @@ not send images to a separate vision provider.
 PORT, IMAGE and CONTAINER can override defaults. make stop stops the named demo.
 Only loopback port access is published by default.
 
+### Windows local startup
+
+Reuse Docker Desktop, GNU Make and Git for Windows. `track_2b/start-local.ps1`
+calls the same `make run` recipe, reading credentials through environment names
+only. It maps the existing Windows `CSCS_BASE_URL` / `CSCS_INFERENCE_API_KEY`
+variables when live `LLM_*` configuration is absent. No key is saved in a script,
+file or image. Example, with an installed GNU Make executable:
+
+```powershell
+.\track_2b\start-local.ps1 -Mode Demo -MakePath C:\tools\make\bin\make.exe
+.\track_2b\start-local.ps1 -Mode Live -Port 8012 -Container track2b-live -MakePath C:\tools\make\bin\make.exe
+```
+
+The launcher opts into Docker `restart=unless-stopped`; Docker Desktop's engine
+must be running. It reuses an owned container without clearing drafts, changing
+its endpoint/key or making a model call. Changed mode, port or source-host
+configuration requires a different container name; it never silently replaces
+an existing service. Code/image updates likewise require an explicit new
+container. Docker engine restart resumes a container that was not explicitly
+stopped. It does not preserve the Python server's in-memory approval records.
+
+For an already deployed Fake-IP proxy, supply the exact approved source domains
+using `-SourceFakeIpHosts`, or set the non-secret `SOURCE_FAKE_IP_HOSTS` environment
+variable. Keep customer-specific host lists in private local launch configuration,
+not in the repository. This uses the existing source-reader boundary and does not
+permit arbitrary private/loopback targets. Source extraction remains OCR only.
+
+To intentionally retire a named local service, first preserve needed drafts,
+then `docker stop <name>` and `docker rm <name>`. The launcher never performs
+these record-losing actions automatically. Default judge `make run` still uses a
+disposable container; `RUN_OPTIONS` is an optional local lifecycle override.
+
 ## Demonstration
 
 For a new inquiry in live mode, paste it and click **Prepare first reply** directly.
