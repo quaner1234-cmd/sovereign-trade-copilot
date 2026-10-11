@@ -73,6 +73,10 @@ then `docker stop <name>` and `docker rm <name>`. The launcher never performs
 these record-losing actions automatically. Default judge `make run` still uses a
 disposable container; `RUN_OPTIONS` is an optional local lifecycle override.
 
+See [current runtime verification](track_2b/docs/RUNTIME-STABILITY.md) for the
+clean-checkout, Windows startup, real Apertus and browser recovery evidence,
+including the limits of restart persistence and source-image reading.
+
 ## Demonstration
 
 For a new inquiry in live mode, paste it and click **Prepare first reply** directly.
