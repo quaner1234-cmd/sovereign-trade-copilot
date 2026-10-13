@@ -6,7 +6,7 @@ from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, Table, TableStyle, Flowable
 
 root=Path(__file__).resolve().parents[1]/'track_2b'
 styles=getSampleStyleSheet()
@@ -21,6 +21,25 @@ def inline(text):
     return re.sub(r'\*\*(.*?)\*\*',r'<b>\1</b>',escape(text))
 
 story=[];buffer=[];rows=[]
+
+class Architecture(Flowable):
+    """Display the actual light drafting boundary, without invented modules."""
+    def __init__(self):
+        super().__init__()
+        self.width=168*mm; self.height=25*mm
+    def draw(self):
+        c=self.canv
+        labels=[('Inquiry + context','source / scope / consent'),('Light brief','original statements'),('Apertus first draft','one call + optional hint'),('Human review','warnings / edit / approve')]
+        for i,(title,detail) in enumerate(labels):
+            x=i*43*mm
+            c.setFillColor(colors.HexColor('#e7eee3')); c.setStrokeColor(colors.HexColor('#c6d2c5'))
+            c.roundRect(x,5*mm,39*mm,18*mm,3*mm,fill=1,stroke=1)
+            c.setFillColor(colors.HexColor('#244d38')); c.setFont('Helvetica-Bold',8)
+            c.drawCentredString(x+19.5*mm,16.5*mm,title)
+            c.setFont('Helvetica',6.5); c.drawCentredString(x+19.5*mm,11*mm,detail)
+            if i<3:
+                c.setStrokeColor(colors.HexColor('#244d38')); c.line(x+39*mm,14*mm,x+43*mm,14*mm)
+                c.line(x+43*mm,14*mm,x+41.5*mm,15*mm); c.line(x+43*mm,14*mm,x+41.5*mm,13*mm)
 def flush():
     if buffer:
         story.append(Paragraph(inline(' '.join(buffer)),styles['Body']));buffer.clear()
@@ -44,6 +63,7 @@ for raw in (root/'technical_report.md').read_text(encoding='utf-8-sig').splitlin
         continue
     flush_table()
     if line=='<!-- page -->':flush();story.append(PageBreak())
+    elif line=='<!-- architecture -->':flush();story.append(Architecture())
     elif line.startswith('# '):flush();story.append(Paragraph(inline(line[2:]),styles['Title']))
     elif line.startswith('## '):flush();story.append(Paragraph(inline(line[3:]),styles['Heading2']))
     elif not line:flush()

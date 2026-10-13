@@ -40,3 +40,4 @@ _private/
 *.db
 *.db-*
 .firecrawl/
+.hyperframes/

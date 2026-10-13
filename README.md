@@ -216,12 +216,19 @@ company authorization, confirms an order quantity or supplies an outgoing photo.
 
 ## Evidence and deliverables
 
+- [Submission fields, files and publication handoff](track_2b/docs/SUBMISSION.md)
 - [Technical report](track_2b/technical_report.md)
 - [Clean-checkout and artifact verification](track_2b/docs/RELEASE-VERIFICATION.md)
 - track_2b/SovereignTradeCopilot_Report.pdf (maximum six pages)
 - track_2b/demo.mp4 (maximum two minutes; local artifact, URL publication pending)
 - [Frozen synthetic inputs, prompts and first outputs](track_2b/data/light-demo/)
 - [Original competition contract](track_2b/README.md)
+
+The 13 October report and video refresh the current Light Harness 1.3 review
+interface and keep the original commercial failures and later negative calibration.
+The report has five pages including references; the video has 90 seconds with
+recorded-playback and scripted-approval disclosure. Local packaging does not
+publish the video URL, push the final code or submit the competition form.
 
 Private mail, company seeds and studies are not public assets. The final image
 copies only the Light Harness and new synthetic data. Older source/experiments

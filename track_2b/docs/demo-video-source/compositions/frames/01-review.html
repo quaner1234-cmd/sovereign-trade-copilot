@@ -1,6 +1,6 @@
 <template>
 <style>
-#root{width:100%;height:100%;font-family:system-ui,sans-serif;color:#183329;overflow:hidden}
+#review01-root{width:100%;height:100%;font-family:system-ui,sans-serif;color:#183329;overflow:hidden}
 .clip{position:absolute;inset:0}
 .review-ground{background:#f7f8f4}
 .review-phase{position:absolute;inset:0}
@@ -11,10 +11,8 @@
 .review-point{font-size:29px;line-height:1.42;margin:0 0 28px}
 .review-note{font-size:25px;line-height:1.4;color:#4c6358;margin-top:35px}
 .review-window{position:absolute;left:735px;top:195px;width:1105px;height:650px;overflow:hidden;border:2px solid #cbd7ce;border-radius:20px;background:white;box-shadow:0 18px 45px #18332914}
-.review-window img{position:absolute;width:2348.75px;height:1030px;max-width:none;left:-600px;top:-90px}
-.review-window.review-input img{top:-48px}
-.review-window.review-approved img{top:-190px}
-.review-window.review-boundary img{top:-40px}
+.review-window img{position:absolute;width:1645px;height:auto;max-width:none;left:-265px;top:0}
+.review-window.review-input img{top:-255px}
 .review-full{position:absolute;left:120px;top:230px;right:120px}
 .review-full h1{font-size:84px;line-height:1.12;letter-spacing:-.035em;max-width:1500px;margin:0 0 45px}
 .review-full p{font-size:35px;line-height:1.4;max-width:1400px;margin:0 0 32px}
@@ -24,50 +22,50 @@
 .review-progress-track{position:absolute;left:80px;right:80px;top:922px;height:6px;background:#dce5dd}
 .review-progress{height:6px;background:#315d45;transform-origin:left center}
 </style>
-<div id="root" data-composition-id="01-review" data-start="0" data-duration="90" data-width="1920" data-height="1080">
-<div class="clip review-ground" data-start="0" data-duration="90" data-track-index="0"></div>
-<div class="clip" data-start="0" data-duration="90" data-track-index="1"><div class="review-brand">SOVEREIGN TRADE COPILOT / FIRST REPLY</div></div>
-<section class="clip review-phase" id="review01-phase-1" data-start="0" data-duration="8" data-track-index="2"><div class="review-full">
-<h1 id="review01-title">A traceable first reply.<br>Human approval.</h1>
-<p id="review01-intro">One real Apertus draft. Clear business boundaries.</p>
-<div id="review01-chain"><span class="review-pill">Inquiry + context</span><span class="review-pill">Light brief</span><span class="review-pill">Draft + review</span></div>
+<div data-hf-id="hf-63b2" id="review01-root" data-composition-id="01-review" data-start="0" data-duration="90" data-width="1920" data-height="1080">
+<div data-hf-id="hf-06ga" id="review01-ground" class="clip review-ground" data-start="0" data-duration="90" data-track-index="0"></div>
+<div data-hf-id="hf-j271" id="review01-brand-track" class="clip" data-start="0" data-duration="90" data-track-index="1"><div data-hf-id="hf-bm7t" class="review-brand">SOVEREIGN TRADE COPILOT / FIRST REPLY</div></div>
+<section data-hf-id="hf-7xzl" class="clip review-phase" id="review01-phase-1" data-start="0" data-duration="8" data-track-index="2"><div data-hf-id="hf-awii" class="review-full">
+<h1 data-hf-id="hf-buc1" id="review01-title">A traceable first reply.<br data-hf-id="hf-x5px">Human approval.</h1>
+<p data-hf-id="hf-x0m6" id="review01-intro">One real Apertus draft. Clear business boundaries.</p>
+<div data-hf-id="hf-8ua8" id="review01-chain"><span data-hf-id="hf-fqr6" class="review-pill">Inquiry + context</span><span data-hf-id="hf-swc9" class="review-pill">Light brief</span><span data-hf-id="hf-u9b1" class="review-pill">Draft + review</span></div>
 </div></section>
-<section class="clip review-phase" id="review01-phase-2" data-start="8" data-duration="14" data-track-index="2"><div class="review-left">
-<p class="review-eyebrow">01 / SYNTHETIC HERO</p><h2 id="review01-h2">Start with an inquiry.</h2>
-<p class="review-point" id="review01-hp1">Custom cycling jacket + commuter vest.</p>
-<p class="review-point" id="review01-hp2">Authorized conditions: MOQ 240; samples 18 business days; bulk 70–95 calendar days.</p>
-<p class="review-note" id="review01-hp3">Timing remains conditional. Context is fictional and explicitly confirmed.</p>
-</div><div class="review-window review-input"><img data-layout-allow-overflow="true" src="assets/hero-inquiry.png" alt="Actual synthetic inquiry in the conversation interface"></div></section>
-<section class="clip review-phase" id="review01-phase-3" data-start="22" data-duration="16" data-track-index="2"><div class="review-left">
-<p class="review-eyebrow">02 / APERTUS FIRST OUTPUT</p><h2 id="review01-d2">Preserve the first draft.</h2>
-<p class="review-point" id="review01-dp1">Answers MOQ and timing. Asks for priority design and first-run allocation.</p>
-<p class="review-point review-warning" id="review01-dp2">Missing: an explicit conditional costing next move.</p>
-<p class="review-note" id="review01-dp3">Real CSCS Apertus v1.5 70B generation. This screen is marked recorded replay.</p>
-</div><div class="review-window"><img data-layout-allow-overflow="true" src="assets/hero-draft.png" alt="Frozen first Apertus draft, unchanged"></div></section>
-<section class="clip review-phase" id="review01-phase-4" data-start="38" data-duration="13" data-track-index="2"><div class="review-left">
-<p class="review-eyebrow">03 / EDIT + EXPLICIT APPROVAL</p><h2 id="review01-a2">Review the next move.</h2>
-<p class="review-point" id="review01-ap1">Add: review design and material route, then prepare a sample-cost basis and conditional costing.</p>
-<p class="review-point" id="review01-ap2">Approval applies only to this edited version.</p>
-<p class="review-note" id="review01-ap3">Scripted reviewer interaction. No measured time saving. Nothing sent.</p>
-</div><div class="review-window review-approved"><img data-layout-allow-overflow="true" src="assets/hero-approved.png" alt="Actual edited hero draft and scripted approval"></div></section>
-<section class="clip review-phase" id="review01-phase-5" data-start="51" data-duration="15" data-track-index="2"><div class="review-left">
-<p class="review-eyebrow">04 / BOUNDARY: MOQ BASIS</p><h2 id="review01-q2">Retain the failure.</h2>
-<p class="review-point review-warning" id="review01-qp1">240 pcs became “240 pcs per style.” That basis was never authorized.</p>
-<p class="review-point" id="review01-qp2">A located warning helps review. The operator must remove the invented basis.</p>
-<p class="review-note" id="review01-qp3">120 / 360 / 720 are price-comparison tiers, not confirmed orders.</p>
-</div><div class="review-window review-boundary"><img data-layout-allow-overflow="true" src="assets/boundary-quote.png" alt="Actual quotation boundary draft with MOQ basis warning"></div></section>
-<section class="clip review-phase" id="review01-phase-6" data-start="66" data-duration="14" data-track-index="2"><div class="review-left">
-<p class="review-eyebrow">05 / BOUNDARY: UNREAD SOURCE</p><h2 id="review01-p2">A warning is not truth.</h2>
-<p class="review-point" id="review01-pp1">ONE prototype stays known. Referenced notes stay unread.</p>
-<p class="review-point review-warning" id="review01-pp2">The draft invents what the sample fee covers. Operator correction is required.</p>
-<p class="review-note" id="review01-pp3">Fee-scope advisory was added after generation. The original draft is unchanged.</p>
-</div><div class="review-window review-boundary"><img data-layout-allow-overflow="true" src="assets/boundary-prototype.png" alt="Actual prototype boundary draft with unread-source hint and fee-scope warning"></div></section>
-<section class="clip review-phase" id="review01-phase-7" data-start="80" data-duration="10" data-track-index="2"><div class="review-full">
-<h1 id="review01-end">Apertus drafts.<br>You review and approve.</h1>
-<p id="review01-run">make run → paste inquiry → confirm context → draft → edit / approve</p>
-<p id="review01-limits">Warnings support review. They do not certify safety.<br>No automatic sending. Known failures remain visible.</p>
+<section data-hf-id="hf-881d" class="clip review-phase" id="review01-phase-2" data-start="8" data-duration="14" data-track-index="2"><div data-hf-id="hf-ge7q" class="review-left">
+<p data-hf-id="hf-94as" class="review-eyebrow">01 / SYNTHETIC HERO</p><h2 data-hf-id="hf-ii6s" id="review01-h2">Start with an inquiry.</h2>
+<p data-hf-id="hf-adtq" class="review-point" id="review01-hp1">Custom cycling jacket + commuter vest.</p>
+<p data-hf-id="hf-xsw0" class="review-point" id="review01-hp2">Authorized conditions: MOQ 240; samples 18 business days; bulk 70–95 calendar days.</p>
+<p data-hf-id="hf-ao6b" class="review-note" id="review01-hp3">Timing remains conditional. Context is fictional and explicitly confirmed.</p>
+</div><div data-hf-id="hf-ic3w" class="review-window review-input"><img data-hf-id="hf-uz9f" data-layout-allow-overflow="true" src="assets/current-hero-inquiry.jpg" alt="Actual synthetic inquiry in the current conversation interface"></div></section>
+<section data-hf-id="hf-4x58" class="clip review-phase" id="review01-phase-3" data-start="22" data-duration="16" data-track-index="2"><div data-hf-id="hf-y3iy" class="review-left">
+<p data-hf-id="hf-tq6z" class="review-eyebrow">02 / APERTUS FIRST OUTPUT</p><h2 data-hf-id="hf-e60w" id="review01-d2">Preserve the first draft.</h2>
+<p data-hf-id="hf-a3a8" class="review-point" id="review01-dp1">Answers MOQ and timing. Asks for priority design and first-run allocation.</p>
+<p data-hf-id="hf-qgop" class="review-point review-warning" id="review01-dp2">Missing: an explicit conditional costing next move.</p>
+<p data-hf-id="hf-9ujd" class="review-note" id="review01-dp3">Real CSCS Apertus v1.5 70B generation. This screen is marked recorded replay.</p>
+</div><div data-hf-id="hf-3ugh" class="review-window"><img data-hf-id="hf-o1nq" data-layout-allow-overflow="true" src="assets/current-hero-draft.jpg" alt="Frozen first Apertus draft, unchanged, in current UI"></div></section>
+<section data-hf-id="hf-t1h3" class="clip review-phase" id="review01-phase-4" data-start="38" data-duration="13" data-track-index="2"><div data-hf-id="hf-yhtz" class="review-left">
+<p data-hf-id="hf-dae1" class="review-eyebrow">03 / EDIT + EXPLICIT APPROVAL</p><h2 data-hf-id="hf-d20o" id="review01-a2">Review the next move.</h2>
+<p data-hf-id="hf-643l" class="review-point" id="review01-ap1">Add: review design and material route, then prepare a sample-cost basis and conditional costing.</p>
+<p data-hf-id="hf-ihy6" class="review-point" id="review01-ap2">Approval applies only to this edited version.</p>
+<p data-hf-id="hf-n2oq" class="review-note" id="review01-ap3">Scripted reviewer interaction. No measured time saving. Nothing sent.</p>
+</div><div data-hf-id="hf-7gt9" class="review-window review-approved"><img data-hf-id="hf-qoni" data-layout-allow-overflow="true" src="assets/current-hero-approved.jpg" alt="Actual edited hero draft and explicit scripted approval"></div></section>
+<section data-hf-id="hf-jb65" class="clip review-phase" id="review01-phase-5" data-start="51" data-duration="15" data-track-index="2"><div data-hf-id="hf-yw50" class="review-left">
+<p data-hf-id="hf-9i0x" class="review-eyebrow">04 / BOUNDARY: MOQ BASIS</p><h2 data-hf-id="hf-9ig7" id="review01-q2">Retain the failure.</h2>
+<p data-hf-id="hf-8a22" class="review-point review-warning" id="review01-qp1">240 pcs became “240 pcs per style.” That basis was never authorized.</p>
+<p data-hf-id="hf-dwfu" class="review-point" id="review01-qp2">A located warning helps review. The operator must remove the invented basis.</p>
+<p data-hf-id="hf-wo00" class="review-note" id="review01-qp3">120 / 360 / 720 are price-comparison tiers, not confirmed orders.</p>
+</div><div data-hf-id="hf-lwya" class="review-window review-boundary"><img data-hf-id="hf-2dbe" data-layout-allow-overflow="true" src="assets/current-boundary-quote.jpg" alt="Actual quotation boundary context and MOQ basis warning"></div></section>
+<section data-hf-id="hf-xrhf" class="clip review-phase" id="review01-phase-6" data-start="66" data-duration="14" data-track-index="2"><div data-hf-id="hf-zag1" class="review-left">
+<p data-hf-id="hf-akmz" class="review-eyebrow">05 / BOUNDARY: UNREAD SOURCE</p><h2 data-hf-id="hf-m4j5" id="review01-p2">A warning is not truth.</h2>
+<p data-hf-id="hf-6uwo" class="review-point" id="review01-pp1">ONE prototype stays known. Referenced notes stay unread.</p>
+<p data-hf-id="hf-0u8g" class="review-point review-warning" id="review01-pp2">The draft invents what the sample fee covers. Operator correction is required.</p>
+<p data-hf-id="hf-evnq" class="review-note" id="review01-pp3">Fee-scope advisory was added after generation. The original draft is unchanged.</p>
+</div><div data-hf-id="hf-5zrq" class="review-window review-boundary"><img data-hf-id="hf-1xs4" data-layout-allow-overflow="true" src="assets/current-boundary-prototype.jpg" alt="Actual prototype boundary context and fee-scope warning"></div></section>
+<section data-hf-id="hf-ap0m" class="clip review-phase" id="review01-phase-7" data-start="80" data-duration="10" data-track-index="2"><div data-hf-id="hf-2h4u" class="review-full">
+<h1 data-hf-id="hf-td8j" id="review01-end">Apertus drafts.<br data-hf-id="hf-rsrt">You review and approve.</h1>
+<p data-hf-id="hf-g5s8" id="review01-run">make run → paste inquiry → confirm context → draft → edit / approve</p>
+<p data-hf-id="hf-5go2" id="review01-limits">Warnings support review. They do not certify safety.<br data-hf-id="hf-szow">No automatic sending. Known failures remain visible.</p>
 </div></section>
-<div class="clip" data-start="0" data-duration="90" data-track-index="3"><div class="review-progress-track"><div class="review-progress" id="review01-progress"></div></div><div class="review-footer">Recorded Apertus first-output playback • synthetic data only • editing / approval scripted<br>AI prepares a traceable first reply for human approval.</div></div>
+<div data-hf-id="hf-vbzl" id="review01-footer-track" class="clip" data-start="0" data-duration="90" data-track-index="3"><div data-hf-id="hf-3mbq" class="review-progress-track"><div data-hf-id="hf-aa9p" class="review-progress" id="review01-progress"></div></div><div data-hf-id="hf-hff1" class="review-footer">Current UI 1.3 • recorded Apertus first-output playback • synthetic data only • scripted approval<br data-hf-id="hf-sldv">AI prepares a traceable first reply for human approval.</div></div>
 </div>
 <script>
 window.__timelines=window.__timelines||{};
