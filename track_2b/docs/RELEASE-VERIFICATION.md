@@ -1,5 +1,54 @@
 # Final demo verification
 
+## 13 October 2026: submission package refresh
+
+Local deliverables are updated to Light Harness 1.3. The report has five pages
+including references, with an architecture diagram, the unchanged B/E/E first
+results, later failed calibration, and current limitations. The 90-second MP4
+uses actual current-interface synthetic captures, labels recorded first-output
+playback and scripted approval, and sends nothing. Original earlier PDF/video
+were preserved privately before replacement.
+
+HyperFrames was upgraded from 0.8.133 to 0.8.152 and validated. Runtime, layout
+and contrast checks passed with zero errors; one existing dense-timeline advisory
+remains. The final encode is H.264, 1920 x 1080, 24 fps, 90.000 seconds,
+4,417,248 bytes, silent with readable explanatory copy. Actual final MP4 frames
+at inquiry, draft, approval, both boundaries and ending were decoded and reviewed;
+this is not just a source-preview check. All five PDF pages were rendered and
+reviewed; the later smoke finding changed page 4 only and was rendered again.
+
+A real local Git clone of `48b92f5` passed root `make run` into isolated Docker
+containers in recorded and real Apertus modes. `/health`, `/ui`, three exact
+original `/process` playbacks, unconfirmed-context rejection, changed offline
+input rejection and scripted draft-version approval passed. One new synthetic
+CSCS Apertus v1.5 70B integration call used one attempt: 1,620 prompt + 163 output
+= 1,783 tokens, 5,221 ms, finish reason `stop`. The first result was retained.
+It is not a scored business improvement or a replacement for any original draft.
+It introduced a project-dependent per-style/per-color MOQ qualifier beyond the
+source; warnings did not catch its hyphenated wording. This limitation is now
+also disclosed in the report. No prompt, warning, application code or frozen
+case data was changed. No full benchmark was run.
+
+The public-file check found no known CSCS credential, inspected private customer
+markers or identifying machine paths in the inspected text/PDF metadata; binary
+assets received an exact known-key check and actual visual review. This checks
+known material, not arbitrary-secret completeness. Runtime/source/image/log
+credential checks and final archive integrity are recorded in the local delivery
+manifest and private verification evidence. Private seed, real inquiry and
+private experiments remain outside the exported Git tree.
+
+The repository is public and its GitHub template origin is verified. Its remote
+`main` was still `7276cd2` on 13 October; it does not yet contain the local Light
+Harness package. No push, video publication, Terms acceptance or submission
+occurred. Before submission, publish the final verified commit and a public
+judge-accessible video URL. The local ZIP is a handoff/backup, not a substitute
+for those required URLs. See `docs/SUBMISSION.md` for actual form fields.
+
+The packaging script exports the final committed tree, verifies the report/video
+limits, data under 100 MB and ZIP CRCs, and records SHA-256 checksums. The final
+documentation-only commit may follow the tested clone; runtime/data equality is
+verified rather than rerunning an unchanged model experiment.
+
 Status: PASS for the reproducible review-demo runtime and local artifacts.
 Business reliability remains bounded by the B / E / E raw results. This is not a
 human usability PASS, a commercial-safety certificate or a published submission.

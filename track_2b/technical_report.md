@@ -172,17 +172,22 @@ start-local.ps1 calls the same recipe; it reads existing CSCS_* user variables
 when LLM_* is absent, reuses an owned container, and opts into restart-unless-stopped.
 Conflicting mode, port or source configuration is rejected rather than overwritten.
 
-On 11 October, an actual clean Git clone passed Docker make run, health/UI, three
-exact recorded POST /process cases, changed-input rejection and scripted version
-approval. A separate current-version browser live call returned v1.5-70B in one
-attempt: 1,620 input + 174 output = 1,794 tokens; 4,624 ms client latency. Its first
-draft was preserved. It answered known terms but omitted a design-material
-request and an explicit design/material review before costing. This is integration
-evidence, not a scored improvement or a selected evaluation retry. All 42 existing
-focused Python runtime tests and nine embedded UI checks passed. Actual browser
-edit/approval, refresh, stopped-container recovery and expired-token rejection
-passed. Privacy checks found no known key in application files, image metadata or
-logs. Host reboot was not executed. See docs/RUNTIME-STABILITY.md for scope.
+The 11 October clean-clone validation passed 42 focused Python tests and nine
+embedded UI checks, browser edit/approval, refresh, stopped-container recovery
+and expired-token rejection. Privacy checks found no known key in application
+files, image metadata or logs. Host reboot was not executed; see
+docs/RUNTIME-STABILITY.md for scope.
+
+On 13 October a fresh Git clone of the submission passed root make run, health/UI,
+three exact recorded POST /process cases, changed-input rejection and scripted
+version approval. One separate real CSCS v1.5-70B smoke call returned its first
+draft in one attempt: 1,620 input + 163 output = 1,783 tokens; 5,221 ms latency.
+This was integration evidence, not a scored improvement or a selected retry.
+The output answered known terms and preserved a useful next move, but added a
+project-dependent per-style/per-color MOQ qualifier beyond the supplied source.
+Automatic warnings were silent; the hyphenated phrase escaped the current basis
+heuristic. Human correction is still required. The first result was preserved;
+neither prompt nor check was repaired to improve this packaging result.
 
 ## 8. Demo and release interpretation
 The video demonstrates actual recorded first-output review, explicit manual

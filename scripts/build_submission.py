@@ -33,6 +33,7 @@ def build(output, ffprobe):
         'demo.mp4': ROOT/'track_2b/demo.mp4',
         'technical_report.md': ROOT/'track_2b/technical_report.md',
         'START_HERE.md': ROOT/'track_2b/docs/SUBMISSION.md',
+        'PREVIEW.png': ROOT/'track_2b/docs/demo-video-source/assets/submission-preview.png',
     }
     pages = len(PdfReader(copies['SovereignTradeCopilot_Report.pdf']).pages)
     if not 1 <= pages <= 6:

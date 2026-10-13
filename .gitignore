@@ -41,3 +41,4 @@ _private/
 *.db-*
 .firecrawl/
 .hyperframes/
+.thumbnails/
