@@ -2,7 +2,6 @@
 import argparse
 import hashlib
 import json
-import shutil
 import subprocess
 import zipfile
 from pathlib import Path
@@ -45,8 +44,6 @@ def build(output, ffprobe):
     duration = float(probe['format']['duration'])
     if not 0 < duration <= 120:
         raise SystemExit(f'Video duration limit failed: {duration}')
-    for name, source in copies.items():
-        shutil.copyfile(source, output/name)
     source_zip = output/'SOURCE.zip'
     subprocess.run(['git', '-C', str(ROOT), 'archive', '--format=zip',
                     '--prefix=sovereign-trade-copilot/', '-o', str(source_zip),
@@ -54,6 +51,11 @@ def build(output, ffprobe):
     with zipfile.ZipFile(source_zip) as archive:
         if archive.testzip():
             raise SystemExit('Source archive CRC verification failed.')
+        # Export committed bytes, including Markdown, rather than a checkout's
+        # platform-specific LF/CRLF representation.
+        for name, source in copies.items():
+            entry = 'sovereign-trade-copilot/' + source.relative_to(ROOT).as_posix()
+            (output/name).write_bytes(archive.read(entry))
         names = archive.namelist()
         for name in names:
             parts = Path(name).parts
